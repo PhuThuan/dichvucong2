@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 
-defineProps({ user: Object })
+defineProps({ services: Array })
 
 </script>
 
@@ -21,10 +21,13 @@ defineProps({ user: Object })
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     
                     <div class="p-6 text-gray-900">You're logged in!</div>
-
+                    <ul>
+                        <li v-for="service in services" :key="service.id">Dich vu #{{ service.id }} la {{ service.name }} </li>
+                    </ul>
                     
                 </div>
             </div>
+
         </div>
     </AuthenticatedLayout>
 </template>

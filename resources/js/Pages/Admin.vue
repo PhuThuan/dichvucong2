@@ -24,7 +24,14 @@ defineProps({ users: Array })
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <ul>
-                    <li v-for="user in users" :key="user.id">{{user.id}} - {{ user.phone }} - {{ user.email }}</li>
+                    <li v-for="user in users" :key="user.id">{{user.id}} - {{ user.phone }} </li>
+                </ul>
+            </div>
+        </div>
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <ul>
+                    <li v-for="user in users" :key="user.id"></li>
                 </ul>
             </div>
         </div>

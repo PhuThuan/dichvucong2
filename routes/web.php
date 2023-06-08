@@ -5,7 +5,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+use App\Http\Controllers\User\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,9 +27,7 @@ Route::get('/', function () {
 })->name('home');
 
 
-Route::get('/dashboard', function(){
-    return Inertia::render('Dashboard');
-})->middleware(['auth','verified'])->name('dashboard');
+Route::get('/dashboard', [UserController::class,'getService'])->middleware(['auth','verified'])->name('dashboard');
 
 
 
