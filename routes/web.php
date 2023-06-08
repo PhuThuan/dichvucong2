@@ -27,15 +27,15 @@ Route::get('/', function () {
 })->name('home');
 
 
-Route::get('/dashboard', [AdminController::class,'getInfo'])->middleware(['auth','verified'])->name('dashboard');
+Route::get('/dashboard', function(){
+    return Inertia::render('Dashboard');
+})->middleware(['auth','verified'])->name('dashboard');
 
 
 
 //middleware check account login is admin or user
 Route::prefix('/admin')->middleware('checkAccountLogin')->group(function () {
-    Route::get('/', function () {
-        return Inertia::render("Admin");
-    })->name('admin');
+    Route::get('/', [AdminController::class,'getInfo'])->name('admin');
 });
 
 
