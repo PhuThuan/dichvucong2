@@ -7,7 +7,7 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
-  
+
     phone: '',
     password: '',
     password_confirmation: '',
@@ -21,14 +21,16 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestLayout style=" background: radial-gradient(#13a8ff, #dddef8);">
         <Head title="Register" />
-
+        <div class="text-blue-500 text-3xl text-center font-bold my-10">
+            Đăng ký
+        </div>
         <form @submit.prevent="submit">
-           
+            
 
             <div class="mt-4">
-                <InputLabel for="phone" value="phone" />
+                
 
                 <TextInput
                     id="phone"
@@ -36,6 +38,7 @@ const submit = () => {
                     class="mt-1 block w-full"
                     v-model="form.phone"
                     required
+                    placeholder="Số điện thoại"
                     autocomplete="username"
                 />
 
@@ -43,7 +46,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                
 
                 <TextInput
                     id="password"
@@ -52,13 +55,14 @@ const submit = () => {
                     v-model="form.password"
                     required
                     autocomplete="new-password"
+                    placeholder="Mật khẩu"
                 />
 
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
+                
 
                 <TextInput
                     id="password_confirmation"
@@ -67,21 +71,16 @@ const submit = () => {
                     v-model="form.password_confirmation"
                     required
                     autocomplete="new-password"
+                    placeholder="Nhập lại mật khẩu"
                 />
 
                 <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    :href="route('login')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                    Already registered?
-                </Link>
+            <div class="flex items-center justify-center mt-5">
 
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
+                <PrimaryButton class="border-none" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" style="background: linear-gradient(to right, #4b4b4b, #ededed);">
+                    Đăng ký
                 </PrimaryButton>
             </div>
         </form>

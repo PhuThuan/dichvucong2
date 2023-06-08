@@ -1,6 +1,6 @@
 <script setup>
 import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestLayout from '@/Layouts/LayoutLogin.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -30,16 +30,18 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestLayout style=" background: radial-gradient(#13a8ff, #dddef8);">
         <Head title="Log in" />
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
-
+        <div class="text-blue-500 text-3xl text-center font-bold my-10">
+            Đăng nhập
+        </div>
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="phone" value="Phone" />
+                <InputLabel for="phone"  />
 
                 <TextInput
                     id="phone"
@@ -49,13 +51,14 @@ const submit = () => {
                     required
                     autofocus
                     autocomplete="username"
+                    placeholder="Số điện thoại"
                 />
 
-                <InputError class="mt-2" :message="form.errors.phone" />
+                <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="password" />
 
                 <TextInput
                     id="password"
@@ -64,31 +67,43 @@ const submit = () => {
                     v-model="form.password"
                     required
                     autocomplete="current-password"
+                    placeholder="Mật khẩu"
                 />
 
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
-            <div class="block mt-4">
+            <div class="hidden mt-4">
                 <label class="flex items-center">
                     <Checkbox name="remember" v-model:checked="form.remember" />
                     <span class="ml-2 text-sm text-gray-600">Remember me</span>
                 </label>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="items-center justify-end mt-4 text-center">
+                <PrimaryButton class="my-3 " :class="{ 'opacity-25': form.processing } " :disabled="form.processing"  >
+                    Đăng nhập
+                </PrimaryButton>
+                <br>
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    class="font-semibold text-sm text-dark-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    Forgot your password?
+                    Quên mật khẩu?
                 </Link>
 
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </PrimaryButton>
+                
+                <div class="mt-10 font-semibold text-sm text-dark-600">
+                    Bạn chưa có tài khoản?
+                </div>
+                <Link 
+                :href="route('register')"
+                class="font-semibold text-sm text-dark-600">
+                    Tạo tài khoản mới
+                </Link>
             </div>
         </form>
     </GuestLayout>
 </template>
+
