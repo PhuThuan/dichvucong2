@@ -22,12 +22,51 @@ const form = useForm({
     remember: false,
 });
 
+const validateForm = () => {
+    let isValid = true;
+
+    // Validate phone
+    const phoneRegex = /^([+]84|0|84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-4|6-9])[0-9]{7}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.phone) {
+        form.errors.phone = 'Số điện thoại không được bỏ trống.';
+        form.errors.email="";
+        isValid = false;
+    } else if (!phoneRegex.test(form.phone)) {
+        if( emailRegex.test(form.phone)){
+            form.errors.phone = '';
+            form.errors.email="";
+            return isValid;
+        }
+        
+        form.errors.phone = 'Số điện thoại không đúng.';
+        isValid = false;
+    } else {    
+        form.errors.phone = '';
+    }
+
+    // Validate password
+    if (!form.password) {
+        form.errors.password = 'Mật khẩu không được bỏ trống.';
+        isValid = false;
+    } else {
+        form.errors.password = '';
+    }
+
+    return isValid;
+};
+
 const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
-    });
+    if (validateForm()) {
+        form.post(route('login'), {
+            onFinish: () => form.reset('password'),
+        });
+    }
 };
 </script>
+
+
+
 
 <template>
     <GuestLayout style=" background: radial-gradient(#13a8ff, #dddef8);">
@@ -48,13 +87,13 @@ const submit = () => {
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.phone"
-                    required
                     autofocus
                     autocomplete="username"
                     placeholder="Số điện thoại"
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2" v-if="form.errors.email == 'These credentials do not match our records.'" :message="'Số điện thoại không tồn tại'" />
+                <InputError class="mt-2" :message="form.errors.phone" />
             </div>
 
             <div class="mt-4">
@@ -65,12 +104,12 @@ const submit = () => {
                     type="password"
                     class="mt-1 block w-full"
                     v-model="form.password"
-                    required
                     autocomplete="current-password"
                     placeholder="Mật khẩu"
                 />
 
                 <InputError class="mt-2" :message="form.errors.password" />
+                <InputError class="mt-2" v-if="form.errors.password == 'These credentials do not match our records.'" :message="'Sai mật khẩu'" />
             </div>
 
             <div class="hidden mt-4">

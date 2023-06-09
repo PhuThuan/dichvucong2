@@ -12,12 +12,45 @@ const form = useForm({
     password: '',
     password_confirmation: '',
 });
+const validateForm = () => {
+    let isValid = true;
+
+    // Validate phone
+    const phoneRegex = /^([+]84|0|84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-4|6-9])[0-9]{7}$/;
+    if (!form.phone) {
+        form.errors.phone = 'Số điện thoại không được bỏ trống.';
+        
+        isValid = false;
+    } else if (!phoneRegex.test(form.phone)) {
+        
+        
+        form.errors.phone = 'Số điện thoại không đúng.';
+        isValid = false;
+    } else {    
+        form.errors.phone = '';
+    }
+
+    // Validate password
+    if (!form.password) {
+        form.errors.password = 'Mật khẩu không được bỏ trống.';
+        isValid = false;
+    } else {
+        form.errors.password = '';
+    }
+    
+
+    return isValid;
+};
 
 const submit = () => {
-    form.post(route('register'), {
+    if (validateForm()) {
+        form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
-    });
+        });
+    }
 };
+
+
 </script>
 
 <template>
@@ -37,12 +70,13 @@ const submit = () => {
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.phone"
-                    required
+                    
                     placeholder="Số điện thoại"
                     autocomplete="username"
                 />
 
-                <InputError class="mt-2" :message="form.errors.phone" />
+                <InputError class="mt-2" v-if="form.errors.phone!='The phone has already been taken.'"  :message="form.errors.phone" />
+                <InputError class="mt-2" v-if="form.errors.phone=='The phone has already been taken.'" :message="'Số điện thoại không khả dụng'"  />
             </div>
 
             <div class="mt-4">
@@ -53,7 +87,7 @@ const submit = () => {
                     type="password"
                     class="mt-1 block w-full"
                     v-model="form.password"
-                    required
+                    
                     autocomplete="new-password"
                     placeholder="Mật khẩu"
                 />
@@ -69,12 +103,14 @@ const submit = () => {
                     type="password"
                     class="mt-1 block w-full"
                     v-model="form.password_confirmation"
-                    required
+                    
                     autocomplete="new-password"
                     placeholder="Nhập lại mật khẩu"
                 />
 
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
+                <!-- <InputError class="mt-2" :message="form.errors.password_confirmation" /> -->
+                <InputError class="mt-2" v-if="form.errors.password_confirmation == 'The password field confirmation does not match.'" message="Nhập lại mật khẩu" />
+
             </div>
 
             <div class="flex items-center justify-center mt-5">
