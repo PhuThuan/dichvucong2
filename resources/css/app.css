@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+body,
+*:not(i) {
+    font-family: 'Gill Sans', system-ui, sans-serif;
+}
