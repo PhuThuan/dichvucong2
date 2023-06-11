@@ -27,13 +27,26 @@ Route::get('/', function () {
 })->name('home');
 
 
-Route::get('/dashboard', [UserController::class,'getService'])->middleware(['auth','verified'])->name('dashboard');
+
 
 
 
 //middleware check account login is admin or user
 Route::prefix('/admin')->middleware('checkAccountLogin')->group(function () {
-    Route::get('/', [AdminController::class,'getInfo'])->name('admin');
+
+    Route::get('/',function(){
+        return Inertia::render('Home_Admin');
+    });
+    Route::get('/account', [AdminController::class,'getInfo'])->name('admin');
+
+    Route::get('/manage/customer',function(){
+        return Inertia::render('Customer_Management');
+    });
+    
+});
+
+Route::prefix('/user')->middleware(['auth','verified'])->group(function () {
+    Route::get('/dashboard', [UserController::class,'getService'])->name('dashboard');
 });
 
 
