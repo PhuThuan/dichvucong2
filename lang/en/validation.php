@@ -163,10 +163,21 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
-            'unique'=>'Số điện thoại đã tồn tại'
+        'phone' => [
+            'unique' => 'Số điện thoại không khả dụng',
+          
         ],
+        'password' =>[
+            'min' => [
+              //  'numeric' => 'Mật khẩu có ít nhất :min.',
+                'string' => 'Nhập lại mật khẩu',
+            ],
+          
+        ],
+        'password_confirmation'=>[
+            'same' => 'Nhập lại mật khẩu.',
+        ]
+
     ],
 
     /*
@@ -181,7 +192,7 @@ return [
     */
 
     'attributes' => [
-        'phone'
+        
     ],
 
 ];

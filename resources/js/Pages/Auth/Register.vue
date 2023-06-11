@@ -110,7 +110,7 @@ const submit = () => {
 
                 <!-- <InputError class="mt-2" :message="form.errors.password_confirmation" /> -->
                 <InputError class="mt-2" v-if="form.errors.password_confirmation == 'The password field confirmation does not match.'" message="Nhập lại mật khẩu" />
-
+                <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
             <div class="flex items-center justify-center mt-5">

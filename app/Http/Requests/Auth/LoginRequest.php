@@ -56,18 +56,22 @@ class LoginRequest extends FormRequest
       
        
         if (! Auth::attempt($data, $this->boolean('remember'))) {
-            if (User::all()->where('email', '=', $data['email'])) {
-              
+            $check=User::where('email', '=', $phone)->first();
+        
+            if ( $check) {
+             
 
                 throw ValidationException::withMessages([
                     'password' => trans('auth.password'),
                 ]);
             }
-            RateLimiter::hit($this->throttleKey());
+            
+          
 
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+            throw  ValidationException::withMessages([
+                'phone' => trans('auth.failed'),
             ]);
+            
         }
        
 
