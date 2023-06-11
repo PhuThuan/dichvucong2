@@ -24,7 +24,12 @@
             </span>
         </a>
     </header>
+    <div style="background-color: #5ce1e6;">
+
+        <slot />
+    </div>
 </template>
+
 <style>
 span.icon-search,
 span.icon-bell {
