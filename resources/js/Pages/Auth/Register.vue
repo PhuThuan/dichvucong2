@@ -1,7 +1,6 @@
 <script setup>
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
@@ -34,9 +33,14 @@ const validateForm = () => {
     if (!form.password) {
         form.errors.password = 'Mật khẩu không được bỏ trống.';
         isValid = false;
+    } else if (form.password.length < 6 || form.password !== form.password_confirmation) {
+        form.errors.password = 'Nhập lại mật khẩu.';
+        isValid = false;
     } else {
         form.errors.password = '';
     }
+    
+   
     
 
     return isValid;
@@ -110,12 +114,12 @@ const submit = () => {
 
                 <!-- <InputError class="mt-2" :message="form.errors.password_confirmation" /> -->
                 <InputError class="mt-2" v-if="form.errors.password_confirmation == 'The password field confirmation does not match.'" message="Nhập lại mật khẩu" />
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
+
             </div>
 
             <div class="flex items-center justify-center mt-5">
 
-                <PrimaryButton class="border-none" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" style="background: linear-gradient(to right, #4b4b4b, #ededed);">
+                <PrimaryButton class="border-none bg-gradient-to-r from-[#b4b4b4] to-[#ededed] text-black" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" style="background: linear-gradient(to right, #4b4b4b, #ededed);">
                     Đăng ký
                 </PrimaryButton>
             </div>

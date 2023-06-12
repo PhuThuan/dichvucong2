@@ -18,10 +18,18 @@ class checkAccountLogin
     {
         
         //prevent user access admin page
-        if(Auth::user()->role!=1){
+        
+        if (isset(Auth::user()->role)){
+            if(Auth::user()->role==1){
           
-            return to_route('dashboard');
+                return to_route('admin');
+            }
+            if(Auth::user()->role!=1){
+          
+                return to_route('dashboard');
+            } 
         }
+        
         
         return $next($request);
     }

@@ -17,14 +17,15 @@ use App\Http\Controllers\User\UserController;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('home');
+Route::get('/',
+    // return Inertia::render('Dashboard', [
+    //     'canLogin' => Route::has('login'),
+    //     'canRegister' => Route::has('register'),
+    //     'laravelVersion' => Application::VERSION,
+    //     'phpVersion' => PHP_VERSION,
+    // ]);
+     [UserController::class,'getService']
+)->name('dashboard');
 
 
 
@@ -32,7 +33,7 @@ Route::get('/', function () {
 
 
 //middleware check account login is admin or user
-Route::prefix('/admin')->middleware('checkAccountLogin')->group(function () {
+Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->group(function () {
 
     Route::get('/',function(){
         return Inertia::render('Home_Admin');
@@ -46,7 +47,7 @@ Route::prefix('/admin')->middleware('checkAccountLogin')->group(function () {
 });
 
 Route::prefix('/user')->middleware(['auth','verified'])->group(function () {
-    Route::get('/dashboard', [UserController::class,'getService'])->name('dashboard');
+    
 });
 
 
