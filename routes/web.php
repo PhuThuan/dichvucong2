@@ -26,7 +26,7 @@ Route::get('/',
     // ]);
      [UserController::class,'getService']
 )->name('dashboard');
-
+Route::get('/contact',[UserController::class,'contact'])->name('contact');;
 
 
 
@@ -46,7 +46,7 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     
 });
 
-Route::prefix('/user')->middleware(['auth','verified'])->group(function () {
+Route::middleware(['auth','verified'])->group(function () {
     
 });
 
