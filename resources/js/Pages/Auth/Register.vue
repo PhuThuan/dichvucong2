@@ -1,10 +1,14 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+//import GuestLayout from '@/Layouts/GuestLayout.vue';
+import GuestLayout from '@/Layouts/LayoutLogin.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref, defineProps, defineEmits } from 'vue';
 
+const showPassword = ref(false);
+const showPassword2 = ref(false);
 const form = useForm({
 
     phone: '',
@@ -18,14 +22,14 @@ const validateForm = () => {
     const phoneRegex = /^([+]84|0|84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-4|6-9])[0-9]{7}$/;
     if (!form.phone) {
         form.errors.phone = 'Số điện thoại không được bỏ trống.';
-        
+
         isValid = false;
     } else if (!phoneRegex.test(form.phone)) {
-        
-        
+
+
         form.errors.phone = 'Số điện thoại không đúng.';
         isValid = false;
-    } else {    
+    } else {
         form.errors.phone = '';
     }
 
@@ -39,9 +43,9 @@ const validateForm = () => {
     } else {
         form.errors.password = '';
     }
-    
-   
-    
+
+
+
 
     return isValid;
 };
@@ -49,7 +53,7 @@ const validateForm = () => {
 const submit = () => {
     if (validateForm()) {
         form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+            onFinish: () => form.reset('password', 'password_confirmation'),
         });
     }
 };
@@ -59,69 +63,64 @@ const submit = () => {
 
 <template>
     <GuestLayout style=" background: radial-gradient(#13a8ff, #dddef8);">
+
         <Head title="Register" />
         <div class="text-blue-500 text-3xl text-center font-bold my-10">
             Đăng ký
         </div>
         <form @submit.prevent="submit">
+
+
+            <div class="mt-4">
+                <TextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" placeholder="Số điện thoại"
+                    autocomplete="username" />
+
+                <InputError class="mt-2" v-if="form.errors.phone != 'The phone has already been taken.'"
+                    :message="form.errors.phone" />
+                <InputError class="mt-2" v-if="form.errors.phone == 'The phone has already been taken.'"
+                    :message="'Số điện thoại không khả dụng'" />
+            </div>
+            <div class="relative mt-4">
+                <TextInput 
+                    id="password" 
+                    :type="showPassword ? 'text' : 'password'" 
+                    class="mt-1 block w-full"
+                    v-model="form.password" 
+                    autocomplete="current-password" 
+                    placeholder="Mật khẩu" />
+                <button type="button" class="absolute right-0 top-0 h-full px-3 text-gray-300 focus:outline-none"
+                    @click="showPassword = !showPassword">
+                    <i class="fas fa-eye" :class="{ 'hidden': !showPassword, 'block': showPassword }"></i>
+                    <i class="fas fa-eye-slash" :class="{ 'block': !showPassword, 'hidden': showPassword }"></i>
+                </button>
+                
+            </div>
+            <InputError class="" :message="form.errors.password" />
+
+
+            <div class="relative mt-4">
+                <TextInput id="password_confirmation" :type="showPassword2 ? 'text' : 'password'" class="mt-1 block w-full"
+                    v-model="form.password_confirmation" autocomplete="current-password" placeholder="Nhập lại mật khẩu" />
+                <button type="button" class="absolute right-0 top-0 h-full text-gray-300 px-3 focus:outline-none"
+                    @click="showPassword2 = !showPassword2">
+                    <i class="fas fa-eye" :class="{ 'hidden': !showPassword2, 'block': showPassword2 }"></i>
+                    <i class="fas fa-eye-slash" :class="{ 'block': !showPassword2, 'hidden': showPassword2 }"></i>
+                </button>
             
-
-            <div class="mt-4">
-                
-
-                <TextInput
-                    id="phone"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.phone"
-                    
-                    placeholder="Số điện thoại"
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" v-if="form.errors.phone!='The phone has already been taken.'"  :message="form.errors.phone" />
-                <InputError class="mt-2" v-if="form.errors.phone=='The phone has already been taken.'" :message="'Số điện thoại không khả dụng'"  />
             </div>
+            <InputError class=""
+                    v-if="form.errors.password_confirmation == 'The password field confirmation does not match.'"
+                    message="Nhập lại mật khẩu" />
 
-            <div class="mt-4">
-                
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    
-                    autocomplete="new-password"
-                    placeholder="Mật khẩu"
-                />
+            <div class="flex items-center justify-center ">
 
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    
-                    autocomplete="new-password"
-                    placeholder="Nhập lại mật khẩu"
-                />
-
-                <!-- <InputError class="mt-2" :message="form.errors.password_confirmation" /> -->
-                <InputError class="mt-2" v-if="form.errors.password_confirmation == 'The password field confirmation does not match.'" message="Nhập lại mật khẩu" />
-
-            </div>
-
-            <div class="flex items-center justify-center mt-5">
-
-                <PrimaryButton class="border-none bg-gradient-to-r from-[#b4b4b4] to-[#ededed] text-black" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" style="background: linear-gradient(to right, #4b4b4b, #ededed);">
+                <button
+                    class="my-4 bg-gradient-to-r from-[#b4b4b4] to-[#ededed] text-black py-2 px-4 rounded-[11px]  font-semibold"
+                    :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Đăng ký
-                </PrimaryButton>
+                </button>
+
             </div>
         </form>
     </GuestLayout>
