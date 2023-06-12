@@ -120,7 +120,7 @@ const submit = () => {
             </div>
 
             <div class="items-center justify-end mt-4 text-center">
-                <PrimaryButton class="my-3 " :class="{ 'opacity-25': form.processing } " :disabled="form.processing"  >
+                <PrimaryButton class="my-3 bg-gradient-to-r from-[#b4b4b4] to-[#ededed] text-black" :class="{ 'opacity-25': form.processing } " :disabled="form.processing"  >
                     Đăng nhập
                 </PrimaryButton>
                 <br>
