@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('service', function (Blueprint $table) {
+        Schema::create('service_field_value', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->tinyInteger('avaiable');
+            $table->integer('services_fields_id');
+            $table->string('name');
             $table->timestamps();
-            
         });
     }
 
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('service_field_value');
     }
 };
