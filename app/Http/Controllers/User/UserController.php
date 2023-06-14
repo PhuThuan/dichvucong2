@@ -19,4 +19,8 @@ class UserController extends Controller
             'services' => Service::all()->where('avaiable','1'),
         ]);
     }
+    public function contact(){
+        
+        return Inertia::render('CustomerSupportCenter');
+    }
 }
