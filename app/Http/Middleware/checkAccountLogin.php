@@ -21,8 +21,8 @@ class checkAccountLogin
         
         if (isset(Auth::user()->role)){
             if(Auth::user()->role==1){
-          
-                return to_route('admin');
+                
+                return $next($request);
             }
             if(Auth::user()->role!=1){
           
