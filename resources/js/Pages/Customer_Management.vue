@@ -15,8 +15,12 @@ var currentPage = ref(1)
 var itemsPerPage = ref(2)
 var totalItems = ref(data.length)
 var listData = ref([])
-
-
+const isOpen1 = ref(false)
+const input1 = ref(null)
+onMounted(() => {
+    // input1.value.focus()
+    input1.value = 'sadsd'
+})
 const totalPages = computed(() => {
     return Math.ceil(totalItems.value / itemsPerPage.value);
 })
@@ -64,53 +68,57 @@ const nextPage = () => {
         // Ví dụ: this.fetchData(this.currentPage);
     }
 }
+const copyText = () => {
+    const textToCopy = 'Nội dung cần sao chép';
+    // const input = this.$refs.input1; // Truy cập đến phần tử input sử dụng $refs
+    // input.select(); // Chọn toàn bộ nội dung trong input
+    // console.log(input1.value.value);
+    navigator.clipboard.writeText(input1.value.value)
+        .then(() => {
+            console.log('Đã sao chép thành công!');
+        })
+        .catch((error) => {
+            console.error('Lỗi sao chép:', error);
+        });
+}
 </script>
 
 
 <template>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
-
     <Head title="Quản Lý Tài Khoản" />
-
-
-
     <HeaderAdmin>
-
-
         <div class="flex p-2" style="justify-content: space-between;align-items: center;">
             <i class="fas fa-arrow-left text-2xl"></i>
-            <div style="width: 14rem;" class=""><i class="fas fa-users  text-2xl float-left text-white"></i>
+            <div style="width: 14rem;" class="whitespace-nowrap"><i
+                    class="fas fa-users  text-2xl float-left text-white"></i>
                 <p class="text-black text-xl font-bold">Quản lý khách hàng</p>
             </div>
             <div>
+                <div class="relative">
+                    <!-- Button kích hoạt dropdown -->
+                    <button
+                        class="text-white  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        type="button" @click="isOpen1 = !isOpen1" style="background-color: #5ce1e6;">
+                        <i class="fas fa-filter text-2xl"></i>
+                    </button>
 
-                <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" style="background-color: #5ce1e6;"
-                    class="text-white  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    type="button"><i class="fas fa-filter text-2xl"></i></button>
-                <!-- Dropdown menu -->
-                <div id="dropdown"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                    <ul class="p-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                        <li>
-                            <div class="flex items-center mb-4">
-                                <input id="default-checkbox" type="checkbox" value=""
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="default-checkbox"
-                                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Default
-                                    checkbox</label>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="flex items-center mb-4">
-                                <input id="default-checkbox" type="checkbox" value=""
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="default-checkbox"
-                                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Default
-                                    checkbox</label>
-                            </div>
-                        </li>
-                    </ul>
+                    <!-- Nội dung dropdown -->
+                    <div v-if="isOpen1" class="right-0 absolute mt-2 py-2 w-48 bg-white rounded-md shadow-lg">
+                        <div class="flex items-center mb-2 ml-2">
+                            <input id="default-checkbox" type="checkbox" value=""
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="default-checkbox"
+                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Default checkbox</label>
+                        </div>
+                        <div class="flex items-center mb-2 ml-2">
+                            <input id="default-checkbox" type="checkbox" value=""
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="default-checkbox"
+                                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Default checkbox</label>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
         </div>
