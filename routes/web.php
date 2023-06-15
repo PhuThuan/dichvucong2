@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\Service\ServiceController;
+use App\Http\Controllers\Admin\Service\ServiceFieldsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -17,23 +19,6 @@ use Illuminate\Http\Request;
 | contains the "web" middleware group. Now create something great!
 |
 */
-//Test them dich vụ
-Route::get('/filedsvalue', function () {
-    return Inertia::render('FieldsValue');
-});
-Route::get('/fileds', function () {
-    return Inertia::render('FormFields');
-});
-Route::get('/service', function () {
-    return Inertia::render('FormService');
-});
-Route::get('/post', function (Request $request) {
-    dd($request->all());
-})->name('post2');
-
-Route::post('/post2', function (Request $request) {
-    dd($request->all());
-})->name('post3');
 
 ///
 Route::get('/',
@@ -62,7 +47,7 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     Route::get('/manage/customer',function(){
         return Inertia::render('Customer_Management');
     });
-    
+    Route::resource('/service', ServiceController::class)->names(['store'=>'service.store']);
 });
 
 Route::middleware(['auth','verified'])->group(function () {

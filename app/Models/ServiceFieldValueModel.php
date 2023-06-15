@@ -11,7 +11,7 @@ class ServiceFieldValueModel extends Model
     protected $table = 'service_field_value';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'services_fields_id	',
+        'services_fields_id',
         'name',
     ];
 }
