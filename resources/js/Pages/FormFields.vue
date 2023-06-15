@@ -53,7 +53,7 @@ const submit = () => {
 
     const form = useForm(data)
     console.log(form);
-    form.post(route('post3'));
+    form.post('/admin/service_fields');
 
 };
 </script>
