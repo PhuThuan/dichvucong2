@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\User\UserController;
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,7 +17,25 @@ use App\Http\Controllers\User\UserController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+//Test them dich vụ
+Route::get('/filedsvalue', function () {
+    return Inertia::render('FieldsValue');
+});
+Route::get('/fileds', function () {
+    return Inertia::render('FormFields');
+});
+Route::get('/service', function () {
+    return Inertia::render('FormService');
+});
+Route::get('/post', function (Request $request) {
+    dd($request->all());
+})->name('post2');
 
+Route::post('/post2', function (Request $request) {
+    dd($request->all());
+})->name('post3');
+
+///
 Route::get('/',
     // return Inertia::render('Dashboard', [
     //     'canLogin' => Route::has('login'),
