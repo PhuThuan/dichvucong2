@@ -7,6 +7,7 @@ use App\Models\ServicesModel;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Enums\TypeData;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -22,5 +23,19 @@ class UserController extends Controller
     public function contact(){
         
         return Inertia::render('CustomerSupportCenter');
+    }
+    public function showForm(){
+        return ServicesModel::all();
+    }
+
+    public function getDataForm($service_id){
+        $serviceFields = ServicesModel::find($service_id)->servicesFields->get();
+        //dd($serviceFields);
+        foreach($serviceFields as $field){
+            if($field['html_type'] == TypeData::htmlType['radio'] || $field['html_type'] == TypeData::htmlType['checkbox'] || $field['html_type'] == TypeData::htmlType['select']){
+                $field->serviceFieldValue;
+            }
+        }
+        return $serviceFields;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ServiceFieldValueModel extends Model
 {
@@ -14,4 +15,8 @@ class ServiceFieldValueModel extends Model
         'services_fields_id',
         'name',
     ];
+    public function servicesFields() : BelongsTo
+    {
+        return $this->belongsTo(ServicesFieldsModel::class,'services_fields_id','id');
+    }
 }

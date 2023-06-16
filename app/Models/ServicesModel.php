@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ServicesModel extends Model
 {
@@ -17,5 +18,10 @@ class ServicesModel extends Model
         'description',
         'status',      
    ];
+
+    public function servicesFields() : hasOne
+    {
+        return $this->hasOne(ServicesFieldsModel::class,'services_id','id');
+    }
 
 }
