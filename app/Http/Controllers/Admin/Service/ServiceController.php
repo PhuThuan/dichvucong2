@@ -35,7 +35,6 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        //xli 
         
         $dataService = [
             'name' => $request->input('name'),
@@ -47,27 +46,31 @@ class ServiceController extends Controller
         ];
 
         $dataField = $request->input('fields');
+        //result store data about id service_id
         $result = ServicesModel::create($dataService);
 
         
-      //  dd($dataField);
+        //dd($dataField);
         foreach($dataField as $value){
             $data = [
                 'services_id' => $result->id,
                 'field_name' => $value['field_name'],
-                'html_type' => TypeData::htmlType[$value['html_type']],
-                'db_type' => TypeData::dbType[$value['db_type']],
+                'html_type' => $value['html_type'],
+                'db_type' => $value['db_type'],
                 'label' => $value['label'],
                 'validate' => $value['validate'],
                 'placehoder' => $value['placehoder'],
-                'fields_value' =>$value['fields_value'] ?? [],
+                
             ];
-            //1 hang = object
+            //store data array values option
+            $fileds_value = $value['fields_value'] ?? [];
+            //1 row = 1 object
             $dataFieldValue = ServicesFieldsModel::create($data);
-            //dd($data['fields_value']);
-            if($dataFieldValue['html_type'] === TypeData::htmlType['radio']){
-
-                $service_field_value = $data['fields_value'][$data['field_name']];
+            
+            //handle multi type
+            if($dataFieldValue['html_type'] == TypeData::htmlType['radio'] || $dataFieldValue['html_type'] == TypeData::htmlType['checkbox'] || $dataFieldValue['html_type'] == TypeData::htmlType['select']){
+                //get data field_value from FE = array values option, exmaple ['male', 'female]
+                $service_field_value = $fileds_value;
 
                     foreach($service_field_value as $value){
                         $data = [
