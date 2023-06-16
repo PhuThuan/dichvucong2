@@ -180,6 +180,8 @@ const submit = () => {
         fields: dataFields,
     });
     console.log(form);
+    dataFields=[]
+    form.post('post2');
     // form.post('/admin/service');
 
 };
