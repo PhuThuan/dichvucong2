@@ -48,6 +48,8 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
         return Inertia::render('Customer_Management');
     });
     Route::resource('/service', ServiceController::class)->names(['store'=>'service.store']);
+
+    
 });
 
 Route::middleware(['auth','verified'])->group(function () {
