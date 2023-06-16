@@ -15,7 +15,5 @@ class AdminController extends Controller
         return Inertia::render('Admin',['users' => User::all()]);
     }
     
-    public function showForm(){
-        
-    }
+    
 }

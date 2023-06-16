@@ -44,6 +44,7 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     });
     Route::get('/account', [AdminController::class,'getInfo'])->name('admin');
 
+
     Route::get('/manage/customer',function(){
         return Inertia::render('Customer_Management');
     });
@@ -52,8 +53,12 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     
 });
 
-Route::middleware(['auth','verified'])->group(function () {
-    
+Route::prefix('/user')->middleware(['auth','verified'])->group(function () {
+
+    Route::get('/service', [UserController::class,'showForm']);
+
+    Route::get('/service/{id_service}', [UserController::class,'getDataForm']);
+
 });
 
 
