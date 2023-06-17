@@ -68,6 +68,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
+Route::get('/order', function () {
+    return Inertia::render('OrderCreateForm');
+});
 
 require __DIR__.'/auth.php';
