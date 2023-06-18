@@ -9,25 +9,17 @@ import { computed, ref, onMounted } from 'vue';
 const message = ref('')
 const showToast = ref(false)
 const isProcessed = ref(false)
-const data = {
-    name: 'zzz',
-    cccd: '123',
-    phone: '1234'
+const data = ['zzz','123','1234','Cần Thơ']
+const field = ['Họ và tên', 'CCCD', 'Số điện thoại', 'Địa chỉ']
+const service={
+    id:1,
+    name:'Đặt lịch khám bệnh'
 }
 onMounted(() => {
 
 })
-const totalPages = computed(() => {
-    return Math.ceil(totalItems.value / itemsPerPage.value);
-})
-const visiblePages = computed(() => {
-    const startPage = Math.max(1, currentPage.value - 2);
-    const endPage = Math.min(startPage + 2, totalPages.value);
-    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
-})
-const displayData = computed(() => {
-    return listData;
-})
+
+
 const showAndHideToast = (content) => {
     showToast.value = true;
     message.value = content
@@ -61,20 +53,15 @@ const copyText = (id) => {
         </div>
     </HeaderAdmin>
     <div class="font-bold text-base p-3">
-        <div class="flex p-2 items-center">
-            <strong class="mr-2 ">tên</strong>
-            <strong class="mr-2 ">zzz</strong>
-            <i class="fas fa-clone fa-lg" style="color: #b3b4b7;cursor: pointer;" @click="copyText('name')"></i>
+        <div class="flex p-2 items-center " v-for="(i, index) in data">
+            <strong class="mr-2 ">{{ field[index] }}: </strong>
+            <strong class="mr-2 ">{{ i}}</strong>
+            <i class="fas fa-clone fa-lg" style="color: #b3b4b7;cursor: pointer;" @click="copyText(i)"></i>
         </div>
+        
         <div class="flex p-2 items-center">
-            <strong class="mr-2 ">Họ & tên:</strong>
-            <strong class="mr-2 ">zzz</strong>
-            <i class="fas fa-clone fa-lg" style="color: #b3b4b7; cursor: pointer;" @click="copyText('name')"></i>
-        </div>
-        <div class="flex p-2 items-center">
-            <strong class="mr-2 ">CCCD:</strong>
-            <strong class="mr-2 ">098</strong>
-            <i class="fas fa-clone fa-lg" style="color: #b3b4b7;cursor: pointer;" @click="copyText('098')"></i>
+            <strong class="mr-2 ">Dịch vụ đã chọn:</strong>
+            <strong class="mr-2 ">{{ service.name }}</strong>
         </div>
         <div class="flex w-full text-center p-3 mt-2" style="margin: 0 auto;">
             <h6 class="mr-4">Trạng thái: </h6>
@@ -90,14 +77,17 @@ const copyText = (id) => {
             </div>
         </div>
     </div>
-    <div class="flex p-4 text-3xl items-center w-10/12" style="margin: 0 auto;">
+    <div class="flex p-4 text-3xl  w-10/12" style="margin: 0 auto; justify-content: space-between;">
         <i class="far fa-trash-alt fa-lg" style="cursor: pointer;"></i>
+
+        <i class="far fa-edit fa-lg" style="cursor: pointer;"></i>
+    </div>
+    <div class="absolute w-full bottom-2" style="z-index: 99;">
         <div id="toast-simple"
             :style="{ visibility: showToast ? 'visible' : 'hidden', backgroundColor: '#e8e8e8', margin: '0 auto' }"
-            class="flex items-center w-fit p-2  divide-gray-200 rounded-lg " role="alert">
+            class="flex    items-center w-fit p-2  divide-gray-200 rounded-lg " role="alert">
             <div class=" text-sm font-normal whitespace-nowrap">{{ message }}</div>
         </div>
-        <i class="far fa-edit fa-lg" style="cursor: pointer;"></i>
     </div>
 </template>
 <style>
