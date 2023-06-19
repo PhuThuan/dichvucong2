@@ -15,16 +15,26 @@ const props = defineProps({
 // Khởi tạo biến lấy giá trị của đầu vào (input)
 let streetNameInput = ref()
 
+// Khởi tạo biến lưu giá trị tạm cho input 
+let inputData = ref({})
+
 function updateFormData(attribute, value) {
-    // Cập nhật giá trị của trường input trong biến formData của component cha
-    // props.formData[attribute] = value;
-    Object.defineProperty(props.formData, attribute, {
+    // Cập nhật giá trị của trường inputData 
+    Object.defineProperty(inputData.value, attribute, {
         value: value,
         writable: true, // Cho phép ghi đè giá trị thuộc tính
         enumerable: true, // Có thể lặp qua thuộc tính
         configurable: true // Có thể cấu hình lại thuộc tính
     });
-    // console.log(props.formData);
+
+    // Cập nhật dữ liệu vào formData
+    if (inputData.value.city === undefined) {
+        delete props.formData[props.services_fields.field_name]
+    } else {
+        props.formData[props.services_fields.field_name] = inputData.value;
+        props.formData[props.services_fields.field_name].streetName = streetNameInput.value;
+    }
+    console.log(props.formData);
 };
 
 // Kiểm tra fetch dữ liệu

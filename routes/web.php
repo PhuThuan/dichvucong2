@@ -80,5 +80,13 @@ Route::get('/order', function () {
 });
 
 Route::get('/test/customer/{page}/{perPage}', [UserController::class, 'showDataCustomer']);
+Route::get('/get-address', function () {
+    // Lấy địa chỉ từ file trên github
+    // $data = file_get_contents('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
+
+    // Lấy địa chỉ từ File public/datas/addressData.json
+    $json = File::get(public_path('datas/addressData.json'));
+    return response($json)->header('Content-Type', 'application/json');
+});
 
 require __DIR__.'/auth.php';

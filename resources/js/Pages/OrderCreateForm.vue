@@ -13,6 +13,10 @@ import ComboboxInputs from '@/Components/ComboboxInputs.vue';
 
 // Khởi tạo các biến lưu giá trị form
 let formData = ref({})
+const props = defineProps({
+    id_service: Number,
+    services: Array,
+});
 
 // Submit form
 function submitForm() {
@@ -21,19 +25,20 @@ function submitForm() {
     // let form = formData.value;
     let form = useForm(formData.value);
     console.log(form);
-    form.post('/user/service');
+    form.post(`/user/service/${services.id}`);
 }
 
 // Dữ liệu được prop
-let services = {
-    id: 6,
-    name: 'Đặt lịch khám bệnh',
-    model_name: '?',
-    table_name: '',
-    slug: '',
-    descriptions: '',
-    status: 1,
-}
+// let services = {
+//     id: 5,
+//     name: 'Đặt lịch khám bệnh',
+//     model_name: '?',
+//     table_name: '',
+//     slug: '',
+//     descriptions: '',
+//     status: 1,
+// }
+let services = {}
 
 // Dữ liệu lấy từ Database, mảng field input. http://127.0.0.1:8000/user/service/{id_service}
 // let services_fields_array = [
@@ -41,7 +46,7 @@ let services = {
 //         id: 1,
 //         services_id: 1,
 //         field_name: 'name',
-//         html_type: 'text',
+//         html_type: '',
 //         db_type: 1,
 //         label: 'Họ và tên',
 //         validate: 'required',
@@ -51,7 +56,7 @@ let services = {
 //         id: 2,
 //         services_id: 1,
 //         field_name: 'cccd',
-//         html_type: 'text',
+//         html_type: '',
 //         db_type: 1,
 //         label: 'CCCD/CMND',
 //         validate: 'required',
@@ -60,8 +65,8 @@ let services = {
 //     {
 //         id: 3,
 //         services_id: 1,
-//         field_name: 'phone',
-//         html_type: 'text',
+//         field_name: 'sdt',
+//         html_type: '',
 //         db_type: 1,
 //         label: 'Số điện thoại',
 //         validate: 'required',
@@ -71,7 +76,7 @@ let services = {
 //         id: 2,
 //         services_id: 1,
 //         field_name: 'random',
-//         html_type: 'number',
+//         html_type: '',
 //         db_type: 1,
 //         label: 'Ngôn ngữ lập trình',
 //         validate: 'max:200',
@@ -111,7 +116,7 @@ let services = {
 //         id: 4,
 //         services_id: 2,
 //         field_name: 'address',
-//         html_type: 'address',
+//         html_type: 21,
 //         db_type: 1,
 //         label: 'Địa chỉ',
 //         validate: '',
@@ -145,6 +150,11 @@ let isLoading = ref({});
 let services_fields_array = reactive([])
 
 const fetchData = async () => {
+    props.services.forEach((item, index) => {
+        if (props.id_service === item.id) {
+            services = item;
+        }
+    })
     isLoading.value = true;
     try {
         await axios({
@@ -160,6 +170,7 @@ const fetchData = async () => {
             });
             console.log(services_fields_array);
         })
+
     } catch (error) {
         console.error(error);
     }
