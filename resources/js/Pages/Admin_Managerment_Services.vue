@@ -14,7 +14,7 @@ defineProps({ services: Array })
         </Link>
 
         <div class="overflow-x-auto">
-            <div class="min-w-screen min-h-screen">
+            <div class="min-w-screen ">
                 <div class="w-full">
                     <div class="bg-white rounded my-2">
                         <table class="min-w-max w-full table-auto">
@@ -26,7 +26,7 @@ defineProps({ services: Array })
                             </thead>
                             <tbody class="text-gray-600 text-sm font-light">
                                 
-                                <tr class="border-b border-gray-200  hover:bg-gray-100" :class="{'bg-gray-100 hover:bg-gray-100': service.id%2!=0}"  v-for="service in services" :key="service.id">
+                                <tr class="border-b border-gray-200  hover:bg-gray-100" :class="{'bg-gray-100 hover:bg-gray-100': service.id%2==0}"  v-for="service in services" :key="service.id">
                                     <td class="py-3 px-6 text-left whitespace-nowrap">
                                         <div class="flex items-center">
 
