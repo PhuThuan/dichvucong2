@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\ServicesModel;
+use App\Models;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -24,8 +25,15 @@ class UserController extends Controller
         
         return Inertia::render('CustomerSupportCenter');
     }
+
+    public function showDataCustomer($page, $perPage) {
+        $customers =  Models\User::paginate($perPage, ['*'], 'page', $page);
+        return Inertia::render('Customer_Management', ['customers' => $customers]);
+        // return response()->json($customers); test postman
+    }
     public function showService(){
         return ServicesModel::all()->where('avaiable',TypeData::status['enable']);
+
     }
 
     public function getDataForm($service_id){
