@@ -1,7 +1,7 @@
 <script setup>
 import Home_Admin from '@/Components/Home_Admin.vue';
 import { Link } from '@inertiajs/vue3';
-const services = [{id:0 , name:"khám bệnh"},{id:1 , name:"sửa xe"},{id:2,name:"lau nhà"}]
+// const services = [{id:0 , name:"khám bệnh"},{id:1 , name:"sửa xe"},{id:2,name:"lau nhà"}]
 </script>
 <template>
     <Home_Admin>
