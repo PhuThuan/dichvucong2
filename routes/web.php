@@ -49,9 +49,9 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     
 });
 
-Route::prefix('/user')->middleware(['auth','verified'])->group(function () {
+Route::middleware(['auth','verified'])->group(function () {
 
-    Route::get('/service', [UserController::class,'showForm']);
+    Route::get('/service', [UserController::class,'showService']);
 
     Route::get('/service/{id_service}', [UserController::class,'getDataForm']);
 

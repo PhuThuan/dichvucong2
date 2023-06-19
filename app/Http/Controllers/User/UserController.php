@@ -18,17 +18,22 @@ class UserController extends Controller
         return Inertia::render('Dashboard', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'services' => ServicesModel::all()->where('avaiable','1'),
+            'services' => ServicesModel::all()->where('avaiable',TypeData::status['enable']),
         ]);
     }
     public function contact(){
         
         return Inertia::render('CustomerSupportCenter');
     }
+
     public function showDataCustomer($page, $perPage) {
         $customers =  Models\User::paginate($perPage, ['*'], 'page', $page);
         return Inertia::render('Customer_Management', ['customers' => $customers]);
         // return response()->json($customers); test postman
+    }
+    public function showService(){
+        return ServicesModel::all()->where('avaiable',TypeData::status['enable']);
+
     }
 
     public function getDataForm($service_id){
