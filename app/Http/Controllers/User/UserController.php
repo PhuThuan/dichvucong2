@@ -17,15 +17,15 @@ class UserController extends Controller
         return Inertia::render('Dashboard', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'services' => ServicesModel::all()->where('avaiable','1'),
+            'services' => ServicesModel::all()->where('avaiable',TypeData::status['enable']),
         ]);
     }
     public function contact(){
         
         return Inertia::render('CustomerSupportCenter');
     }
-    public function showForm(){
-        return ServicesModel::all();
+    public function showService(){
+        return ServicesModel::all()->where('avaiable',TypeData::status['enable']);
     }
 
     public function getDataForm($service_id){
