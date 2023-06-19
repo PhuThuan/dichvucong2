@@ -7,3 +7,18 @@ body,
 *:not(i) {
     font-family: 'Gill Sans', system-ui, sans-serif;
 }
+/* Compiled dark classes from Tailwind */
+
+
+  /* Custom style */
+  .header-right {
+      width: calc(100% - 3.5rem);
+  }
+  .sidebar:hover {
+      width: 16rem;
+  }
+  @media only screen and (min-width: 768px) {
+      .header-right {
+          width: calc(100% - 16rem);
+      }        
+  }
