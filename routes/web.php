@@ -43,11 +43,7 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
         return Inertia::render('Home_Admin');
     });
     Route::get('/account', [AdminController::class,'getInfo'])->name('admin');
-
-
-    Route::get('/manage/customer',function(){
-        return Inertia::render('Customer_Management');
-    });
+    Route::get('/manage/customer/{page}/{perPage}', [UserController::class, 'showDataCustomer']);
     Route::resource('/service', ServiceController::class)->names(['store'=>'service.store']);
 
     
@@ -71,5 +67,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/order', function () {
     return Inertia::render('OrderCreateForm');
 });
+
+Route::get('/test/customer/{page}/{perPage}', [UserController::class, 'showDataCustomer']);
 
 require __DIR__.'/auth.php';
