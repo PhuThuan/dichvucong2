@@ -18,10 +18,8 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        //
-      $data = ServicesModel::all();
-    
-        return Inertia::render('Admin_Managerment_Services', 'services' = $data);
+        $data = ServicesModel::all();
+        return Inertia::render('Admin_Managerment_Services', ['services' => $data]);
     }
 
     /** 
@@ -107,6 +105,7 @@ class ServiceController extends Controller
     }
 
     public function createModel($data,$model_name,$table_name){
+        
         $migrate_call = '';
         $model_call = '';
         //dd($data);

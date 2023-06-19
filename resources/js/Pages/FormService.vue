@@ -1,6 +1,7 @@
 <script setup>
 
 import HeaderAdmin from '@/Components/HeaderAdmin.vue'
+import Home_Admin from '@/Components/Home_Admin.vue'
 import { ref } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3';
 
@@ -193,14 +194,7 @@ const submit = () => {
 
 <template>
     <Head title="Thêm Dịch Vụ" />
-    <HeaderAdmin>
-        <div class=" p-2" style="">
-            <i class="fas fa-arrow-left text-2xl float-left"></i>
-            <div style="width: 14rem; margin: 0 auto;" class="whitespace-nowrap">
-                <p class="text-black text-xl font-bold pr-0">Thêm dịch vụ</p>
-            </div>
-        </div>
-    </HeaderAdmin>
+    <Home_Admin>
     <form @submit.prevent="submit" class="p-3 w-full">
         <div class="grid gap-6 mb-6 md:grid-cols-2">
             <div>
@@ -343,6 +337,7 @@ const submit = () => {
                 class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center  mr-2 mb-2">Submit</button>
         </div>
     </form>
+</Home_Admin>
 </template>
 
 <style>
