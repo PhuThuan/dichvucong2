@@ -3,6 +3,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import HeaderAdmin from '@/Components/HeaderAdmin.vue'
+import Home_Admin from '@/Components/Home_Admin.vue';
 
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed, ref, onMounted } from 'vue';
@@ -86,7 +87,7 @@ const copyText = () => {
 
 <template>
     <Head title="Quản Lý Tài Khoản" />
-    <HeaderAdmin>
+    <!-- <HeaderAdmin>
         <div class="flex p-2" style="justify-content: space-between;align-items: center;">
             <i class="fas fa-arrow-left text-2xl"></i>
             <div style="width: 14rem;" class="whitespace-nowrap"><i
@@ -95,14 +96,14 @@ const copyText = () => {
             </div>
             <div>
                 <div class="relative">
-                    <!-- Button kích hoạt dropdown -->
+                  
                     <button
                         class="text-white  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         type="button" @click="isOpen1 = !isOpen1" style="background-color: #5ce1e6;">
                         <i class="fas fa-filter text-2xl"></i>
                     </button>
 
-                    <!-- Nội dung dropdown -->
+                   
                     <div v-if="isOpen1" class="right-0 absolute mt-2 py-2 w-48 bg-white rounded-md shadow-lg">
                         <div class="flex items-center mb-2 ml-2">
                             <input id="default-checkbox" type="checkbox" value=""
@@ -122,7 +123,8 @@ const copyText = () => {
             </div>
 
         </div>
-    </HeaderAdmin>
+    </HeaderAdmin> -->
+    <Home_Admin>
     <div style="margin: 0 auto;" class="w-full sm:max-w-lg  px-6 py-4   sm:rounded-lg">
 
         <div class="flex flex-col w-30">
@@ -209,6 +211,7 @@ const copyText = () => {
         </nav>
 
     </div>
+</Home_Admin>
 </template>
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');

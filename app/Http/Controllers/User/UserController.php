@@ -18,7 +18,7 @@ class UserController extends Controller
         return Inertia::render('Dashboard', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'services' => ServicesModel::all()->where('avaiable',TypeData::status['enable']),
+            'services' => ServicesModel::all()->where('status',TypeData::status['enable']),
         ]);
     }
     public function contact(){
@@ -37,6 +37,7 @@ class UserController extends Controller
     }
 
     public function getDataForm($service_id){
+        
         $serviceFields = ServicesModel::find($service_id)->servicesFields->get();
         //dd($serviceFields);
         foreach($serviceFields as $field){

@@ -14,6 +14,10 @@ class AdminController extends Controller
 
         return Inertia::render('Admin',['users' => User::all()]);
     }
+    public function getService(){
+        $data = ServicesModel::all();
+        return Inertia::render('Admin_Managerment_Services', ['services' => $data]);
+    }
     
     
 }

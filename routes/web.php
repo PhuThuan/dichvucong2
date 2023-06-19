@@ -28,8 +28,8 @@ Route::get('/',
     //     'laravelVersion' => Application::VERSION,
     //     'phpVersion' => PHP_VERSION,
     // ]);
-     [UserController::class,'getService']
-)->name('dashboard');
+     [UserController::class,'getService'])->name('dashboard');
+
 Route::get('/contact',[UserController::class,'contact'])->name('contact');;
 
 
@@ -40,16 +40,21 @@ Route::get('/contact',[UserController::class,'contact'])->name('contact');;
 Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->group(function () {
 
     Route::get('/',function(){
-        return Inertia::render('Home_Admin');
+        return Inertia::render('Admin_Home');
     });
     Route::get('/account', [AdminController::class,'getInfo'])->name('admin');
     Route::get('/manage/customer/{page}/{perPage}', [UserController::class, 'showDataCustomer']);
     Route::resource('/service', ServiceController::class)->names(['store'=>'service.store']);
 
+
+    
     
 });
 
-Route::middleware(['auth','verified'])->group(function () {
+Route::prefix('/user')->middleware(['auth','verified'])->group(function () {
+    Route::get('/',function(){
+        return Inertia::render('Home_Admin');
+    });
 
     Route::get('/service', [UserController::class,'showService']);
 
@@ -59,9 +64,13 @@ Route::middleware(['auth','verified'])->group(function () {
 
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
 
 Route::get('/order', function () {
