@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Service;
 
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Controller;
 use App\Models\ServicesModel;
 use Illuminate\Http\Request;
@@ -9,7 +10,7 @@ use Inertia\Inertia;
 use App\Enums\TypeData;
 use App\Models\ServiceFieldValueModel;
 use App\Models\ServicesFieldsModel;
-
+use App\Models;
 class ServiceController extends Controller
 {
     /**
@@ -18,16 +19,17 @@ class ServiceController extends Controller
     public function index()
     {
         //
-
-        return Inertia::render('FormService');
+      $data = ServicesModel::all();
+    
+        return Inertia::render('Admin_Managerment_Services', 'services' = $data);
     }
 
-    /**
+    /** 
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        
+        return Inertia::render('FormService');
     }
 
     /**
@@ -45,47 +47,96 @@ class ServiceController extends Controller
             'status' => $request->input('status'),
         ];
 
-        $dataField = $request->input('fields');
-        //result store data about id service_id
-        $result = ServicesModel::create($dataService);
+        //////////check Model///////////
+        $model_name = $dataService['model_name'];
+        $table_name = $dataService['table_name'];
+        $getFieldData = [];
 
-        
-        //dd($dataField);
-        foreach($dataField as $value){
-            $data = [
-                'services_id' => $result->id,
-                'field_name' => $value['field_name'],
-                'html_type' => $value['html_type'],
-                'db_type' => $value['db_type'],
-                'label' => $value['label'],
-                'validate' => $value['validate'],
-                'placehoder' => $value['placehoder'],
-                
-            ];
-            //store data array values option
-            $fileds_value = $value['fields_value'] ?? [];
-            //1 row = 1 object
-            $dataFieldValue = ServicesFieldsModel::create($data);
+        if($this->checkModelExists($model_name)){
             
-            //handle multi type
-            if($dataFieldValue['html_type'] == TypeData::htmlType['radio'] || $dataFieldValue['html_type'] == TypeData::htmlType['checkbox'] || $dataFieldValue['html_type'] == TypeData::htmlType['select']){
-                //get data field_value from FE = array values option, exmaple ['male', 'female]
-                $service_field_value = $fileds_value;
+            dd($model_name);
 
-                    foreach($service_field_value as $value){
-                        $data = [
-                            'services_fields_id' => $dataFieldValue['id'],
-                            'name' => $value,
-                        ];
-                        ServiceFieldValueModel::create($data);
-                    }
-
-            }
+        }else {
            
-        }
+            //dd($dataField);
+            $dataField = $request->input('fields');
+            //result store data about id service_id
+            $result = ServicesModel::create($dataService);
 
+            foreach($dataField as $value){
+                $data = [
+                    'services_id' => $result->id,
+                    'field_name' => $value['field_name'],
+                    'html_type' => $value['html_type'],
+                    'db_type' => $value['db_type'],
+                    'label' => $value['label'],
+                    'validate' => $value['validate'],
+                    'placehoder' => $value['placehoder'],
+                    
+                ];
+                $temp  = [
+                    'field_name' => $data['field_name'],
+                    'db_type' => $data['db_type'],
+                ];
+                array_push($getFieldData,$temp);
+                
+                //store data array values option
+                $fileds_value = $value['fields_value'] ?? [];
+                //1 row = 1 object
+                $dataFieldValue = ServicesFieldsModel::create($data);
+
+                //handle multi type
+                if($dataFieldValue['html_type'] == TypeData::htmlType['radio'] || $dataFieldValue['html_type'] == TypeData::htmlType['checkbox'] || $dataFieldValue['html_type'] == TypeData::htmlType['select']){
+                    //get data field_value from FE = array values option, exmaple ['male', 'female]
+                    $service_field_value = $fileds_value;
+
+                        foreach($service_field_value as $value){
+                            $data = [
+                                'services_fields_id' => $dataFieldValue['id'],
+                                'name' => $value,
+                            ];
+                            ServiceFieldValueModel::create($data);
+                        }
+
+                }
+            
+            }//end loop
+            //dd($getFieldData);
+            $this->createModel($getFieldData ,$model_name,$table_name);
+        }
     }
 
+    public function createModel($data,$model_name,$table_name){
+        $migrate_call = '';
+        $model_call = '';
+        //dd($data);
+        foreach($data as $value){
+            
+            //dd($value);
+            $migrate_call .= ($value['field_name'] . '#' . TypeData::dbType[$value['db_type']] . ';');
+            $model_call .= ('\'' .$value['field_name']. '\'' . ',' );
+            
+        }
+        //exm php artisan crud:migration posts --schema="title#string; body#text"
+        Artisan::call("crud:migration ".$model_name." --schema=". $migrate_call);
+        //run migrate
+        Artisan::call('migrate');
+        //step 2 call model
+        //exm php artisan crud:model Post --fillable="['title', 'body']"
+        Artisan::call("crud:model ".$model_name." --table=\"$table_name\" --fillable=\"[".$model_call."]\" ");
+        //rename model to Models/
+        rename(app_path($model_name.'.php'),app_path('Models/'.$model_name.'.php'));
+
+    }
+    public function checkModelExists($model_name){
+        
+        if(file_exists(app_path('/Models/'.$model_name.'.php'))){
+            
+            return true;
+
+        }
+        else return false;
+    }
     /**
      * Display the specified resource.
      */
