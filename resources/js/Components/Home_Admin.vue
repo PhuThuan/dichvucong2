@@ -38,7 +38,7 @@ import HeaderAdmin from '@/Components/HeaderAdmin.vue'
           <span class="hidden md:block">ADMIN</span>
         </div>
         <div class="flex justify-between items-center h-14 bg-blue-800  header-right">
-          <div class="bg-white rounded flex items-center w-full max-w-xl mr-4 pl-2 shadow-sm border border-gray-200">
+          <div class="bg-white rounded flex items-center w-full max-w-xl mr-1 pl-2 shadow-sm border border-gray-200">
             <button class="outline-none  border-none">
               <svg class="w-5 text-gray-600 h-5 cursor-pointer" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </button>
@@ -46,17 +46,18 @@ import HeaderAdmin from '@/Components/HeaderAdmin.vue'
           </div>
           <ul class="flex items-center">
             <li>
-                <a href="#" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-blue-800  text-white-600   hover:border-blue-500">
-                <span class="inline-flex justify-center items-center ml-4">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                <a href="#" class="static flex flex-row items-center h-11 focus:outline-none hover:bg-blue-800  text-white-600   hover:border-blue-500">
+                <span class="inline-flex justify-center items-center ml-1 relative">
+                  <svg style="font-size: x-large;" class="w-7 h-7  " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                  <span  style="font-size: x-small;top: -8px;right: -3px;" class="absolute  px-1 py-0.5 ml-auto text-xs font-medium tracking-wide text-red-500 bg-red-50 rounded-full">9+</span>
                 </span>
-                <span class="hidden md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-red-500 bg-red-50 rounded-full">1.2k</span>
+                
               </a>
             </li>
             <li>
-              <Link :href="route('logout')" method="post" class="flex items-center mr-4 hover:text-blue-100">
+              <Link :href="route('logout')" method="post" class="flex items-center mx-2 hover:text-blue-100">
                 <span class="inline-flex mr-1">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                  <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 </span>
                 Logout
               </Link>
@@ -113,7 +114,7 @@ import HeaderAdmin from '@/Components/HeaderAdmin.vue'
               </Link>
             </li>
             <li>
-              <Link href="#" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-blue-800  text-white-600 hover:text-white-800 border-l-4 border-transparent hover:border-blue-500  pr-6">
+              <Link href="/admin/service" class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-blue-800  text-white-600 hover:text-white-800 border-l-4 border-transparent hover:border-blue-500  pr-6">
                 <span class="inline-flex justify-center items-center ml-4">
                   <i class="fas fa-tag  w-5 h-5"></i>
                   <!-- <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg> -->

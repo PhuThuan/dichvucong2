@@ -8,7 +8,7 @@ import { Link } from '@inertiajs/vue3';
     
 
         <div
-            class="w-[18rem] sm:w-full px-6  bg-white shadow-md overflow-hidden sm:rounded-lg rounded-xl" 
+            class="w-[18rem] lg:w-96 sm:w-full px-6  bg-white shadow-md overflow-hidden sm:rounded-lg rounded-xl" 
         >
             <slot />
         </div>
