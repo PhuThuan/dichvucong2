@@ -58,7 +58,9 @@ Route::prefix('/user')->middleware(['auth','verified'])->group(function () {
 
     Route::get('/service', [UserController::class,'showService']);
 
-    Route::get('/service/{id_service}', [UserController::class,'getDataForm']);
+    Route::get('/service/{id_service}', [UserController::class,'getDataForm'])->name('createService');
+
+    Route::post('/service/{id_service}', [UserController::class,'createDataUser']);
 
 });
 

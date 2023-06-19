@@ -10,6 +10,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Enums\TypeData;
 use Inertia\Inertia;
+use App\Models;
 
 class UserController extends Controller
 {
@@ -36,15 +37,35 @@ class UserController extends Controller
 
     }
 
-    public function getDataForm($service_id){
+    public function getDataForm($id_service){
         
-        $serviceFields = ServicesModel::find($service_id)->servicesFields->get();
+        $serviceFields = ServicesModel::find($id_service)->servicesFields->get();
         //dd($serviceFields);
         foreach($serviceFields as $field){
             if($field['html_type'] == TypeData::htmlType['radio'] || $field['html_type'] == TypeData::htmlType['checkbox'] || $field['html_type'] == TypeData::htmlType['select']){
                 $field->serviceFieldValue;
             }
         }
-        return $serviceFields;
+        return Inertia::render('OrderCreateForm',['id'=>$id_service]);
+    }
+
+    public function createDataUser($service_id, Request $request){
+
+        if($model_name =ServicesModel::find($service_id)['model_name']){
+            $data = $request->all();
+
+            $dataConvert = "[";
+            foreach($data as $key => $val){
+                $dataConvert.= "'".$key . "'=>'" . $val ."'" .",";
+            }
+            $dataConvert .= "]";
+    
+            dd($data);
+            return eval("return \\App\\Models\\".$model_name."::create(".$data.");");
+        }else {
+            //return notifi model not found
+        }
+       
+
     }
 }
