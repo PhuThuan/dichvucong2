@@ -13,7 +13,7 @@ defineProps({
     },
 });
 const htmlType = [
-    'text', 'number', 'checkbox', 'email', 'password', 'file', 'radio', 'select', 'submit', 'range', 'tel', 'search', 'reset', 'image', 'time', 'date', 'month', 'week', 'color', 'url', 'hidden'
+    'text', 'number', 'checkbox', 'email', 'password', 'file', 'radio', 'select', 'submit', 'range', 'tel', 'search', 'reset', 'image', 'time', 'date', 'month', 'week', 'color', 'url', 'hidden', 'address'
 ]
 const dbType = [
     'char', 'varchar', 'int', 'bigint', 'decimal', 'float', 'date', 'time', 'datetime', 'boolean', 'text', 'json', 'enum', 'set', 'blob'
@@ -180,7 +180,7 @@ const submit = () => {
         fields: dataFields,
     });
     console.log(form);
-    dataFields=[]
+    dataFields = []
     //form.post('post2');
     form.post('/admin/service');
 
@@ -316,7 +316,7 @@ const submit = () => {
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 </td>
                                 <td class="px-2 py-2 whitespace-nowrap">
-                                    <input type="text" :id="'validate' + item" 
+                                    <input type="text" :id="'validate' + item"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 </td>
                                 <td class="px-2 py-2 whitespace-nowrap">
