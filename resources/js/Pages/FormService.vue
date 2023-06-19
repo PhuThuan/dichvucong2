@@ -64,10 +64,10 @@ const handleSelectChange = (item, id) => {
         const hiddenDiv = document.createElement("tr");
         hiddenDiv.id = 'row_af' + item
 
-        hiddenDiv.style.class = "bg-white border-b dark:bg-gray-900 dark:border-gray-700";
+        hiddenDiv.style.class = "bg-white border-b    ";
         const html = `<td colspan="2" class="px-2 py-2 text-center">Nhập giá trị cho trường</td>
                                 <td colspan="5" class="px-2 py-2 flex whitespace-nowrap w-max" style="align-items:center;flex-wrap: wrap;">
-                                    <button id="${'btn' + item}" type="button" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800  rounded-lg  px-5 py-2.5 text-center mr-2 mb-2"><i class="fas fa-plus fa-lg" ></i></button>
+                                    <button id="${'btn' + item}" type="button" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300    rounded-lg  px-5 py-2.5 text-center mr-2 mb-2"><i class="fas fa-plus fa-lg" ></i></button>
                                     <div id="${'div' + item}" class=" text-sm">
                                         
                                     </div>
@@ -103,7 +103,7 @@ const addItem = (id, name, index) => {
     input.name = name
     const idInput = 'input' + pos.value
     input.id = idInput
-    input.className = "bg-gray-50 border mt-1  mx-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-50 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    input.className = "bg-gray-50 border mt-1  mx-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-50 p-2.5            "
     const divA = document.getElementById(id);
     divA.appendChild(div);
     const myElement = document.getElementById(divID);
@@ -198,52 +198,52 @@ const submit = () => {
     <form @submit.prevent="submit" class="p-3 w-full">
         <div class="grid gap-6 mb-6 md:grid-cols-2">
             <div>
-                <label for="nameService" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên dịch
+                <label for="nameService" class="block mb-2 text-sm font-medium text-gray-900  ">Tên dịch
                     vụ</label>
                 <input type="text" id="nameService" v-model="serviceField.name"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            "
                     placeholder="Nhập tên dịch vụ" required>
             </div>
             <div>
-                <label for="name_model" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên
+                <label for="name_model" class="block mb-2 text-sm font-medium text-gray-900  ">Tên
                     Model</label>
                 <input type="text" id="name_model" v-model="serviceField.model_name"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            "
                     placeholder="Nhập tên Model" required>
             </div>
             <div>
-                <label for="table" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tên Table</label>
+                <label for="table" class="block mb-2 text-sm font-medium text-gray-900  ">Tên Table</label>
                 <input type="text" id="table" v-model="serviceField.table_name"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            "
                     placeholder="Nhập tên bảng dữ liệu" required>
             </div>
             <div>
-                <label for="slug" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Slug</label>
+                <label for="slug" class="block mb-2 text-sm font-medium text-gray-900  ">Slug</label>
                 <input type="text" id="slug" v-model="serviceField.slug"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            "
                     placeholder="Nhập slug" required>
             </div>
             <div>
-                <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mô tả</label>
+                <label for="message" class="block mb-2 text-sm font-medium text-gray-900  ">Mô tả</label>
                 <textarea id="message" rows="4" v-model="serviceField.description"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Nhập mô tả..."></textarea>
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500            "
+                    placeholder="Nhập mô tả..." required></textarea>
             </div>
             <div>
                 <div class="flex align-items">
-                    <label class="mr-3 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Trạng thái:</label>
+                    <label class="mr-3 block mb-2 text-sm font-medium text-gray-900  ">Trạng thái:</label>
                     <div>
                         <input checked id="default-radio-1" type="radio" value="1" name="default-radio"
                             v-model="serviceField.status"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500     focus:ring-2    ">
                         <label for="default-radio-1"
-                            class="mr-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Hiển thị</label>
+                            class="mr-3 ml-2 text-sm font-medium text-gray-900  ">Hiển thị</label>
                     </div>
                     <div>
                         <input id="default-radio-2" type="radio" value="0" name="default-radio"
                             v-model="serviceField.status"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="default-radio-2" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Không
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500     focus:ring-2    ">
+                        <label for="default-radio-2" class="ml-2 text-sm font-medium text-gray-900  ">Không
                             hiển thị</label>
                     </div>
                 </div>
@@ -255,8 +255,8 @@ const submit = () => {
 
             <div class="" style="margin: 0 auto;">
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <table class=" text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <table class=" text-sm text-left text-gray-500  ">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50    ">
                             <tr>
                                 <!-- <th scope="col" class="px-6 py-3  whitespace-nowrap text-center w-fit">
                                     STT
@@ -285,37 +285,37 @@ const submit = () => {
                             </tr>
                         </thead>
                         <tbody v-for="(item, index) in fieldList" :key="item">
-                            <tr :id="'row_f' + item" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                <!-- <th scope="row" class="px-2 py-2  whitespace-nowrap dark:text-white text-center">
+                            <tr :id="'row_f' + item" class="bg-white border-b    ">
+                                <!-- <th scope="row" class="px-2 py-2  whitespace-nowrap   text-center">
                                     {{ index }}
                                 </th> -->
-                                <th scope="row" class="px-2 py-2  whitespace-nowrap dark:text-white">
+                                <th scope="row" class="px-2 py-2  whitespace-nowrap  ">
                                     <input type="text" :id="'name' + item" required
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
                                 </th>
                                 <td class="px-2 py-2 whitespace-nowrap ">
                                     <select :id="'html' + item" @change="handleSelectChange(item, 'html' + item)"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
                                         <option v-for="(i, y) in htmlType" :key="i" :value="y">{{ i }}</option>
                                     </select>
                                 </td>
                                 <td class="px-2 py-2 whitespace-nowrap">
                                     <select :id="'db' + item"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
                                         <option v-for="(i, y) in dbType" :key="i" :value="y">{{ i }}</option>
                                     </select>
                                 </td>
                                 <td class="px-2 py-2 whitespace-nowrap">
                                     <input type="text" :id="'label' + item" required
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
                                 </td>
                                 <td class="px-2 py-2 whitespace-nowrap">
                                     <input type="text" :id="'validate' + item"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
                                 </td>
                                 <td class="px-2 py-2 whitespace-nowrap">
                                     <input type="text" :id="'placehoder' + item"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
                                 </td>
                                 <td class="px-2 py-2 whitespace-nowrap text-center">
                                     <i class="far fa-trash-alt fa-lg" style="color: #ea0b0b; cursor: pointer;"
@@ -328,13 +328,13 @@ const submit = () => {
                     </table>
                 </div>
                 <button @click="addField" type="button"
-                    class="text-white mt-2 bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Thêm
+                    class="text-white mt-2 bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300   font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Thêm
                     trường</button>
             </div>
         </div>
         <div style="justify-content: center;" class="flex">
             <button type="submit"
-                class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center  mr-2 mb-2">Submit</button>
+                class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300   font-medium rounded-lg text-sm px-5 py-2.5 text-center  mr-2 mb-2">Submit</button>
         </div>
     </form>
 </Home_Admin>
