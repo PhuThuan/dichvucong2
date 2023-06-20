@@ -43,7 +43,7 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
         return Inertia::render('Admin_Home');
     });
     Route::get('/account', [AdminController::class,'getInfo'])->name('admin');
-    Route::get('/manage/customer/{page}/{perPage}', [UserController::class, 'showDataCustomer']);
+    Route::get('/manage/customer/{page}/{perPage}', [UserController::class, 'showDataCustomer'])->name("adminService");
     Route::resource('/service', ServiceController::class)->names(['store'=>'service.store']);
 
 
