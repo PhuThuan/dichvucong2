@@ -42,12 +42,12 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     Route::get('/',function(){
         return Inertia::render('Admin_Home');
     });
-    Route::get('/account', [AdminController::class,'getInfo'])->name('admin');
+ //   Route::get('/account', [AdminController::class,'getInfo'])->name('admin');
     Route::get('/manage/customer/{page}/{perPage}', [UserController::class, 'showDataCustomer'])->name("adminService");
     Route::resource('/service', ServiceController::class)->names(['store'=>'service.store']);
 
-
-    
+    Route::get('/test',[AdminController::class, 'getDataUsers']);
+    route::get('/account/{page}',[AdminController::class,'getUserAll']);
     
 });
 

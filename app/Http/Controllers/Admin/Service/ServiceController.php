@@ -52,7 +52,7 @@ class ServiceController extends Controller
 
         if($this->checkModelExists($model_name)){
             
-            dd($model_name);
+           return back()->with('notification','Model đã tồn tại');
 
         }else {
            
@@ -101,6 +101,7 @@ class ServiceController extends Controller
             }//end loop
             //dd($getFieldData);
             $this->createModel($getFieldData ,$model_name,$table_name);
+            return back()->with('notification','Tạo dịch vụ thành công');
         }
     }
 
@@ -109,6 +110,27 @@ class ServiceController extends Controller
         $migrate_call = '';
         $model_call = '';
         //dd($data);
+        $dataRequire = [
+            [
+                'field_name' => 'service_id',
+                'db_type' => TypeData::dbType['int']
+            ],
+            [
+               'field_name' => 'user_id',
+               'db_type' => TypeData::dbType['int']
+
+            ],
+            [
+                'field_name' => 'status',
+                'db_type' => TypeData::dbType['boolean']
+            ]
+        ];
+        //add required data
+        foreach($dataRequire as $value){
+            array_push($data,$value);
+        }
+       
+       // dd($data);
         foreach($data as $value){
             
             //dd($value);
@@ -116,13 +138,16 @@ class ServiceController extends Controller
             $model_call .= ('\'' .$value['field_name']. '\'' . ',' );
             
         }
+        //add required data
+        //$migrate_call .='service_id#'. TypeData::dbType['int'].';user_id#'. TypeData::dbType['int'].';status#'. TypeData::dbType['boolean'];
+        
         //exm php artisan crud:migration posts --schema="title#string; body#text"
         Artisan::call("crud:migration ".$table_name." --schema=". $migrate_call);
         //run migrate
         Artisan::call('migrate');
         //step 2 call model
         //exm php artisan crud:model Post --fillable="['title', 'body']"
-        Artisan::call("crud:model ".$model_name." --table=\"$table_name\" --fillable=\"[".$model_call."]\" ");
+        Artisan::call("crud:model ".$model_name." --relationships=\"user_id\"#hasMany#App\Models\User --table=\"$table_name\" --fillable=\"[".$model_call."]\" ");
         //rename model to Models/
         rename(app_path($model_name.'.php'),app_path('Models/'.$model_name.'.php'));
 
