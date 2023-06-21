@@ -16,7 +16,20 @@ let formData = ref({})
 const props = defineProps({
     id: Number,
     services: Array,
+    notification: String,
 });
+
+// Trạng thái popup thông báo
+let isModalOpen = ref(false);
+
+// Các hàm tắt mở model
+function openModal() {
+    isModalOpen.value = true;
+};
+function closeModal() {
+    // Chuyển hướng đến trang chủ
+    window.location.href = 'http://127.0.0.1:8000/';
+};
 
 // Submit form
 function submitForm() {
@@ -26,123 +39,12 @@ function submitForm() {
     let form = useForm(formData.value);
     console.log(form);
     form.post(`/user/service/${props.id}`);
+    if (props.notification === 'Tạo thành công') {
+        openModal();
+    }
 }
 
-// Dữ liệu được prop
-// let services = {
-//     id: 5,
-//     name: 'Đặt lịch khám bệnh',
-//     model_name: '?',
-//     table_name: '',
-//     slug: '',
-//     descriptions: '',
-//     status: 1,
-// }
 let services = {}
-
-// Dữ liệu lấy từ Database, mảng field input. http://127.0.0.1:8000/user/service/{id_service}
-// let services_fields_array = [
-//     {
-//         id: 1,
-//         services_id: 1,
-//         field_name: 'name',
-//         html_type: '',
-//         db_type: 1,
-//         label: 'Họ và tên',
-//         validate: 'required',
-//         placeholder: 'Nhập họ và tên'
-//     },
-//     {
-//         id: 2,
-//         services_id: 1,
-//         field_name: 'cccd',
-//         html_type: '',
-//         db_type: 1,
-//         label: 'CCCD/CMND',
-//         validate: 'required',
-//         placeholder: 'Nhập CCCD/CMND'
-//     },
-//     {
-//         id: 3,
-//         services_id: 1,
-//         field_name: 'sdt',
-//         html_type: '',
-//         db_type: 1,
-//         label: 'Số điện thoại',
-//         validate: 'required',
-//         placeholder: 'Nhập SĐT'
-//     },
-//     {
-//         id: 2,
-//         services_id: 1,
-//         field_name: 'random',
-//         html_type: '',
-//         db_type: 1,
-//         label: 'Ngôn ngữ lập trình',
-//         validate: 'max:200',
-//         placeholder: 'Nhập một số ngẫu nhiên'
-//     },
-//     {
-//         id: 3,
-//         services_id: 2,
-//         field_name: 'time',
-//         html_type: 'checkbox',
-//         db_type: 1,
-//         label: 'Chọn thời gian muốn vượt qua',
-//         validate: 'required',
-//         placeholder: 'chọn',
-//     },
-//     {
-//         id: 4,
-//         services_id: 2,
-//         field_name: 'test',
-//         html_type: 'radio',
-//         db_type: 1,
-//         label: 'Trắc nghiệm',
-//         validate: '',
-//         placeholder: '',
-//     },
-//     {
-//         id: 1,
-//         services_id: 2,
-//         field_name: 'uploadfile',
-//         html_type: 'file',
-//         db_type: 1,
-//         label: 'Upload File',
-//         validate: '',
-//         placeholder: '',
-//     },
-//     {
-//         id: 4,
-//         services_id: 2,
-//         field_name: 'address',
-//         html_type: 21,
-//         db_type: 1,
-//         label: 'Địa chỉ',
-//         validate: '',
-//         placeholder: 'Chọn địa chỉ'
-//     },
-//     {
-//         id: 1,
-//         services_id: 2,
-//         field_name: 'combobox',
-//         html_type: 'combobox',
-//         db_type: 1,
-//         label: 'Ngôn ngữ lập trình',
-//         validate: '',
-//         placeholder: 'Chọn một',
-//     },
-//     {
-//         id: 5,
-//         services_id: 1,
-//         field_name: 'bhyt',
-//         html_type: 'text',
-//         db_type: 1,
-//         label: 'Bảo hiểm y tế',
-//         validate: 'required',
-//         placeholder: 'Nhập BHYT'
-//     },
-// ]
 
 // Kiểm tra fetch dữ liệu
 let isLoading = ref({});
@@ -150,33 +52,6 @@ let isLoading = ref({});
 let services_fields_array = reactive([])
 
 const fetchData = async () => {
-    // props.services.forEach((item, index) => {
-    //     if (props.id === item.id) {
-    //         services = item;
-    //         console.log(services);
-    //     }
-    // })
-    // console.log(props.services);
-    // isLoading.value = true;
-    // // try {
-    // //     await axios({
-    // //         method: 'get',
-    // //         url: `http://127.0.0.1:8000/user/service/${props.id}`,
-    // //     }).then(function (response) {
-    // //         const tempData = response.data;
-    // //         console.log(tempData);
-    // //         tempData.forEach(element => {
-    // //             if (element.services_id === services.id) {
-    // //                 services_fields_array.push(element);
-    // //             }
-    // //         });
-    // //         console.log(services_fields_array);
-    // //     })
-
-    // // } catch (error) {
-    // //     console.error(error);
-    // // }
-
     console.log(props.services);
     console.log(props.id);
     props.services.forEach(element => {
@@ -187,8 +62,6 @@ const fetchData = async () => {
         console.log(element.services_id);
     });
     isLoading.value = false;
-
-    // services_fields_array = props.services;
     console.log(services_fields_array);
 };
 // Chạy sau khi render
@@ -220,6 +93,27 @@ onMounted(() => {
             qr_code_scanner
         </span>
         </Link>
+    </div>
+
+    <!-- Popup Model  -->
+    <div class="popup-modal">
+        <!-- <button @click="openModal"
+            class="block text-white bg-blue-700 hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            type="button">
+            Toggle modal
+        </button> -->
+
+        <div v-if="isModalOpen" id="popup-modal" tabindex="-1"
+            class="flex flex-wrap content-center justify-center fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="p-[0.5rem] text-center px-[1.5rem] pb-[1.5rem] relative bg-[#d9d9d9] rounded-[1.5rem]">
+                <h3 class="mb-[3rem] text-[1.75rem] font-normal text-[#000000]">{{ notification }}
+                </h3>
+                <button @click="closeModal" data-modal-hide="popup-modal" type="button"
+                    class="text-[#000000] bg-[#37b6ff] hover:bg-[#58b3e8] focus:outline-none font-medium rounded-full text-sm inline-flex items-center px-5 text-center">
+                    Xong
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Form tạo yêu cầu -->
