@@ -14,5 +14,5 @@ import Footer2 from '@/Components/Footer.vue';
                     phường Hưng Thạnh, quận Cái Răng, TP Cần Thơ</span></div>
         </div>
     </div>
-    <Footer2/>
+    <Footer2 class="absolute lg:w-full" />
 </template>
