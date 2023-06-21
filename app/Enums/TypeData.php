@@ -22,6 +22,6 @@ final class TypeData extends Enum
         0=>'char',1=>'varchar',2=>'int',3=>'bigint',4=>'decimal',5=>'float',6=>'date',7=>'time',8=>'datetime',9=>'boolean',10=>'text',11=>'json',12=>'enum',13=>'set',14=>'blob'
     ];
     const status=[
-        'enable'=>1,1=>'enable',0=>'disenable',0=>'disenable',
+        'enable'=>1,1=>'enable',0=>'disable','disable'=>0,
     ];
 }

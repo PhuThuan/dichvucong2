@@ -60,7 +60,7 @@ class UserController extends Controller
 
         if ($model_name = ServicesModel::find($id_service)['model_name']) {
             $data = $request->all();
-            $data['status'] = TypeData::status['enable'];
+            $data['status'] = TypeData::status['disable'];
             $data['user_id'] = Auth::user()->id;
             $data['service_id'] = (int)($id_service);
          
@@ -73,11 +73,12 @@ class UserController extends Controller
 
            // dd($dataConvert);
             eval("return \\App\\Models\\" . $model_name . "::create(" . $dataConvert . ");");
-            return back()->with('notification','Tạo thành công');
+
+            return back()->with('message','thanhco ng');
          //   return to_route('dashboard');
         } else {
             //return notifi model not found
-            return back()->with('notification','không thành công');
+            return Inertia::share('OrderCreateForm',['notification'=>'không thành công']);
         }
     }
 }

@@ -46,7 +46,7 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     Route::get('/manage/customer/{page}/{perPage}', [UserController::class, 'showDataCustomer'])->name("adminService");
     Route::resource('/service', ServiceController::class)->names(['store'=>'service.store']);
 
-    Route::get('/test',[AdminController::class, 'getDataUsers']);
+    Route::get('/listService/{status}/{perPage}',[AdminController::class, 'getDataUsers']);
     route::get('/account/{page}',[AdminController::class,'getUserAll']);
     
 });
