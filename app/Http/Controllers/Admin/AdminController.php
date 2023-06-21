@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\TypeData;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 use App\Models\ServicesModel;
@@ -33,7 +34,7 @@ class AdminController extends Controller
                 $data_model= eval("return \\App\\Models\\" . $model_name . "::all();");
                 //dd($data_model);
                 foreach($data_model as $data){
-                    
+
                     $user= User::find($user_id);
                   
                     array_push($dataResult,[
@@ -47,6 +48,16 @@ class AdminController extends Controller
         }
 
         dd($dataResult);
+    }
+
+    public function getUserAll($page){
+        $users=User::where('role','=',TypeData::roleUser['user'])->paginate(10, ['*'], 'page', $page);
+        $usersCount = User::where('role','=',TypeData::roleUser['user'])->count();
+        $data=  [
+            'users'=> $users,
+            'usersCount'=> $usersCount,
+          ];
+         return Inertia::render('Customer_Management',['data'=>$data,'page'=>$page]);
     }
     
 }
