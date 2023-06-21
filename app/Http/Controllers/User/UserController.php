@@ -10,7 +10,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Enums\TypeData;
 use Inertia\Inertia;
-use App\Models;
+
 
 class UserController extends Controller
 {
@@ -46,12 +46,13 @@ class UserController extends Controller
                 $field->serviceFieldValue;
             }
         }
-        return Inertia::render('OrderCreateForm',['id'=>$id_service]);
+        return Inertia::render('OrderCreateForm',['id'=>$id_service,'services' => $serviceFields]);
     }
 
-    public function createDataUser($service_id, Request $request){
+    public function createDataUser(Request $request){
 
-        if($model_name =ServicesModel::find($service_id)['model_name']){
+        
+        if($model_name =ServicesModel::find(7)['model_name']){
             $data = $request->all();
 
             $dataConvert = "[";
@@ -60,8 +61,8 @@ class UserController extends Controller
             }
             $dataConvert .= "]";
     
-            dd($data);
-            return eval("return \\App\\Models\\".$model_name."::create(".$data.");");
+            //dd($data);
+            return eval("return \\App\\Models\\".$model_name."::create(".$dataConvert.");");
         }else {
             //return notifi model not found
         }

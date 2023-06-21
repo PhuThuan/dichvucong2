@@ -14,7 +14,7 @@ import ComboboxInputs from '@/Components/ComboboxInputs.vue';
 // Khởi tạo các biến lưu giá trị form
 let formData = ref({})
 const props = defineProps({
-    id_service: Number,
+    id: Number,
     services: Array,
 });
 
@@ -150,31 +150,46 @@ let isLoading = ref({});
 let services_fields_array = reactive([])
 
 const fetchData = async () => {
-    props.services.forEach((item, index) => {
-        if (props.id_service === item.id) {
-            services = item;
-        }
-    })
-    isLoading.value = true;
-    try {
-        await axios({
-            method: 'get',
-            url: `http://127.0.0.1:8000/user/service/${services.id}`,
-        }).then(function (response) {
-            const tempData = response.data;
-            console.log(response.data);
-            tempData.forEach(element => {
-                if (element.services_id === services.id) {
-                    services_fields_array.push(element);
-                }
-            });
-            console.log(services_fields_array);
-        })
+    // props.services.forEach((item, index) => {
+    //     if (props.id === item.id) {
+    //         services = item;
+    //         console.log(services);
+    //     }
+    // })
+    // console.log(props.services);
+    // isLoading.value = true;
+    // // try {
+    // //     await axios({
+    // //         method: 'get',
+    // //         url: `http://127.0.0.1:8000/user/service/${props.id}`,
+    // //     }).then(function (response) {
+    // //         const tempData = response.data;
+    // //         console.log(tempData);
+    // //         tempData.forEach(element => {
+    // //             if (element.services_id === services.id) {
+    // //                 services_fields_array.push(element);
+    // //             }
+    // //         });
+    // //         console.log(services_fields_array);
+    // //     })
 
-    } catch (error) {
-        console.error(error);
-    }
+    // // } catch (error) {
+    // //     console.error(error);
+    // // }
+
+    console.log(props.services);
+    console.log(props.id);
+    props.services.forEach(element => {
+        if (element.services_id == props.id) {
+            services_fields_array.push(element);
+            console.log(element);
+        }
+        console.log(element.services_id);
+    });
     isLoading.value = false;
+
+    // services_fields_array = props.services;
+    console.log(services_fields_array);
 };
 // Chạy sau khi render
 onMounted(() => {

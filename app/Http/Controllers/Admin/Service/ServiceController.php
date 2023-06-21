@@ -117,7 +117,7 @@ class ServiceController extends Controller
             
         }
         //exm php artisan crud:migration posts --schema="title#string; body#text"
-        Artisan::call("crud:migration ".$model_name." --schema=". $migrate_call);
+        Artisan::call("crud:migration ".$table_name." --schema=". $migrate_call);
         //run migrate
         Artisan::call('migrate');
         //step 2 call model
