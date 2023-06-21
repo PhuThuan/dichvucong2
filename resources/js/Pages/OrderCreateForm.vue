@@ -25,7 +25,7 @@ function submitForm() {
     // let form = formData.value;
     let form = useForm(formData.value);
     console.log(form);
-    form.post(`/user/service/${services.id}`);
+    form.post(`/user/service/${props.id}`);
 }
 
 // Dữ liệu được prop

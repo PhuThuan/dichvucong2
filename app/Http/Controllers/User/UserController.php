@@ -49,10 +49,10 @@ class UserController extends Controller
         return Inertia::render('OrderCreateForm',['id'=>$id_service,'services' => $serviceFields]);
     }
 
-    public function createDataUser(Request $request){
+    public function createDataUser(Request $request, $id_service){
 
         
-        if($model_name =ServicesModel::find(7)['model_name']){
+        if($model_name =ServicesModel::find($id_service)['model_name']){
             $data = $request->all();
 
             $dataConvert = "[";
