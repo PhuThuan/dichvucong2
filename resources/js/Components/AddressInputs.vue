@@ -1,8 +1,7 @@
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
-import { reactive, computed, onMounted } from 'vue';
-
+import { ref, reactive, computed, onMounted } from 'vue';
+import InputError from '@/Components/InputError.vue';
 const props = defineProps({
     services_fields: {
         type: Object,
@@ -11,12 +10,25 @@ const props = defineProps({
         type: Object,
     },
 });
+const emit = defineEmits(['addressResponse']);
+
+// Chạy sau khi render
+onMounted(() => {
+    emit('addressResponse', {
+        required: (stringToObject.value.required ? true : false)
+    })
+})
 
 // Khởi tạo biến lấy giá trị của đầu vào (input)
 let streetNameInput = ref()
 
 // Khởi tạo biến lưu giá trị tạm cho input 
 let inputData = ref({})
+
+// Khởi tạo biến lưu các giá trị validate
+let validate = ref({
+    errors: {}
+});
 
 function updateFormData(attribute, value) {
     // Cập nhật giá trị của trường inputData 
@@ -33,6 +45,17 @@ function updateFormData(attribute, value) {
     } else {
         props.formData[props.services_fields.field_name] = inputData.value;
         props.formData[props.services_fields.field_name].streetName = streetNameInput.value;
+    }
+
+    validate.value[props.services_fields.field_name] = value;
+    if (validateForm()) {
+        validateForm()
+    } else {
+        delete props.formData[props.services_fields.field_name];
+        if (!stringToObject.value.required) {
+            validate.value[props.services_fields.field_name] = null
+        }
+        validateForm()
     }
     console.log(props.formData);
 };
@@ -131,6 +154,26 @@ const stringToObject = computed(() => {
         return attributes;
     }
 });
+
+// Xác thực address
+const validateForm = () => {
+    let isValid = true;
+
+    if (stringToObject.value.required) {
+        if (!validate.value[props.services_fields.field_name]) {
+            validate.value.errors[props.services_fields.field_name] = `${props.services_fields.label} không được bỏ trống.`;
+            isValid = false;
+        }
+        else {
+            validate.value.errors[props.services_fields.field_name] = '';
+        }
+    }
+    else {
+        validate.value.errors[props.services_fields.field_name] = '';
+    }
+    console.log(stringToObject);
+    return isValid;
+};
 </script>
 
 <template>
