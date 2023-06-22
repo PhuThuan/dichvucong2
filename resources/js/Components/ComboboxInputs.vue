@@ -1,12 +1,26 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import InputError from '@/Components/InputError.vue';
 const props = defineProps({
     services_fields: {
         type: Object,
     },
     formData: {
         type: Object,
-    }
+    },
+});
+const emit = defineEmits(['comboboxResponse']);
+
+// Chạy sau khi render
+onMounted(() => {
+    emit('comboboxResponse', {
+        required: (stringToObject.value?.required ? true : false)
+    })
+})
+
+// Khởi tạo biến lưu các giá trị validate
+let validate = ref({
+    errors: {}
 });
 
 // Dữ liệu lấy từ Database, mảng field input. http://127.0.0.1:8000/user/service/{id_service}
@@ -19,6 +33,19 @@ function updateFormData(attribute, value) {
     // Cập nhật giá trị của trường input trong biến formData của component cha
     if (input !== props.services_fields.placeholder)
         props.formData[props.services_fields.field_name] = `select,${input.value}`;
+
+    //
+    validate.value[props.services_fields.field_name] = value;
+    if (validateForm()) {
+        validateForm()
+    } else {
+        delete props.formData[attribute];
+        if (!stringToObject.value?.required) {
+            validate.value[props.services_fields.field_name] = null
+        }
+        validateForm()
+    }
+    console.log(props.formData);
 };
 
 // computed chuyển đổi chuỗi thành đối tượng
@@ -39,6 +66,27 @@ const stringToObject = computed(() => {
         return attributes;
     }
 });
+
+// Xác thực combobox
+const validateForm = () => {
+    let isValid = true;
+
+    if (stringToObject.value?.required) {
+        if (!validate.value[props.services_fields.field_name]) {
+            validate.value.errors[props.services_fields.field_name] = `${props.services_fields.label} không được bỏ trống.`;
+            isValid = false;
+        }
+        else {
+            validate.value.errors[props.services_fields.field_name] = '';
+        }
+    }
+    else {
+        validate.value.errors[props.services_fields.field_name] = '';
+    }
+    console.log(stringToObject);
+    console.log(validate.value);
+    return isValid;
+};
 </script>
 
 <template>
@@ -52,5 +100,7 @@ const stringToObject = computed(() => {
             <option selected>{{ services_fields?.placeholder }}</option>
             <option :value="value.id" v-for="(value, index) in service_field_value">{{ value.name }}</option>
         </select>
+        <InputError class="mt-2" :message="validate.errors[props.services_fields.field_name]"
+            :required="stringToObject?.required" />
     </div>
 </template>

@@ -10,6 +10,7 @@ import RadioInputs from '@/Components/RadioInputs.vue';
 import FileInputs from '@/Components/FileInputs.vue';
 import AddressInputs from '@/Components/AddressInputs.vue';
 import ComboboxInputs from '@/Components/ComboboxInputs.vue';
+import TelInputs from '@/Components/TelInputs.vue';
 
 // Khởi tạo các biến lưu giá trị form
 let formData = ref({})
@@ -18,6 +19,8 @@ const props = defineProps({
     services: Array,
     notification: String,
 });
+
+const formValidate = ref({})
 
 // Trạng thái popup thông báo
 let isModalOpen = ref(false);
@@ -33,16 +36,39 @@ function closeModal() {
 
 // Submit form
 function submitForm() {
+    let exitFlag = false;
     // Post
     console.log(formData);
-    // let form = formData.value;
-    let form = useForm(formData.value);
-    console.log(form);
-    form.post(`/user/service/${props.id}`);
-    if (props.notification === 'Tạo thành công') {
-        openModal();
+    console.log(formValidate.value);
+
+    // Nếu có field chưa hợp lệ thì sữa exitFlad
+    services_fields_array.forEach(element => {
+        console.log(formData.value[element.field_name]);
+        if (formValidate.value[element.field_name]?.required) {
+            if (!formData.value[element.field_name]) {
+                exitFlag = true;
+                return;
+            }
+        }
+        // Chuyển đối tượng thành json 
+        if (typeof (formData.value[element.field_name])) {
+            formData.value[element.field_name] = JSON.stringify(formData.value[element.field_name])
+            alert(formData.value[element.field_name])
+        }
+    });
+
+    if (exitFlag) {
+        return; // Thoát khỏi hàm nếu có trường field không hợp lệ
+    } else {
+        console.log(formData);
+        console.log(formValidate.value);
+        let form = useForm(formData.value);
+        console.log(form);
+        form.post(`/user/service/${props.id}`);
+        if (props.notification === 'Tạo thành công') {
+            openModal();
+        }
     }
-    console.log('notification'+props.flash.message);
 }
 
 let services = {}
@@ -69,8 +95,8 @@ const fetchData = async () => {
 onMounted(() => {
     fetchData();
 })
-
 </script>
+
 <template>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -79,7 +105,7 @@ onMounted(() => {
     <HeaderCustomer />
 
     <!-- sub header -->
-    <div
+    <nav
         class="flex text-center font-semibold flex-wrap content-center bg-[#37b6ff] justify-between border-[#000000] border-2">
         <Link href="/" class="flex content-center flex-wrap">
         <span class="material-symbols-outlined ml-[4px]" style="font-size: 3rem;">
@@ -94,16 +120,10 @@ onMounted(() => {
             qr_code_scanner
         </span>
         </Link>
-    </div>
+    </nav>
 
     <!-- Popup Model  -->
     <div class="popup-modal">
-        <!-- <button @click="openModal"
-            class="block text-white bg-blue-700 hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            type="button">
-            Toggle modal
-        </button> -->
-
         <div v-if="isModalOpen" id="popup-modal" tabindex="-1"
             class="flex flex-wrap content-center justify-center fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div class="p-[0.5rem] text-center px-[1.5rem] pb-[1.5rem] relative bg-[#d9d9d9] rounded-[1.5rem]">
@@ -118,20 +138,29 @@ onMounted(() => {
     </div>
 
     <!-- Form tạo yêu cầu -->
-    <form @submit.prevent="submitForm" class="px-[2rem] py-[.2rem] text-[1rem]" enctype="multipart/form-data">
-        <!-- Tạo input  -->
+    <form class="px-[2rem] py-[.2rem] text-[1rem]" enctype="multipart/form-data">
+        <!-- Tạo input tự động  -->
         <div class="m-[.0rem]" v-for="item in services_fields_array">
-            <TextInputs :services_fields="item" :formData="formData" v-if="item.html_type === 0" />
-            <NumberInputs :services_fields="item" :formData="formData" v-if="item.html_type === 1" />
-            <CheckboxInputs :services_fields="item" :formData="formData" v-if="item.html_type === 2" />
-            <RadioInputs :services_fields="item" :formData="formData" v-if="item.html_type === 6" />
-            <FileInputs :services_fields="item" :formData="formData" v-if="item.html_type === 5" />
-            <AddressInputs :services_fields="item" :formData="formData" v-if="item.html_type === 21" />
-            <ComboboxInputs :services_fields="item" :formData="formData" v-if="item.html_type === 7" />
+            <TextInputs :services_fields="item" :formData="formData" v-if="item.html_type === 0"
+                @textResponse="(data) => formValidate[item.field_name] = data" />
+            <NumberInputs :services_fields="item" :formData="formData" v-if="item.html_type === 1"
+                @numberResponse="(data) => formValidate[item.field_name] = data" />
+            <CheckboxInputs :services_fields="item" :formData="formData" v-if="item.html_type === 2"
+                @checkboxResponse="(data) => formValidate[item.field_name] = data" />
+            <RadioInputs :services_fields="item" :formData="formData" v-if="item.html_type === 6"
+                @radioResponse="(data) => formValidate[item.field_name] = data" />
+            <FileInputs :services_fields="item" :formData="formData" v-if="item.html_type === 5"
+                @fileResponse="(data) => formValidate[item.field_name] = data" />
+            <AddressInputs :services_fields="item" :formData="formData" v-if="item.html_type === 21"
+                @addressResponse="(data) => formValidate[item.field_name] = data" />
+            <ComboboxInputs :services_fields="item" :formData="formData" v-if="item.html_type === 7"
+                @comboboxResponse="(data) => formValidate[item.field_name] = data" />
+            <TelInputs :services_fields="item" :formData="formData" v-if="item.html_type === 10"
+                @telResponse="(data) => formValidate[item.field_name] = data" />
         </div>
 
         <div class="mx-[.0rem] mt-[.5rem]">
-            <button @click="submitForm" class="rounded-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium px-5 py-2.5 
+            <button @click="submitForm" type="button" class="rounded-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium px-5 py-2.5 
             text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full">
                 Gửi</button>
         </div>

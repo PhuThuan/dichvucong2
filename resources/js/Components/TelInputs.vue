@@ -7,13 +7,13 @@ const props = defineProps({
     },
     formData: {
         type: Object,
-    }
+    },
 });
-const emit = defineEmits(['textResponse']);
+const emit = defineEmits(['telResponse']);
 
 // Chạy sau khi render
 onMounted(() => {
-    emit('textResponse', {
+    emit('telResponse', {
         required: (stringToObject.value.required ? true : false)
     })
 })
@@ -67,13 +67,19 @@ const stringToObject = computed(() => {
     }
 });
 
-// Xác thực text
+// Xác thực số điện thoại
 const validateForm = () => {
     let isValid = true;
 
+    // Validate phone
+    const phoneRegex = /^(0|\\+?84)(3[2-9]|5[689]|7[06789]|8[1-5]|9[014689])[0-9]{7}$/;
     if (stringToObject.value.required) {
         if (!validate.value[props.services_fields.field_name]) {
-            validate.value.errors[props.services_fields.field_name] = `${props.services_fields.label} không được bỏ trống.`;
+            validate.value.errors[props.services_fields.field_name] = 'Số điện thoại không được bỏ trống.';
+            isValid = false;
+        }
+        else if (!phoneRegex.test(validate.value[props.services_fields.field_name]) && validate.value[props.services_fields.field_name]) {
+            validate.value.errors[props.services_fields.field_name] = 'Số điện thoại không đúng.';
             isValid = false;
         }
         else {
@@ -81,7 +87,16 @@ const validateForm = () => {
         }
     }
     else {
-        validate.value.errors[props.services_fields.field_name] = '';
+        if (!validate.value[props.services_fields.field_name]) {
+            validate.value.errors[props.services_fields.field_name] = '';
+        }
+        else if (!phoneRegex.test(validate.value[props.services_fields.field_name]) && validate.value[props.services_fields.field_name]) {
+            validate.value.errors[props.services_fields.field_name] = 'Số điện thoại không đúng.';
+            isValid = false;
+        }
+        else {
+            validate.value.errors[props.services_fields.field_name] = '';
+        }
     }
     console.log(stringToObject);
     return isValid;
@@ -94,10 +109,11 @@ const validateForm = () => {
         }}:
             <span v-if="stringToObject?.required">*</span>
         </label>
-        <input v-model="input" type="text" :id="services_fields.field_name" class="text-sm shadow-sm bg-gray-50 
+        <input v-model="input" :id="services_fields.field_name" class="text-sm shadow-sm bg-gray-50 
         border border-gray-300 text-gray-900 rounded-[9999px] 
-            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " :="stringToObject"
-            :placeholder="services_fields.placeholder" @input="updateFormData(services_fields.field_name, input)" />
+            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " type="tel" autocomplete="tel"
+            pattern="^(0|\\+?84)(3[2-9]|5[689]|7[06789]|8[1-5]|9[014689])[0-9]{7}$" title="" :="stringToObject"
+            :placeholder="services_fields.placeholder" @input="updateFormData(services_fields.field_name, input)">
         <InputError class="mt-2" :message="validate.errors[props.services_fields.field_name]"
             :required="stringToObject?.required" />
     </div>

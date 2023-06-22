@@ -1,5 +1,6 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import InputError from '@/Components/InputError.vue';
 const props = defineProps({
     services_fields: {
         type: Object,
@@ -8,19 +9,42 @@ const props = defineProps({
         type: Object,
     }
 });
+const emit = defineEmits(['fileResponse']);
+
+// Chạy sau khi render
+onMounted(() => {
+    emit('fileResponse', {
+        required: (stringToObject.value.required ? true : false)
+    })
+})
 
 // Khởi tạo biến lấy giá trị của đầu vào (input)
 let input = ref({})
 
+// Khởi tạo biến lưu các giá trị validate
+let validate = ref({
+    errors: {}
+});
+
 function updateFormData(attribute, value) {
     // Cập nhật giá trị của trường input trong biến formData của component cha
     // props.formData[attribute] = value;
-    Object.defineProperty(props.formData, attribute, {
-        value: value,
-        writable: true, // Cho phép ghi đè giá trị thuộc tính
-        enumerable: true, // Có thể lặp qua thuộc tính
-        configurable: true // Có thể cấu hình lại thuộc tính
-    });
+    validate.value[props.services_fields.field_name] = value;
+    if (validateForm()) {
+        Object.defineProperty(props.formData, attribute, {
+            value: value,
+            writable: true, // Cho phép ghi đè giá trị thuộc tính
+            enumerable: true, // Có thể lặp qua thuộc tính
+            configurable: true // Có thể cấu hình lại thuộc tính
+        });
+        validateForm()
+    } else {
+        delete props.formData[attribute];
+        if (!stringToObject.value.required) {
+            validate.value[props.services_fields.field_name] = null
+        }
+        validateForm()
+    }
     console.log(props.formData);
 };
 
@@ -40,12 +64,32 @@ const stringToObject = computed(() => {
     });
     return attributes;
 });
+
+// Xác thực file
+const validateForm = () => {
+    let isValid = true;
+
+    if (stringToObject.value.required) {
+        if (!validate.value[props.services_fields.field_name]) {
+            validate.value.errors[props.services_fields.field_name] = `${props.services_fields.label} không được bỏ trống.`;
+            isValid = false;
+        }
+        else {
+            validate.value.errors[props.services_fields.field_name] = '';
+        }
+    }
+    else {
+        validate.value.errors[props.services_fields.field_name] = '';
+    }
+    console.log(stringToObject);
+    return isValid;
+};
 </script>
 
 <template>
     <div class="flex flex-wrap items-center">
         <label :for="services_fields.field_name" class="block font-medium text-gray-900">{{
-            services_fields.field_name }} <span v-if="stringToObject.required">*</span>
+            services_fields.field_name }}: <span v-if="stringToObject.required">*</span>
         </label>
         <input v-on="input" type="file" :id="services_fields.field_name" class="
         text-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 block w-full cursor-pointer 
@@ -54,5 +98,7 @@ const stringToObject = computed(() => {
             :placeholder="services_fields.placeholder" :="stringToObject"
             accept="image/png, image/jpeg, .doc, .docx, .pdf, .pptx"
             @input="updateFormData(services_fields.field_name, input)" />
+        <InputError class="mt-2" :message="validate.errors[props.services_fields.field_name]"
+            :required="stringToObject?.required" />
     </div>
 </template>
