@@ -198,7 +198,7 @@ const submit = () => {
     console.log(form);
     dataFields = []
     //form.post('post2');
-    // form.post('/admin/service');
+    form.post('/admin/service');
 
 };
 
