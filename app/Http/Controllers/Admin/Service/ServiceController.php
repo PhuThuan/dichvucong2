@@ -8,6 +8,7 @@ use App\Models\ServicesModel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Enums\TypeData;
+use App\Http\Requests\FormServiceRequest;
 use App\Models\ServiceFieldValueModel;
 use App\Models\ServicesFieldsModel;
 use App\Models;
@@ -33,9 +34,9 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(FormServiceRequest $request)
     {
-        
+      // dd($request->all());
         $dataService = [
             'name' => $request->input('name'),
             'model_name' => $request->input('model_name'),

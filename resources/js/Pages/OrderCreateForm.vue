@@ -42,6 +42,7 @@ function submitForm() {
     if (props.notification === 'Tạo thành công') {
         openModal();
     }
+    console.log('notification'+props.flash.message);
 }
 
 let services = {}

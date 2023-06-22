@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Enums\TypeData;
+use App\Models\ServicesFieldsModel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 
@@ -56,11 +58,20 @@ class UserController extends Controller
 
     public function createDataUser(Request $request, $id_service)
     {
-
-
+        $table_name = ServicesFieldsModel::where('services_id',$id_service)->get();
+        $dataResult= [];
+        foreach($table_name as $dataService){
+            $dataResult=[
+               $dataService['field_name'] => $dataService['validate'],
+            ];
+        }
+        $request->validate([
+            $dataResult
+            
+        ]);
         if ($model_name = ServicesModel::find($id_service)['model_name']) {
             $data = $request->all();
-            $data['status'] = TypeData::status['enable'];
+            $data['status'] = TypeData::status['disable'];
             $data['user_id'] = Auth::user()->id;
             $data['service_id'] = (int)($id_service);
          
@@ -73,11 +84,12 @@ class UserController extends Controller
 
            // dd($dataConvert);
             eval("return \\App\\Models\\" . $model_name . "::create(" . $dataConvert . ");");
-            return back()->with('notification','Tạo thành công');
+
+            return back()->with('message','thanhco ng');
          //   return to_route('dashboard');
         } else {
             //return notifi model not found
-            return back()->with('notification','không thành công');
+            return Inertia::share('OrderCreateForm',['notification'=>'không thành công']);
         }
     }
 }

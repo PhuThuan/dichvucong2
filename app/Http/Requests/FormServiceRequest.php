@@ -22,7 +22,12 @@ class FormServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            
+            "name" => ['required', 'string'],
+            "model_name" => ['required', 'string'],
+            "table_name" => ['required', 'string'],
+            "slug" => ['required', 'string'],
+            "description" => ['required', 'string'],
+            "status" => ['required', 'string'],
         ];
     }
 }
