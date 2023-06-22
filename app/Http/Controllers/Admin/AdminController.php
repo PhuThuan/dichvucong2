@@ -30,6 +30,7 @@ class AdminController extends Controller
 
         $dataServices = ServicesModel::all();
         $dataResult= [];
+        $data_count=0;
       //  dd($dataService);
         foreach($dataServices as $dataService){
                 $model_name= $dataService['model_name'];
@@ -37,12 +38,15 @@ class AdminController extends Controller
                 // data type array
                 if($status == 1){
                     $data_model= eval("return   \\App\\Models\\" . $model_name . "::where('status',".$status.")->orderBy('created_at','desc')->get();");
+                    $data_count= eval("return   \\App\\Models\\" . $model_name . "::where('status',".$status.")->count();");
                 }else  if($status == 2){
                     $data_model= eval("return \\App\\Models\\" . $model_name . "::all();");
+                    $data_count= eval("return \\App\\Models\\" . $model_name . "::count();");
                 }else {
                     $data_model= eval("return \\App\\Models\\" . $model_name . "::all()->where('status',".$status.");");
+                    $data_count= eval("return \\App\\Models\\" . $model_name . "::where('status',".$status.")->count();");
                 }
-               
+              
                 //get status == disable
                 //$data_model::where('status',TypeData::status['disable']);
                 //dd($data_model);  
@@ -54,16 +58,19 @@ class AdminController extends Controller
                         'phone' =>  $user['phone'],
                         'created_at' =>Carbon::parse($data['created_at'])->toDateTimeString() ,
                         'service_name' => $dataService['name'],
-                        'service_id'=> $dataService['id'].'/'.$data['id'],
+                        'service_id'=> $dataService['id'],
+                        'form_id'=>$data['id'],
                         'status'=> $data['status'],
+                        'count' => $data_count,
 
                     ]);
                 }
                 
         }
-
+        
         dd($this->arrayPaginate($items=$dataResult,$perPage=10));
-
+   
+// return  Inertia::render('',[''=>$data_count,''=> $data_All]);
     }
     public function  arrayPaginate ($items, $perPage = 5, $page = null, $options = [])
     {
@@ -119,7 +126,7 @@ class AdminController extends Controller
         
         $model_name= $dataService['model_name'];
         $data_model= eval("return \\App\\Models\\" . $model_name . "::find(".$id.");"); 
-        
+
         //convert to array
         $data_model = $data_model->toArray();
         
@@ -131,7 +138,7 @@ class AdminController extends Controller
 
     public function explodeFieldValue($data){
         
-        $dataResult = [];
+        
         foreach($data as $key => $value){
             if(explode(',',$value)[0] == 'radio' || explode(',',$value)[0] == 'checkbox' || explode(',',$value)[0] == 'select'){
                 $id = explode(',',$value);
