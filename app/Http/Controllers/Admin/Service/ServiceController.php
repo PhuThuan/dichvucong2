@@ -36,7 +36,7 @@ class ServiceController extends Controller
      */
     public function store(FormServiceRequest $request)
     {
-       dd($request->all());
+      // dd($request->all());
         $dataService = [
             'name' => $request->input('name'),
             'model_name' => $request->input('model_name'),
