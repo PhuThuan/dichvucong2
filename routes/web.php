@@ -51,6 +51,7 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     route::get('/notification',[AdminController::class,'notification'])->name('adminNoti');
     route::get('/order/detail/{service_id}/{id}',[AdminController::class,'oderDetail'])->name('orderdetail');
     route::get('/user/detail/{id}');
+    route::get('/user/{user_id}/service',[AdminController::class,'getUserService']);
 });
 
 Route::prefix('/user')->middleware(['auth','verified'])->group(function () {

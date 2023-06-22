@@ -58,15 +58,18 @@ class UserController extends Controller
 
     public function createDataUser(Request $request, $id_service)
     {
-        $table_name = ServicesFieldsModel::where('services_id',$id_service)->get();
-        $dataResult= [];
+        $table_name=ServicesFieldsModel::get()->where('services_id',$id_service);
+        
+        $datatempt='';
         foreach($table_name as $dataService){
-            $dataResult=[
-               $dataService['field_name'] => $dataService['validate'],
-            ];
+            
+           $datatempt.='"'. $dataService['field_name'].'"' .'=>'. '"'.$dataService['validate']. '",';
+            
         }
+       
+       
         $request->validate([
-            $dataResult
+            $datatempt
             
         ]);
         if ($model_name = ServicesModel::find($id_service)['model_name']) {
