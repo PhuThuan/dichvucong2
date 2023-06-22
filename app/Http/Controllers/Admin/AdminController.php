@@ -6,6 +6,7 @@ use App\Enums\TypeData;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceFieldValueModel;
+use App\Models\ServicesFieldsModel;
 use App\Models\ServicesModel;
 
 use Illuminate\Http\Request;
@@ -113,16 +114,21 @@ class AdminController extends Controller
                         'id' =>$data['id'],
                         'status'=> $data['status'],
                         'ho_va_ten'=>$data['ho_va_ten']?? '???',
+                        
                     ]);
                 }
                 
         }
-        //data
+        dd($dataResult);
         return Inertia::render('NotiAdmin',['noti' => $dataResult]);
     }
 
     public function oderDetail($service_id,$id){
         $dataService = ServicesModel::find($service_id);
+        $dataLabel = [];
+        
+        //array
+        $dataServiceField = ServicesFieldsModel::where('services_id',$service_id)->get();
         
         $model_name= $dataService['model_name'];
         $data_model= eval("return \\App\\Models\\" . $model_name . "::find(".$id.");"); 
@@ -132,22 +138,34 @@ class AdminController extends Controller
         
         //check multi-value and convert
         $data_model = $this->explodeFieldValue($data_model);
+        //$data_model['label'] = $dataLabel;
+        if(isset($dataServiceField)){
 
+            foreach($dataServiceField as $value){
+                $dataLabel +=[$value['field_name'] => $value['label']];
+                
+            }
+        }else {
+            return;
+        }
+        $data_model['label'] = $dataLabel;
+        $data_model['service_name'] = $dataService['name'];
         dd($data_model); 
     }
 
     public function explodeFieldValue($data){
         
-        
+        $dataField = [];
         foreach($data as $key => $value){
             if(explode(',',$value)[0] == 'radio' || explode(',',$value)[0] == 'checkbox' || explode(',',$value)[0] == 'select'){
                 $id = explode(',',$value);
                 unset($id[0]);
                 //dd($id);
                 //get value form id field
-                $dataField = [];
+                
                 foreach($id as $field){
-                    array_push($dataField,ServiceFieldValueModel::find($field)['name']);
+                    $field_name = ServiceFieldValueModel::find($field)['name'];
+                    $dataField +=[$field_name => $field_name];
                 }
                 $data[$key] = $dataField;
             }
