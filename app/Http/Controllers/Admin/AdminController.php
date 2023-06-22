@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\TypeData;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
+use App\Models\ServiceFieldValueModel;
 use App\Models\ServicesModel;
 
 use Illuminate\Http\Request;
@@ -111,5 +112,41 @@ class AdminController extends Controller
         }
         //data
         dd($dataResult);
+    }
+
+    public function oderDetail($service_id,$id){
+        $dataService = ServicesModel::find($service_id);
+        
+        $model_name= $dataService['model_name'];
+        $data_model= eval("return \\App\\Models\\" . $model_name . "::find(".$id.");"); 
+        
+        //convert to array
+        $data_model = $data_model->toArray();
+        
+        //check multi-value and convert
+        $data_model = $this->explodeFieldValue($data_model);
+
+        dd($data_model); 
+    }
+
+    public function explodeFieldValue($data){
+        
+        $dataResult = [];
+        foreach($data as $key => $value){
+            if(explode(',',$value)[0] == 'radio' || explode(',',$value)[0] == 'checkbox' || explode(',',$value)[0] == 'select'){
+                $id = explode(',',$value);
+                unset($id[0]);
+                //dd($id);
+                //get value form id field
+                $dataField = [];
+                foreach($id as $field){
+                    array_push($dataField,ServiceFieldValueModel::find($field)['name']);
+                }
+                $data[$key] = $dataField;
+            }
+        }
+        //dd($data);
+        return $data;
+        
     }
 }

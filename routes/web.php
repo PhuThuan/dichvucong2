@@ -49,6 +49,7 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     Route::get('/listService/{status}/{perPage}',[AdminController::class, 'getDataUsers']);
     route::get('/account/{page}',[AdminController::class,'getUserAll']);
     route::get('/notification',[AdminController::class,'notification'])->name('adminNoti');
+    route::get('/orderdetail/{service_id}/{id}',[AdminController::class,'oderDetail']);
 });
 
 Route::prefix('/user')->middleware(['auth','verified'])->group(function () {
