@@ -1,71 +1,111 @@
 <script setup>
 
 import Home_Admin from '@/Components/Home_Admin.vue';
-
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { computed, ref, onMounted } from 'vue';
-var data = [{ id: '09879979', time: '23/2/2023', service: 'a' },
-{ id: '09879979', time: '23/2/2023', service: 'Đặt lịch khám bệnh' },
-{ id: '09879979', time: '23/2/2023', service: 'b' },
-{ id: '09879979', time: '23/2/2023', service: 'b' },
-{ id: '09879979', time: '23/2/2023', service: 'c' },]
-var currentPage = ref(1)
-var itemsPerPage = ref(2)
-var totalItems = ref(data.length)
-var listData = ref([])
-const isOpen1 = ref(false)
-const input1 = ref(null)
-onMounted(() => {
-    // input1.value.focus()
-    input1.value = 'sadsd'
-})
-const totalPages = computed(() => {
-    return Math.ceil(totalItems.value / itemsPerPage.value);
-})
-const visiblePages = computed(() => {
-    const startPage = Math.max(1, currentPage.value - 2);
-    const endPage = Math.min(startPage + 2, totalPages.value);
-    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
-})
-const displayData = computed(() => {
-    return listData;
-})
-onMounted(() => {
-    for (let i = 1; i <= itemsPerPage.value; i++) {
-        listData.value.push(data[i - 1])
+
+import { router } from '@inertiajs/vue3';
+import { computed, ref, onMounted, onUnmounted } from 'vue';
+// var data = [{ id: '09879979', time: '23/2/2023', service: 'a' },
+// { id: '09879979', time: '23/2/2023', service: 'Đặt lịch khám bệnh' },
+// { id: '09879979', time: '23/2/2023', service: 'b' },
+// { id: '09879979', time: '23/2/2023', service: 'b' },
+// { id: '09879979', time: '23/2/2023', service: 'c' },]
+// var currentPage = ref(1)
+// defineProps({ data: Array,page:Number })
+const props = defineProps({
+    data: Array,
+    page: Number
+});
+var itemsPerPage = ref(10)
+// var totalItems = ref(data.length)
+var listPage = ref([])
+const total = ref()
+var page = Number(props.page)
+const totalPages = () => {
+    total.value = Math.ceil(props.data.usersCount / itemsPerPage.value)
+    return Math.ceil(props.data.usersCount / itemsPerPage.value);
+}
+const visiblePages = () => {
+    // const startPage = Math.max(1, currentPage.value - 2);
+    // const endPage = Math.min(startPage + 2, totalPages.value);
+    // return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+
+    if (page == 1) {
+        listPage.value.push(page)
+        console.log(listPage.value);
+        for (let i = 1; i < total.value; i++) {
+            const sum = page + i
+            console.log(sum);
+            if (sum < total.value) {
+                listPage.value.push(sum)
+                console.log(listPage.value);
+            }
+            if (sum == total.value) {
+                break
+            }
+        }
     }
+    else if (page == total.value) {
+
+        for (let i = 2; i > 0; i--) {
+            if (page - i != 0) {
+                listPage.value.push(page - i)
+
+            }
+        }
+        listPage.value.push(page)
+    }
+    else {
+
+        listPage.value.push(page - 1)
+        listPage.value.push(page)
+        listPage.value.push(page + 1)
+    }
+    // return listPage.value
+}
+
+
+onMounted(() => {
+    totalPages()
+    visiblePages()
 })
 const goToPage = (page) => {
     // Xử lý khi người dùng chọn trang
-    listData.value = []
-    currentPage.value = page;
-    for (let i = page * 2 - 1; i <= page * 2; i++) {
-        if (i > data.length) {
-            break;
-        }
-        listData.value.push(data[i - 1])
-        console.log(listData)
-    }
-    displayData
+    // listData.value = []
+    // currentPage.value = page;
+    // for (let i = page * 2 - 1; i <= page * 2; i++) {
+    //     if (i > data.length) {
+    //         break;
+    //     }
+    //     listData.value.push(data[i - 1])
+    //     console.log(listData)
+    // }
+    // displayData
+    router.get(`/admin/account/${page}`)
+    // this.$router.push('/admin/account/2');
+    // window.location.href = `/admin/account/2`;
+    // route('/account/1')
     // Gọi API hoặc thực hiện các tác vụ liên quan đến dữ liệu của trang mới
     // Ví dụ: this.fetchData(page);
 }
 const previousPage = () => {
-    if (currentPage.value > 1) {
-        currentPage.value--;
-        goToPage(currentPage.value)
+    if (page > 1) {
+        page--;
+        goToPage(page)
         // Gọi API hoặc thực hiện các tác vụ liên quan đến dữ liệu của trang mới
         // Ví dụ: this.fetchData(this.currentPage);
     }
 }
 const nextPage = () => {
-    if (currentPage.value < totalPages.value) {
-        currentPage.value++;
-        goToPage(currentPage.value)
+    // console.log(page+' '+to);
+    if (page < total.value) {
+        page++;
+        goToPage(page)
         // Gọi API hoặc thực hiện các tác vụ liên quan đến dữ liệu của trang mới
         // Ví dụ: this.fetchData(this.currentPage);
     }
 }
+
 
 </script>
 
@@ -73,28 +113,7 @@ const nextPage = () => {
 <template>
     <Head title="Quản Lý Tài Khoản" />
     <Home_Admin>
-        <div class="relative">
-                  
-                  <button
-                      class="text-white  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      type="button" @click="isOpen1 = !isOpen1" style="color: black;">
-                      <i class="fas fa-filter text-2xl"></i>
-                  </button>
-                  <div v-if="isOpen1" class="left-0 absolute mt-2 py-2 w-48 bg-white rounded-md shadow-lg">
-                      <div class="flex items-center mb-2 ml-2">
-                          <input id="default-checkbox" type="checkbox" value=""
-                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                          <label for="default-checkbox"
-                              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Default checkbox</label>
-                      </div>
-                      <div class="flex items-center mb-2 ml-2">
-                          <input id="default-checkbox" type="checkbox" value=""
-                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                          <label for="default-checkbox"
-                              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Default checkbox</label>
-                      </div>
-                  </div>
-              </div>
+        <h3>Tổng số lượng tài khoản: {{ props.data.usersCount }}</h3>
         <div class="overflow-x-auto">
             <div class="min-w-screen ">
                 <div class="w-full">
@@ -104,26 +123,22 @@ const nextPage = () => {
                                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                                     <th class="py-3 px-6 text-left">Tài khoản</th>
                                     <th class="py-3 px-6 text-left">Thời gian truy cập</th>
-                                    <th class="py-3 px-6 text-left">Dịch vụ</th>
                                     <th class="w-max "> </th>
                                 </tr>
                             </thead>
                             <!-- :class="{ 'bg-gray-100 hover:bg-gray-100': service.id % 2 != 0 }" -->
                             <tbody class="text-gray-600 text-sm font-light">
-                                <tr class="border-b border-gray-200  hover:bg-gray-100" v-for="(item, index) in listData" :key="index">
+                                <tr class="border-b border-gray-200  hover:bg-gray-100"
+                                    v-for="(item, index) in props.data.users.data" :key="index">
                                     <td class="py-3 px-6 text-left whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <span class="font-medium">{{ item.id }}</span>
+                                            <span class="font-medium">{{ item.phone }}</span>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-left whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <span class="font-medium">{{ item.time }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-3 px-6 text-left whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <span class="font-medium">{{ item.service }}</span>
+                                            <span class="font-medium">{{ item.updated_at
+                                            }}</span>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 ">
@@ -143,42 +158,42 @@ const nextPage = () => {
             </div>
         </div>
         <nav aria-label="Page navigation example ">
-                <ul class="list-style-none w-full md:w-auto flex mt-2 " style="flex-wrap: nowrap;justify-content: center;">
-                    <li>
-                        <button @click="goToPage(1)" :disabled="currentPage === 1"
-                            class="px-3 py-1 bg-gray-200 rounded-l hover:bg-gray-400 focus:outline-none">
-                            First
-                        </button>
-                    </li>
-                    <li>
-                        <button @click="previousPage" :disabled="currentPage === 1"
-                            class="px-3 py-1 bg-gray-200 hover:bg-gray-400 focus:outline-none">
-                            Previous
-                        </button>
-                    </li>
-                    <li v-for="page in visiblePages" :key="page">
-                        <button @click="goToPage(page)" :class="{
-                            'px-3 py-1 bg-gray-200 hover:bg-gray-400 focus:outline-none': true,
-                            'font-bold': currentPage === page
-                        }">
-                            {{ page }}
-                        </button>
-                    </li>
-                    <li>
-                        <button @click="nextPage" :disabled="currentPage === totalPages"
-                            class="px-3 py-1 bg-gray-200 hover:bg-gray-400 focus:outline-none">
-                            Next
-                        </button>
-                    </li>
-                    <li>
-                        <button @click="goToPage(totalPages)" :disabled="currentPage === totalPages"
-                            class="px-3 py-1 bg-gray-200 rounded-r hover:bg-gray-400 focus:outline-none">
-                            Last
-                        </button>
-                    </li>
-                </ul>
-            </nav>
-        
+            <ul class="list-style-none w-full md:w-auto flex mt-2 " style="flex-wrap: nowrap;justify-content: center;">
+                <li>
+                    <button @click="goToPage(1)" :disabled="props.page == 1"
+                        class="px-3 py-1 bg-gray-200 rounded-l hover:bg-gray-400 focus:outline-none">
+                        First
+                    </button>
+                </li>
+                <li>
+                    <button @click="previousPage" :disabled="props.page == 1"
+                        class="px-3 py-1 bg-gray-200 hover:bg-gray-400 focus:outline-none">
+                        Previous
+                    </button>
+                </li>
+                <li v-for="page in listPage" :key="page">
+                    <button @click="goToPage(page)" :class="{
+                        'px-3 py-1 bg-gray-200 hover:bg-gray-400 focus:outline-none': true,
+                        'font-bold': props.page == page
+                    }">
+                        {{ page }}
+                    </button>
+                </li>
+                <li>
+                    <button @click="nextPage" :disabled="props.page == totalPages"
+                        class="px-3 py-1 bg-gray-200 hover:bg-gray-400 focus:outline-none">
+                        Next
+                    </button>
+                </li>
+                <li>
+                    <button @click="goToPage(totalPages())" :disabled="props.page == totalPages"
+                        class="px-3 py-1 bg-gray-200 rounded-r hover:bg-gray-400 focus:outline-none">
+                        Last
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
     </Home_Admin>
 </template>
 <style>
