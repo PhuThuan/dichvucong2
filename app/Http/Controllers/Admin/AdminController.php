@@ -155,14 +155,14 @@ class AdminController extends Controller
 
     public function explodeFieldValue($data){
         
-        $dataField = [];
+        // $dataField = [];
         foreach($data as $key => $value){
             if(explode(',',$value)[0] == 'radio' || explode(',',$value)[0] == 'checkbox' || explode(',',$value)[0] == 'select'){
                 $id = explode(',',$value);
                 unset($id[0]);
                 //dd($id);
                 //get value form id field
-                
+                $dataField = [];
                 foreach($id as $field){
                     $field_name = ServiceFieldValueModel::find($field)['name'];
                     $dataField +=[$field_name => $field_name];
