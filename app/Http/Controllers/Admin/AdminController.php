@@ -37,7 +37,7 @@ class AdminController extends Controller
 
                 // data type array
                 if($status == 1){
-                    $data_model= eval("return   \\App\\Models\\" . $model_name . "::where('status',".$status.")->orderBy('created_at','desc')->get();");
+                    $data_model= eval("return   \\App\\Models\\" . $model_name . "::where('status',".$status.")->get();");
                     $data_count= eval("return   \\App\\Models\\" . $model_name . "::where('status',".$status.")->count();");
                 }else  if($status == 2){
                     $data_model= eval("return \\App\\Models\\" . $model_name . "::all();");
@@ -68,7 +68,7 @@ class AdminController extends Controller
                 
         }
         
-        dd($this->arrayPaginate($items=$dataResult,$perPage=10));
+        dd($dataResult);
    
 // return  Inertia::render('',[''=>$data_count,''=> $data_All]);
     }
