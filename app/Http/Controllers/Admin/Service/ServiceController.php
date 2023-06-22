@@ -70,7 +70,7 @@ class ServiceController extends Controller
                     'db_type' => $value['db_type'],
                     'label' => $value['label'],
                     'validate' => $value['validate'],
-                    'placehoder' => $value['placehoder'],
+                    'placeholder' => $value['placehoder'],
                     
                 ];
                 $temp  = [
