@@ -118,7 +118,7 @@ class AdminController extends Controller
                 
         }
         //data
-        dd($dataResult);
+        return Inertia::render('NotiAdmin',['noti' => $dataResult]);
     }
 
     public function oderDetail($service_id,$id){
@@ -154,6 +154,35 @@ class AdminController extends Controller
         }
         //dd($data);
         return $data;
+        
+    }
+
+    public function getUserService($user_id){
+        $user = User::find($user_id);
+        $services = ServicesModel::all();
+        $dataService = [];
+        foreach($services as $service){
+            $model_name = $service['model_name'];
+            //get service user used
+            $data_model = eval("return \\App\\Models\\" . $model_name . "::all()->where('user_id',".$user_id.");"); 
+            //dd($data_model);
+            
+            if(isset($data_model)){
+                
+                foreach($data_model as $value){
+                    array_push($dataService,[ 'created_at' =>Carbon::parse($value['created_at'])->toDateTimeString() ,
+                                            'service_id' => $service['id'], 
+                                            'service_name' => $service['name']]);
+                }
+            }
+        }
+
+        $dataResult = [
+            'phone' => $user['phone'],
+            'service' => $dataService,
+
+        ];
+        return Inertia::render('ProfileCustomer',['data' =>$dataResult]);
         
     }
 }
