@@ -109,7 +109,7 @@ class AdminController extends Controller
                 }
                 
         }
-
+        //data
         dd($dataResult);
     }
 }
