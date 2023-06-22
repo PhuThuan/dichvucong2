@@ -79,5 +79,37 @@ class AdminController extends Controller
           ];
          return Inertia::render('Customer_Management',['data'=>$data,'page'=>$page]);
     }
-    
+    public function notification(){
+        $dataServices = ServicesModel::all();
+        $dataResult= [];
+      //  dd($dataService);
+        foreach($dataServices as $dataService){
+                $model_name= $dataService['model_name'];
+
+                // data type array
+              
+                    $data_model= eval("return \\App\\Models\\" . $model_name . "::all()->where('status','0');");
+               
+                //get status == disable
+                //$data_model::where('status',TypeData::status['disable']);
+                //dd($data_model);  
+                foreach($data_model as $data){
+
+                    $user= User::find($data['user_id']);
+                  
+                    array_push($dataResult,[
+                        'phone' =>  $user['phone'],
+                        'created_at' =>$data['created_at'],
+                        'service_name' => $dataService['name'],
+                        'service_id'=> $dataService['id'],
+                        'id' =>$data['id'],
+                        'status'=> $data['status'],
+                        'ho_va_ten'=>$data['ho_va_ten']?? '???',
+                    ]);
+                }
+                
+        }
+
+        dd($dataResult);
+    }
 }
