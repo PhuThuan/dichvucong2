@@ -129,7 +129,7 @@ onMounted(() => {
                 <h3 class="mb-[3rem] text-[1.75rem] font-normal text-[#000000]">{{ message }}
                 </h3>
 
-                <Link :href="route('/')"
+                <Link href="/"
                     class="text-[#000000] bg-[#37b6ff] hover:bg-[#58b3e8] focus:outline-none font-medium rounded-full text-sm inline-flex items-center px-5 text-center">
                 Xong
                 </Link>
