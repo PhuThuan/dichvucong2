@@ -53,7 +53,7 @@ class ServiceController extends Controller
 
         if($this->checkModelExists($model_name)){
             
-           return back()->with('notification','Model đã tồn tại');
+            return Inertia::render('FormService',['message'=>'Thêm dịch vụ thất bại']);
 
         }else {
            
@@ -102,7 +102,7 @@ class ServiceController extends Controller
             }//end loop
             //dd($getFieldData);
             $this->createModel($getFieldData ,$model_name,$table_name);
-            return back()->with('notification','Tạo dịch vụ thành công');
+            return Inertia::render('FormService',['message'=>'Thêm dịch vụ thành công']);
         }
     }
 
