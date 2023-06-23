@@ -17,10 +17,12 @@ let formData = ref({})
 const props = defineProps({
     id: Number,
     services: Array,
-    notification: String,
+    message: String,
 });
 
 const formValidate = ref({})
+
+let submitClicked = ref(false);
 
 // Trạng thái popup thông báo
 let isModalOpen = ref(false);
@@ -29,45 +31,42 @@ let isModalOpen = ref(false);
 function openModal() {
     isModalOpen.value = true;
 };
-function closeModal() {
-    // Chuyển hướng đến trang chủ
-    window.location.href = 'http://127.0.0.1:8000/';
-};
 
 // Submit form
-function submitForm() {
+async function submitForm() {
     let exitFlag = false;
     // Post
-    console.log(formData);
-    console.log(formValidate.value);
+    console.log('Form Data');
+    console.log(formData.value);
+    // console.log(formValidate.value);
+
+    // Kích hoạt sự kiện ở thành phần con
+    submitClicked.value = true;
 
     // Nếu có field chưa hợp lệ thì sữa exitFlad
     services_fields_array.forEach(element => {
-        console.log(formData.value[element.field_name]);
+        // console.log(formData.value[element.field_name]);
         if (formValidate.value[element.field_name]?.required) {
             if (!formData.value[element.field_name]) {
                 exitFlag = true;
                 return;
             }
         }
-        // Chuyển đối tượng thành json 
-        if (typeof (formData.value[element.field_name])) {
-            formData.value[element.field_name] = JSON.stringify(formData.value[element.field_name])
-            alert(formData.value[element.field_name])
-        }
     });
 
     if (exitFlag) {
         return; // Thoát khỏi hàm nếu có trường field không hợp lệ
     } else {
-        console.log(formData);
-        console.log(formValidate.value);
         let form = useForm(formData.value);
-        console.log(form);
-        form.post(`/user/service/${props.id}`);
-        if (props.notification === 'Tạo thành công') {
-            openModal();
-        }
+        // console.log(form);
+        form.post(`/user/service/${props.id}`, {
+            onSuccess: () => {
+                // Gui form thanh cong
+                if (props.message === 'Tạo thành công') {
+                    openModal();
+                }
+            }
+        })
     }
 }
 
@@ -79,17 +78,17 @@ let isLoading = ref({});
 let services_fields_array = reactive([])
 
 const fetchData = async () => {
-    console.log(props.services);
-    console.log(props.id);
+    // console.log(props.services);
+    // console.log(props.id);
     props.services.forEach(element => {
         if (element.services_id == props.id) {
             services_fields_array.push(element);
-            console.log(element);
+            // console.log(element);
         }
-        console.log(element.services_id);
+        // console.log(element.services_id);
     });
     isLoading.value = false;
-    console.log(services_fields_array);
+    // console.log(services_fields_array);
 };
 // Chạy sau khi render
 onMounted(() => {
@@ -127,12 +126,13 @@ onMounted(() => {
         <div v-if="isModalOpen" id="popup-modal" tabindex="-1"
             class="flex flex-wrap content-center justify-center fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div class="p-[0.5rem] text-center px-[1.5rem] pb-[1.5rem] relative bg-[#d9d9d9] rounded-[1.5rem]">
-                <h3 class="mb-[3rem] text-[1.75rem] font-normal text-[#000000]">{{ notification }}
+                <h3 class="mb-[3rem] text-[1.75rem] font-normal text-[#000000]">{{ message }}
                 </h3>
-                <button @click="closeModal" data-modal-hide="popup-modal" type="button"
+
+                <Link :href="route('/')"
                     class="text-[#000000] bg-[#37b6ff] hover:bg-[#58b3e8] focus:outline-none font-medium rounded-full text-sm inline-flex items-center px-5 text-center">
-                    Xong
-                </button>
+                Xong
+                </Link>
             </div>
         </div>
     </div>
@@ -141,21 +141,21 @@ onMounted(() => {
     <form class="px-[2rem] py-[.2rem] text-[1rem]" enctype="multipart/form-data">
         <!-- Tạo input tự động  -->
         <div class="m-[.0rem]" v-for="item in services_fields_array">
-            <TextInputs :services_fields="item" :formData="formData" v-if="item.html_type === 0"
+            <TextInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 0"
                 @textResponse="(data) => formValidate[item.field_name] = data" />
-            <NumberInputs :services_fields="item" :formData="formData" v-if="item.html_type === 1"
+            <NumberInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 1"
                 @numberResponse="(data) => formValidate[item.field_name] = data" />
-            <CheckboxInputs :services_fields="item" :formData="formData" v-if="item.html_type === 2"
+            <CheckboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 2"
                 @checkboxResponse="(data) => formValidate[item.field_name] = data" />
-            <RadioInputs :services_fields="item" :formData="formData" v-if="item.html_type === 6"
+            <RadioInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 6"
                 @radioResponse="(data) => formValidate[item.field_name] = data" />
-            <FileInputs :services_fields="item" :formData="formData" v-if="item.html_type === 5"
+            <FileInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 5"
                 @fileResponse="(data) => formValidate[item.field_name] = data" />
-            <AddressInputs :services_fields="item" :formData="formData" v-if="item.html_type === 21"
+            <AddressInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 21"
                 @addressResponse="(data) => formValidate[item.field_name] = data" />
-            <ComboboxInputs :services_fields="item" :formData="formData" v-if="item.html_type === 7"
+            <ComboboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 7"
                 @comboboxResponse="(data) => formValidate[item.field_name] = data" />
-            <TelInputs :services_fields="item" :formData="formData" v-if="item.html_type === 10"
+            <TelInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 10"
                 @telResponse="(data) => formValidate[item.field_name] = data" />
         </div>
 

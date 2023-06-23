@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref, onMounted, onUpdated } from 'vue';
 import InputError from '@/Components/InputError.vue';
 const props = defineProps({
     services_fields: {
@@ -8,8 +8,15 @@ const props = defineProps({
     formData: {
         type: Object,
     },
+    submitClicked: {
+        type: Boolean,
+    }
 });
 const emit = defineEmits(['comboboxResponse']);
+
+onUpdated(() => {
+    eventSubmit();
+})
 
 // Chạy sau khi render
 onMounted(() => {
@@ -22,6 +29,12 @@ onMounted(() => {
 let validate = ref({
     errors: {}
 });
+
+function eventSubmit() {
+    if (props.submitClicked) {
+        updateFormData(props.services_fields.field_name.value, input)
+    }
+}
 
 // Dữ liệu lấy từ Database, mảng field input. http://127.0.0.1:8000/user/service/{id_service}
 let service_field_value = ref(props.services_fields.service_field_value)
@@ -45,7 +58,12 @@ function updateFormData(attribute, value) {
         }
         validateForm()
     }
-    console.log(props.formData);
+    delete props.formData['undefined'];
+    // Xoá dữ liệu từ formData nếu input value rỗng
+    // console.log(props.formData[props.services_fields.field_name]);
+    if (props.formData[props.services_fields.field_name] === `select,${props.services_fields?.placeholder}`)
+        delete props.formData[props.services_fields.field_name];
+    // console.log(props.formData);
 };
 
 // computed chuyển đổi chuỗi thành đối tượng
@@ -72,7 +90,7 @@ const validateForm = () => {
     let isValid = true;
 
     if (stringToObject.value?.required) {
-        if (!validate.value[props.services_fields.field_name]) {
+        if ((props.formData[props.services_fields.field_name] === `select,${props.services_fields?.placeholder}`) || !props.formData[props.services_fields.field_name]) {
             validate.value.errors[props.services_fields.field_name] = `${props.services_fields.label} không được bỏ trống.`;
             isValid = false;
         }
@@ -83,19 +101,18 @@ const validateForm = () => {
     else {
         validate.value.errors[props.services_fields.field_name] = '';
     }
-    console.log(stringToObject);
-    console.log(validate.value);
+    // console.log(stringToObject);
+    // console.log(validate.value);
     return isValid;
 };
 </script>
 
 <template>
     <div class="">
-        <label class="block font-medium text-gray-900">{{ services_fields.label }}: <span
-                v-if="stringToObject?.required">*</span></label>
+        <label class="block font-medium text-gray-900">{{ services_fields.label }}: <span class="text-[#fb4762]" v-if="stringToObject?.required">*</span></label>
         <select v-model="input" class="text-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-[9999px] focus:ring-blue-500 
                 focus:border-blue-500 block w-full p-2.5" :aria-label="services_fields.label"
-            :placeholder="services_fields.placeholder" :="stringToObject"
+            :placeholder="services_fields?.placeholder" :="stringToObject"
             @change="updateFormData(services_fields.field_name, input)">
             <option selected>{{ services_fields?.placeholder }}</option>
             <option :value="value.id" v-for="(value, index) in service_field_value">{{ value.name }}</option>

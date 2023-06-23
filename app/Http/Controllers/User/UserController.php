@@ -87,12 +87,11 @@ class UserController extends Controller
 
            // dd($dataConvert);
             eval("return \\App\\Models\\" . $model_name . "::create(" . $dataConvert . ");");
-
-            return back()->with('message','thanhco ng');
+            return Inertia::render('OrderCreateForm',['message'=>'Tạo thành công']);
          //   return to_route('dashboard');
         } else {
             //return notifi model not found
-            return Inertia::share('OrderCreateForm',['notification'=>'không thành công']);
+            return Inertia::render('OrderCreateForm',['message'=>'Không thành công']);
         }
     }
 }
