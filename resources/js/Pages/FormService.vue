@@ -50,7 +50,7 @@ const handleSelectChange = (item, id) => {
         hiddenDiv.style.class = "bg-white border-b    ";
         const html = `<td colspan="2" class="px-2 py-2 text-center">Nhập giá trị cho trường</td>
                                 <td colspan="5" class="px-2 py-2 flex whitespace-nowrap w-max" style="align-items:center;flex-wrap: wrap;">
-                                    <button id="${'btn' + item}" type="button" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300    rounded-lg  px-5 py-2.5 text-center mr-2 mb-2"><i class="fas fa-plus fa-lg" ></i></button>
+                                    <button id="${'btn' + item}" type="button" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300    rounded-lg  px-2.5 py-2 text-center mr-2 mb-2"><i class="fas fa-plus fa-lg" ></i></button>
                                     <div id="${'div' + item}" class=" text-sm">
                                         
                                     </div>
