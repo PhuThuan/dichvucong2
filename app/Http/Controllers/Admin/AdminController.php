@@ -73,6 +73,7 @@ class AdminController extends Controller
         // dd($dataResult);
         return Inertia::render('Admin_RequestsManagement', ['data' => $dataResult, 'status' => $status]);
     }
+    
     public function  arrayPaginate($items, $perPage = 5, $page = null, $options = [])
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
