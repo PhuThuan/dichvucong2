@@ -133,7 +133,7 @@ const nextPage = () => {
 
                 <template #content>
                     <div class="px-2">
-                        <Link href="/admin/listService/2">
+                        <Link href="/admin/service/list/2">
                         <div class="flex items-center mb-2 ">
                             <input id="default-radio-1" type="radio" value="2" name="default-radio"
                                 :checked="props.status == 2"
@@ -141,7 +141,7 @@ const nextPage = () => {
                             <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Tất cả</label>
                         </div>
                         </Link>
-                        <Link href="/admin/listService/0">
+                        <Link href="/admin/service/list/0">
                         <div class="flex items-center mb-2 ">
                             <input id="default-radio-1" type="radio" value="0" name="default-radio"
                                 :checked="props.status == 0"
@@ -149,7 +149,7 @@ const nextPage = () => {
                             <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Chưa xử lý</label>
                         </div>
                         </Link>
-                        <Link href="/admin/listService/1">
+                        <Link href="/admin/service/list/1">
                         <div class="flex items-center mb-2 ">
                             <input id="default-radio-1" type="radio" value="1" name="default-radio"
                                 :checked="props.status == 1"
