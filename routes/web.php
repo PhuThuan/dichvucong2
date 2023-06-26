@@ -88,11 +88,6 @@ Route::middleware('auth')->group(function () {
 
 });
 
-Route::get('/order', function () {
-    return Inertia::render('OrderCreateForm');
-});
-
-Route::get('/test/customer/{page}/{perPage}', [UserController::class, 'showDataCustomer']);
 Route::get('/get-address', function () {
     // Lấy địa chỉ từ file trên github
     // $data = file_get_contents('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
