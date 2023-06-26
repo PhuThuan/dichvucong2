@@ -190,14 +190,17 @@ class AdminController extends Controller
             $data_model = eval("return \\App\\Models\\" . $model_name . "::all()->where('user_id'," . $user_id . ");");
             //dd($data_model);
 
+
             if (isset($data_model)) {
 
                 foreach ($data_model as $value) {
                     array_push($dataService, [
+                        'id' => $value['id'],
                         'created_at' => Carbon::parse($value['created_at'])->toDateTimeString(),
                         'service_id' => $service['id'],
                         'service_name' => $service['name']
                     ]);
+
                 }
             }
         }
