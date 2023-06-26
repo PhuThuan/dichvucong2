@@ -2,7 +2,7 @@
 
 import Home_Admin from '@/Components/Home_Admin.vue'
 import { ref } from 'vue'
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     message: String
@@ -168,16 +168,16 @@ const submit = () => {
     dataFields = []
     //form.post('post2');
     form.post('/admin/service', {
-            onSuccess: () => {
-                // Gui form thanh cong
-                if (props.message) {
-                    openModal();
-                }
+        onSuccess: () => {
+            // Gui form thanh cong
+            if (props.message) {
+                openModal();
             }
-        });
+        }
+    });
 
 };
-const isModalOpen=ref(false)
+const isModalOpen = ref(false)
 function openModal() {
     isModalOpen.value = true;
 };
@@ -188,12 +188,16 @@ function openModal() {
 <template>
     <Head title="Thêm Dịch Vụ" />
     <Home_Admin>
-        <div v-if="props.message">{{ props.message }}</div>
-        <!-- <button @click="x=true">x</button> -->
-        <div v-if="isModalOpen"  class="fixed inset-0 flex items-center justify-center text-center bg-black bg-opacity-50" style="z-index: 99;">
+        <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center text-center bg-black bg-opacity-50"
+            style="z-index: 99;">
             <div class="bg-white p-4 rounded shadow">
                 <h2 class="text-lg font-bold mb-2">{{ props.message }}</h2>
-                <button @click="isModalOpen=false" class="bg-red-500 text-white py-2 px-4 rounded mt-4">Đóng</button>
+                <Link href="/admin/service" v-if="props.message == 'Thêm dịch vụ thành công'">
+                <button class="bg-red-500 text-white py-2 px-4 rounded mt-4">Đóng</button>
+                </Link>
+                <button @click="isModalOpen = false" v-else
+                    class="bg-red-500 text-white py-2 px-4 rounded mt-4">Đóng</button>
+
             </div>
         </div>
         <form @submit.prevent="submit" class="p-3 w-full">
@@ -294,8 +298,8 @@ function openModal() {
                                     </th>
                                     <td class="px-2 py-2 whitespace-nowrap ">
                                         <select id="name_html" @change="handleSelectChange(item, 'html' + item)" disabled
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
-                                            <option v-for="(i, y) in htmlType" :key="i" :value="y">{{ i }}</option>
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">0,1,2,5,6,7,10,21
+                                            <option v-for="(i, y) in htmlType" :key="i" :value="y">{{ i }} </option>
                                         </select>
                                     </td>
                                     <td class="px-2 py-2 whitespace-nowrap">
@@ -334,7 +338,12 @@ function openModal() {
                                     <td class="px-2 py-2 whitespace-nowrap ">
                                         <select :id="'html' + item" @change="handleSelectChange(item, 'html' + item)"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
-                                            <option v-for="(i, y) in htmlType" :key="i" :value="y">{{ i }}</option>
+                                            <template v-for="(i, y) in htmlType" :key="i">
+                                                <option :value="i"
+                                                    v-if="y === 0 || y === 1 || y === 2 || y === 5 || y === 6 || y === 7 || y === 10 || y === 21">
+                                                    {{ i }}</option>
+                                            </template>
+
                                         </select>
                                     </td>
                                     <td class="px-2 py-2 whitespace-nowrap">
@@ -388,5 +397,4 @@ function openModal() {
 
 .component.show {
     opacity: 1;
-}
-</style>
+}</style>
