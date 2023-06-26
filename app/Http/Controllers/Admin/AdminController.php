@@ -212,4 +212,17 @@ class AdminController extends Controller
         ];
         return Inertia::render('ProfileCustomerAdmin', ['data' => $dataResult]);
     }
+    public function notihead(){
+        $dataServices = ServicesModel::all();
+        $dataResult = [];
+        $data_count = 0;
+        //  dd($dataService);
+        foreach ($dataServices as $dataService) {
+            $model_name = $dataService['model_name'];
+
+            // data type array
+                $data_count = eval("return \\App\\Models\\" . $model_name . "::where('status',0)->count();");
+            }
+            return response($data_count)->header('Content-Type', 'application/json');
+    }
 }

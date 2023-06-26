@@ -43,6 +43,7 @@ onMounted(() => {
         const timeB = new Date(b.created_at);
         return timeB - timeA;
     });
+    
 })
 
 
@@ -55,16 +56,17 @@ onMounted(() => {
             Thông báo
             <!-- <div v-for="(not ,index) in noti">{{ not }} </div> -->
         </div>
+        <div v-if="noti.length==0">Không có thông báo mới nào!</div>
         <div class="h-full flex flex-col">
             <div class="w-full h-full shadow">
                 <table class="table-auto w-full">
                     <tbody>
-
-                        <tr v-for="(not, index) in noti" :key="index"
+                        <template v-for="(not, index) in noti" :key="index">
+                        <tr 
                             class="relative transform scale-100 text-sm py-1 hover:bg-gray-100 cursor-default bg-opacity-25 "
                             :class="{ 'bg-gray-200 hover:bg-gray-200': index % 2 == 0 }">
-                            <Link :href="route('orderdetail', [not.service_id, not.id])">
-                            <td class="pl-5 pr-3 whitespace-no-wrap ">
+                            <Link class="block" :href="route('orderdetail', [not.service_id, not.id])">
+                            <td class="pl-5 pr-48 whitespace-no-wrap ">
                                 <div v-if="showDate(not.created_at) == realTime()" class="text-gray-500">Today</div>
                                 <div v-else> {{ showDate(not.created_at) }} </div>
                                 <div>{{ showTime(not.created_at) }}</div>
@@ -79,7 +81,7 @@ onMounted(() => {
                             </Link>
 
                         </tr>
-
+                    </template>
                     </tbody>
                 </table>
             </div>
