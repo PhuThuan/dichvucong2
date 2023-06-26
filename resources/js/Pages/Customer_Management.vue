@@ -137,7 +137,7 @@ const formatDay = (date) => {
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 ">
-                                        <Link href="#">
+                                        <Link :href="route('detailUser',[item.id])">
                                         <svg style="width: 29px;cursor: pointer;" xmlns="http://www.w3.org/2000/svg"
                                             height="1em"
                                             viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
