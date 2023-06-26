@@ -178,11 +178,11 @@ const fetchData = async () => {
     try {
         await axios({
             method: 'get',
-            url: 'http://127.0.0.1:8000/get-address',
+            url: '/get-address',
         }).then(function (response) {
             addressData = response.data;
             citys.value = response.data;
-            // console.log(addressData);
+             console.log(addressData);
         })
     } catch (error) {
         console.error(error);
