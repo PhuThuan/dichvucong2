@@ -1,52 +1,90 @@
 <script setup>
 
 import Home_Admin from '@/Components/Home_Admin.vue';
-
+import Dropdown from '@/Components/Dropdown.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { computed, ref, onMounted } from 'vue';
-var data = [{ id: '098', info: '09879979', service: 'Đặt lịch khám bệnh', status: 0 },
-{ id: '0987', info: '09879979', service: 'd', status: 1 },
-{ id: '098', info: '09879979', service: 'Đặt lịch khám bệnh', status: 0 },
-{ id: '09979', info: '09879979', service: 'd', status: 0 },
-{ id: '09', info: '09879979', service: 'Đặt lịch khám bệnh', status: 1 },
-{ id: '9979', info: '09879979', service: 'b', status: 1 },
-{ id: '7979', info: '09879979', service: 'a', status: 0 },]
+import { computed, ref, onMounted, watch } from 'vue';
+
+const props = defineProps({ data: Array, status: Number })
 var currentPage = ref(1)
-var itemsPerPage = ref(2)
-var totalItems = ref(data.length)
+var itemsPerPage = ref(10)
+var totalItems = ref(props.data.length)
 var listData = ref([])
-const isOpen1 = ref(false)
-const input1 = ref(null)
-onMounted(() => {
-    // input1.value.focus()
-    input1.value = 'sadsd'
-})
-const totalPages = computed(() => {
+var listPage = ref([])
+
+const totalPages = () => {
     return Math.ceil(totalItems.value / itemsPerPage.value);
-})
-const visiblePages = computed(() => {
-    const startPage = Math.max(1, currentPage.value - 2);
-    const endPage = Math.min(startPage + 2, totalPages.value);
-    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
-})
+}
+const visiblePages = () => {
+    listPage.value = []
+    if (currentPage.value == 1) {
+        listPage.value.push(currentPage.value)
+        console.log(listPage.value);
+        for (let i = 1; i <= 2; i++) {
+            const sum = currentPage.value + i
+            console.log(sum);
+            if (sum <= totalPages()) {
+                listPage.value.push(sum)
+                console.log(listPage.value);
+            }
+            else {
+                break
+            }
+        }
+    }
+    else if (currentPage.value == totalPages()) {
+
+        for (let i = 2; i > 0; i--) {
+            if (currentPage.value - i != 0) {
+                listPage.value.push(currentPage.value - i)
+
+            }
+        }
+        listPage.value.push(currentPage.value)
+    }
+    else {
+
+        listPage.value.push(currentPage.value - 1)
+        listPage.value.push(currentPage.value)
+        listPage.value.push(currentPage.value + 1)
+    }
+    console.log(totalPages());
+    console.log(listPage.value);
+
+}
 const displayData = computed(() => {
     return listData;
 })
+watch(currentPage, (newX) => {
+    visiblePages()
+})
 onMounted(() => {
-    for (let i = 1; i <= itemsPerPage.value; i++) {
-        listData.value.push(data[i - 1])
+    console.log(props.data.length);
+    // for (let i = 1; i <= itemsPerPage.value; i++) {
+    //     listData.value.push(props.data[i - 1])
+    // }
+    if (props.status == 0) {
+        props.data.sort((a, b) => {
+            const timestampA = new Date(a.created_at);
+            const timestampB = new Date(b.created_at);
+            return timestampA - timestampB;
+        });
     }
+    goToPage(1)
+    visiblePages()
+
 })
 const goToPage = (page) => {
     // Xử lý khi người dùng chọn trang
     listData.value = []
     currentPage.value = page;
-    for (let i = page * 2 - 1; i <= page * 2; i++) {
-        if (i > data.length) {
+
+    for (let i = page * 10 - 9; i <= page * 10; i++) {
+        if (i > props.data.length) {
             break;
         }
-        listData.value.push(data[i - 1])
-        console.log(listData)
+        listData.value.push(props.data[i - 1])
+
     }
     displayData
     // Gọi API hoặc thực hiện các tác vụ liên quan đến dữ liệu của trang mới
@@ -61,7 +99,7 @@ const previousPage = () => {
     }
 }
 const nextPage = () => {
-    if (currentPage.value < totalPages.value) {
+    if (currentPage.value < totalPages()) {
         currentPage.value++;
         goToPage(currentPage.value)
         // Gọi API hoặc thực hiện các tác vụ liên quan đến dữ liệu của trang mới
@@ -76,29 +114,52 @@ const nextPage = () => {
     <Head title="Quản Lý Tài Khoản" />
     <Home_Admin>
         <div class="relative flex items-center " style="justify-content: right;">
+            <Dropdown align="right" width="48">
+                <template #trigger>
+                    <span class="inline-flex rounded-md">
+                        <button type="button"
+                            class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            <i class="fas fa-filter text-2xl"></i>
 
-            <button
-                class="text-white  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 text-center inline-flex items-center      "
-                type="button" @click="isOpen1 = !isOpen1" style="color: black;">
-                <i class="fas fa-filter text-2xl"></i>
-            </button>
-            <div v-if="isOpen1" class="right-0  absolute mt-2 py-2 px-2 w-48 bg-white rounded-md shadow-lg" style="top: 35px;">
-                <div class="flex items-center mb-2">
-                    <input id="default-radio-1" type="radio" value="0" name="default-radio"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                    <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Tất cả</label>
-                </div>
-                <div class="flex items-center mb-2">
-                    <input checked id="default-radio-2" type="radio" value="1" name="default-radio"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                    <label for="default-radio-2" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Chưa xử lý</label>
-                </div>
-                <div class="flex items-center">
-                    <input checked id="default-radio-3" type="radio" value="2" name="default-radio"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                    <label for="default-radio-3" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Đã xử lý</label>
-                </div>
-            </div>
+                            <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </span>
+                </template>
+
+                <template #content>
+                    <div class="px-2">
+                        <Link href="/admin/service/list/2">
+                        <div class="flex items-center mb-2 ">
+                            <input id="default-radio-1" type="radio" value="2" name="default-radio"
+                                :checked="props.status == 2"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500   focus:ring-2  ">
+                            <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Tất cả</label>
+                        </div>
+                        </Link>
+                        <Link href="/admin/service/list/0">
+                        <div class="flex items-center mb-2 ">
+                            <input id="default-radio-1" type="radio" value="0" name="default-radio"
+                                :checked="props.status == 0"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500   focus:ring-2  ">
+                            <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Chưa xử lý</label>
+                        </div>
+                        </Link>
+                        <Link href="/admin/service/list/1">
+                        <div class="flex items-center mb-2 ">
+                            <input id="default-radio-1" type="radio" value="1" name="default-radio"
+                                :checked="props.status == 1"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500   focus:ring-2  ">
+                            <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Đã xử lý</label>
+                        </div>
+                        </Link>
+                    </div>
+                </template>
+            </Dropdown>
             <Link>
             <button type="button" href="#"
                 class="text-white ml-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Thêm
@@ -125,17 +186,17 @@ const nextPage = () => {
                                     :key="index">
                                     <td class="py-3 px-6 text-left whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <span class="font-medium">{{ item.id }}</span>
+                                            <span class="font-medium">{{ item.service_id + '0' + item.form_id }}</span>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-left ">
                                         <div class="flex items-center">
-                                            <span class="font-medium">{{ item.info }}</span>
+                                            <span class="font-medium">{{ item.phone }}</span>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-left whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <span class="font-medium">{{ item.service }}</span>
+                                            <span class="font-medium">{{ item.service_name }}</span>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-left whitespace-nowrap">
@@ -145,7 +206,7 @@ const nextPage = () => {
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 ">
-                                        <Link href="#">
+                                        <Link :href="`/admin/order/detail/${item.service_id}/${item.form_id}`">
                                         <svg style="width: 29px;" xmlns="http://www.w3.org/2000/svg" height="1em"
                                             viewBox="0 0 576 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                                             <path
@@ -174,7 +235,7 @@ const nextPage = () => {
                         Previous
                     </button>
                 </li>
-                <li v-for="page in visiblePages" :key="page">
+                <li v-for="page in listPage" :key="page">
                     <button @click="goToPage(page)" :class="{
                         'px-3 py-1 bg-gray-200 hover:bg-gray-400 focus:outline-none': true,
                         'font-bold': currentPage === page
@@ -183,13 +244,13 @@ const nextPage = () => {
                     </button>
                 </li>
                 <li>
-                    <button @click="nextPage" :disabled="currentPage === totalPages"
+                    <button @click="nextPage" :disabled="currentPage === totalPages()"
                         class="px-3 py-1 bg-gray-200 hover:bg-gray-400 focus:outline-none">
                         Next
                     </button>
                 </li>
                 <li>
-                    <button @click="goToPage(totalPages)" :disabled="currentPage === totalPages"
+                    <button @click="goToPage(totalPages())" :disabled="currentPage === totalPages()"
                         class="px-3 py-1 bg-gray-200 rounded-r hover:bg-gray-400 focus:outline-none">
                         Last
                     </button>

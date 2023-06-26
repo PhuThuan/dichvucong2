@@ -1,6 +1,6 @@
 <!-- ? Error -->
 <script setup>
-import { computed, onMounted, ref, reactive } from 'vue';
+import { computed, ref, onMounted, onUpdated, reactive } from 'vue';
 import InputError from '@/Components/InputError.vue';
 const props = defineProps({
     services_fields: {
@@ -9,13 +9,20 @@ const props = defineProps({
     formData: {
         type: Object,
     },
+    submitClicked: {
+        type: Boolean,
+    }
 });
 const emit = defineEmits(['radioResponse']);
+
+onUpdated(() => {
+    eventSubmit();
+})
 
 // Chạy sau khi render
 onMounted(() => {
     emit('radioResponse', {
-        required: (stringToObject.value.required ? true : false)
+        required: (stringToObject.value?.required ? true : false)
     })
 })
 
@@ -31,6 +38,12 @@ let inputValues = reactive([]); // Khởi tạo mảng động
 let validate = ref({
     errors: {}
 });
+
+function eventSubmit() {
+    if (props.submitClicked) {
+        updateFormData(props.services_fields.field_name.value, input)
+    }
+}
 
 function createInputObject(array) {
     // Duyệt qua mảng gốc và tạo đối tượng cho mỗi phần tử
@@ -61,12 +74,17 @@ function updateFormData(attribute, id_service_field_value) {
         validateForm()
     } else {
         delete props.formData[attribute];
-        if (!stringToObject.value.required) {
+        if (!stringToObject.value?.required) {
             validate.value[props.services_fields.field_name] = null
         }
         validateForm()
     }
-    console.log(props.formData);
+    delete props.formData['undefined'];
+    // Xoá dữ liệu từ formData nếu input value rỗng
+    // console.log(props.formData[props.services_fields.field_name]);
+    if (props.formData[props.services_fields.field_name] === 'radio')
+        delete props.formData[props.services_fields.field_name];
+    // console.log(props.formData);
 };
 
 // computed chuyển đổi chuỗi thành đối tượng
@@ -92,7 +110,8 @@ const stringToObject = computed(() => {
 const validateForm = () => {
     let isValid = true;
 
-    if (stringToObject.value.required) {
+    if (stringToObject.value?.required) {
+        // console.log(validate.value[props.services_fields.field_name]);
         if (!validate.value[props.services_fields.field_name]) {
             validate.value.errors[props.services_fields.field_name] = `${props.services_fields.label} không được bỏ trống.`;
             isValid = false;
@@ -104,14 +123,14 @@ const validateForm = () => {
     else {
         validate.value.errors[props.services_fields.field_name] = '';
     }
-    console.log(stringToObject);
+    // console.log(stringToObject);
     return isValid;
 };
 </script>
 
 <template>
     <div class="">
-        <div>{{ services_fields.label }}: <span v-if="stringToObject?.required">*</span></div>
+        <div>{{ services_fields.label }}: <span class="text-[#fb4762]" v-if="stringToObject?.required">*</span></div>
         <div v-for="(item, index) in service_field_value" class="flex items-center" :key="item.id">
             <input type="radio" :id="services_fields.field_name + index" :name="services_fields.field_name" class="text-sm shadow-sm bg-gray-50 
         border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-4 h-4 rounded"

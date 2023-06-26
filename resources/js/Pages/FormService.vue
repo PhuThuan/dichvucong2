@@ -4,13 +4,8 @@ import Home_Admin from '@/Components/Home_Admin.vue'
 import { ref } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3';
 
-defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
+const props = defineProps({
+    message: String
 });
 const htmlType = [
     'text', 'number', 'checkbox', 'email', 'password', 'file', 'radio', 'select', 'submit', 'range', 'tel', 'search', 'reset', 'image', 'time', 'date', 'month', 'week', 'color', 'url', 'hidden', 'address'
@@ -18,27 +13,16 @@ const htmlType = [
 const dbType = [
     'char', 'varchar', 'int', 'bigint', 'decimal', 'float', 'date', 'time', 'datetime', 'boolean', 'text', 'json', 'enum', 'set', 'blob'
 ]
+
 const fieldList = ref([0])
 const pos = ref(0)
-const selectedValue = ref([])
 const addField = () => {
     pos.value++
     fieldList.value.push(pos.value)
 }
 const delField = (value) => {
     fieldList.value = fieldList.value.filter(item => item !== value);
-    // const obj = selectedValue.value.find(item => item.id === value);
-    // console.log(obj);
-    // if (obj) {
-    //     selectedValue.value = selectedValue.value.filter(item => item.id !== value)
-    // }
-    // for (let i in fieldList.value) {
-    //     const item = selectedValue.value.find(item => item.id === fieldList.value[i]);
-    //     if (item !== undefined) {
-    //         item.index = i
-    //         break
-    //     }
-    // }
+
 }
 
 let dataFields = []
@@ -66,7 +50,7 @@ const handleSelectChange = (item, id) => {
         hiddenDiv.style.class = "bg-white border-b    ";
         const html = `<td colspan="2" class="px-2 py-2 text-center">Nhập giá trị cho trường</td>
                                 <td colspan="5" class="px-2 py-2 flex whitespace-nowrap w-max" style="align-items:center;flex-wrap: wrap;">
-                                    <button id="${'btn' + item}" type="button" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300    rounded-lg  px-5 py-2.5 text-center mr-2 mb-2"><i class="fas fa-plus fa-lg" ></i></button>
+                                    <button id="${'btn' + item}" type="button" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300    rounded-lg  px-2.5 py-2 text-center mr-2 mb-2"><i class="fas fa-plus fa-lg" ></i></button>
                                     <div id="${'div' + item}" class=" text-sm">
                                         
                                     </div>
@@ -122,25 +106,10 @@ const addItem = (id, name, index) => {
     });
     pos.value++
 }
-// const delItem = (id, value) => {
-//     const item = selectedValue.value.find(obj => obj.id === id);
 
-//     if (item) {
-//         // Tìm vị trí của giá trị cần xóa trong mảng arr
-//         const index = item.arr.indexOf(value);
-
-//         // Kiểm tra nếu giá trị cần xóa tồn tại trong mảng
-//         if (index !== -1) {
-//             // Xóa giá trị khỏi mảng arr
-//             item.arr.splice(index, 1);
-//         }
-//     }
-//     console.log(selectedValue.value);
-
-// }
 
 const submit = () => {
-    
+
     const name = document.getElementById('name').value;
     const html_name = document.getElementById('name_html').value;
     const db_name = document.getElementById('name_db').value;
@@ -148,14 +117,14 @@ const submit = () => {
     const validate_name = document.getElementById('name_validate').value;
     const placehoder_name = document.getElementById('name_placehoder').value;
     const object = {
-            field_name: name,
-            html_type: html_name,
-            db_type: db_name,
-            label: label_name,
-            validate: validate_name,
-            placehoder: placehoder_name,
-            fields_value: []
-        }
+        field_name: name,
+        html_type: html_name,
+        db_type: db_name,
+        label: label_name,
+        validate: validate_name,
+        placehoder: placehoder_name,
+        fields_value: []
+    }
     dataFields.push(object)
     for (let i of fieldList.value) {
         const field_name = document.getElementById('name' + i).value;
@@ -198,11 +167,20 @@ const submit = () => {
     console.log(form);
     dataFields = []
     //form.post('post2');
-    form.post('/admin/service');
+    form.post('/admin/service', {
+            onSuccess: () => {
+                // Gui form thanh cong
+                if (props.message) {
+                    openModal();
+                }
+            }
+        });
 
 };
-
-
+const isModalOpen=ref(false)
+function openModal() {
+    isModalOpen.value = true;
+};
 
 </script>
 
@@ -210,6 +188,14 @@ const submit = () => {
 <template>
     <Head title="Thêm Dịch Vụ" />
     <Home_Admin>
+        <div v-if="props.message">{{ props.message }}</div>
+        <!-- <button @click="x=true">x</button> -->
+        <div v-if="isModalOpen"  class="fixed inset-0 flex items-center justify-center text-center bg-black bg-opacity-50" style="z-index: 99;">
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-lg font-bold mb-2">{{ props.message }}</h2>
+                <button @click="isModalOpen=false" class="bg-red-500 text-white py-2 px-4 rounded mt-4">Đóng</button>
+            </div>
+        </div>
         <form @submit.prevent="submit" class="p-3 w-full">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
@@ -301,7 +287,7 @@ const submit = () => {
                             </thead>
                             <tbody>
                                 <tr id="name_tr" class="bg-white border-b">
-                                    
+
                                     <th scope="row" class="px-2 py-2  whitespace-nowrap  ">
                                         <input type="text" id="name" required value="ho_va_ten" disabled
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
@@ -327,7 +313,7 @@ const submit = () => {
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
                                     </td>
                                     <td class="px-2 py-2 whitespace-nowrap">
-                                        <input type="text" id="name_placehoder"  value="Nhập họ và tên..." disabled
+                                        <input type="text" id="name_placehoder" value="Nhập họ và tên..." disabled
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
                                     </td>
                                     <!-- <td class="px-2 py-2 whitespace-nowrap text-center">
@@ -394,4 +380,13 @@ const submit = () => {
 
 <style>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+.component {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.component.show {
+    opacity: 1;
+}
 </style>
