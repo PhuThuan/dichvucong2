@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMail;
+
 class AdminController extends Controller
 {
     public function getInfo()
@@ -266,5 +269,81 @@ class AdminController extends Controller
             $data_count += eval("return \\App\\Models\\" . $model_name . "::where('status',0)->count();");
         }
         return response($data_count)->header('Content-Type', 'application/json');
+    }
+
+    public function getListService()
+    {
+        $data = ServicesModel::all()->where('status', TypeData::status['enable']);
+        return Inertia::render('Admin_OrderCreate', ['services' => $data]);
+    }
+    public function getForm($id_service)
+    {
+
+        $serviceFields = ServicesModel::find($id_service)->servicesFields->get();
+        // dd($serviceFields);
+        foreach ($serviceFields as $field) {
+            if ($field['html_type'] == TypeData::htmlType['radio'] || $field['html_type'] == TypeData::htmlType['checkbox'] || $field['html_type'] == TypeData::htmlType['select']) {
+                $field->serviceFieldValue;
+            }
+        }
+        return Inertia::render('Admin_OrderForm', ['id' => $id_service, 'services' => $serviceFields]);
+    }
+
+    public function createDataUser(Request $request, $id_service)
+    {
+        $table_name=ServicesFieldsModel::get()->where('services_id',$id_service);
+        
+        $datatempt='';
+
+        foreach($table_name as $dataService){
+            
+           $datatempt.='"'. $dataService['field_name'].'"' .'=>'. '"'.$dataService['validate']. '",';
+            
+        }
+       
+        $request->validate([
+            $datatempt
+            
+        ]);
+        $modelService = ServicesModel::find($id_service);
+        if ($model_name = $modelService['model_name']) {
+            $data = $request->all();
+            $data['status'] = TypeData::status['disable'];
+            $data['user_id'] = Auth::user()->id;
+            $data['service_id'] = (int)($id_service);
+         
+            // dd($data);
+            $dataConvert = "[";
+            foreach ($data as $key => $val) {
+                $dataConvert .= "'" . $key . "'=>'" . $val . "'" . ",";
+            }
+            $dataConvert .= "]";
+
+           // dd($dataConvert);
+            eval("return \\App\\Models\\" . $model_name . "::create(" . $dataConvert . ");");
+
+            /////send MAIL////////
+            $dataMailForm = $data;
+            $dataMailForm = $this->explodeFieldValue($dataMailForm);
+            unset($dataMailForm['user_id']);
+            unset($dataMailForm['status']);
+            $dataMailForm['email'] ?? Auth::user()->email;
+            $dataMailForm['phone'] ?? Auth::user()->phone;
+            
+            $dataMail = [
+                'name' => $request['ho_va_ten'],
+                'message' => "Bạn đã tạo thành công dịch vụ ".$modelService['name'],
+                'subject' =>  $modelService['name'],
+                'data' => $dataMailForm,
+            ];
+            
+            Mail::to('phuthuan1910305@gmail.com')->send(new SendMail($dataMail));
+
+            return Inertia::render('Admin_OrderForm',['message'=>'Đã thêm yêu cầu thành công']);
+         //   return to_route('dashboard');
+        } else {
+            //return notifi model not found
+            return Inertia::render('Admin_OrderForm',['message'=>'Không thành công']);
+        }
     }
 }

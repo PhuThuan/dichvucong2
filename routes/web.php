@@ -60,6 +60,11 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     //chi tiet tk 
     route::get('/user/{user_id}/service',[AdminController::class,'getUserService'])->name('detailUser');
     
+    route::get('/list/service', [AdminController::class, 'getListService']);
+
+    Route::get('/serviceForm/{id_service}', [AdminController::class, 'getForm'])->name('createAdmin');
+    
+    Route::post('/service/post/{id_service}', [AdminController::class, 'createDataUser'])->name('dataForm');
 });
 
 Route::prefix('/user')->middleware(['auth','verified'])->group(function () {
