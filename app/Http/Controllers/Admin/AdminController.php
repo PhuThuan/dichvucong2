@@ -196,7 +196,7 @@ class AdminController extends Controller
                 foreach ($data_model as $value) {
                     array_push($dataService, [
                         'id' => $value['id'],
-                        'created_at' => Carbon::parse($value['created_at'])->toDateTimeString(),
+                        'created_at' => $value['created_at'],
                         'service_id' => $service['id'],
                         'service_name' => $service['name']
                     ]);

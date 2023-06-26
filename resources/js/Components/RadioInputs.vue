@@ -111,8 +111,8 @@ const validateForm = () => {
     let isValid = true;
 
     if (stringToObject.value?.required) {
-        // console.log(validate.value[props.services_fields.field_name]);
-        if (!validate.value[props.services_fields.field_name]) {
+        console.log(props.formData[props.services_fields.field_name]);
+        if (!props.formData[props.services_fields.field_name]) {
             validate.value.errors[props.services_fields.field_name] = `${props.services_fields.label} không được bỏ trống.`;
             isValid = false;
         }
