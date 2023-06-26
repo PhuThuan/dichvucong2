@@ -121,11 +121,11 @@ class AdminController extends Controller
                 ]);
             }
         }
-        dd($dataResult);
+//        dd($dataResult);
         return Inertia::render('NotiAdmin', ['noti' => $dataResult]);
     }
 
-    public function oderDetail($service_id, $id)
+    public function orderDetail($service_id, $id)
     {
         $dataService = ServicesModel::find($service_id);
         $dataLabel = [];
