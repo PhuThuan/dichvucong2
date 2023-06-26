@@ -210,6 +210,6 @@ class AdminController extends Controller
             'service' => $dataService,
 
         ];
-        return Inertia::render('ProfileCustomer', ['data' => $dataResult]);
+        return Inertia::render('ProfileCustomerAdmin', ['data' => $dataResult]);
     }
 }
