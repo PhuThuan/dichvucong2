@@ -82,6 +82,17 @@ let serviceList = ref(props.data.service);
                 </div>
             </div>
         </template>
+        <!-- Logout -->
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <div class="bg-[#e0e9f8] flex content-center justify-center flex-wrap h-[3rem] sticky bottom-0">
+            <span class="material-symbols-outlined">
+                logout
+            </span>
+            <Link class="mx-[2rem]" :href="route('logout')" method="post" as="button">
+            Đăng xuất khỏi thiết bị
+            </Link>
+        </div>
     </div>
     <FooterVue />
 </template>
