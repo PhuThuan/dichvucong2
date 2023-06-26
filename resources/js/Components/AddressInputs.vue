@@ -46,41 +46,6 @@ function eventSubmit() {
     }
 }
 
-// function updateFormData(attribute, value) {
-//     // Cập nhật giá trị của trường inputData 
-//     Object.defineProperty(inputData.value, attribute, {
-//         value: value,
-//         writable: true, // Cho phép ghi đè giá trị thuộc tính
-//         enumerable: true, // Có thể lặp qua thuộc tính
-//         configurable: true // Có thể cấu hình lại thuộc tính
-//     });
-
-//     // Cập nhật dữ liệu vào formData
-//     if (inputData.value.city === undefined) {
-//         delete props.formData[props.services_fields.field_name]
-//     } else {
-//         props.formData[props.services_fields.field_name] = inputData.value;
-//         props.formData[props.services_fields.field_name].streetName = streetNameInput.value;
-//     }
-
-//     validate.value[props.services_fields.field_name] = value;
-//     if (validateForm()) {
-//         validateForm()
-//     } else {
-//         // delete props.formData[props.services_fields.field_name];
-//         if (!stringToObject.value?.required) {
-//             validate.value[props.services_fields.field_name] = null
-//         }
-//         validateForm()
-//     }
-//     delete props.formData[props.services_fields.field_name]['undefined'];
-//     // Xoá dữ liệu từ formData nếu input value rỗng
-//     // console.log(props.formData[props.services_fields.field_name]);
-//     // if (props.formData[props.services_fields.field_name] === 'checkbox')
-//     //     delete props.formData[props.services_fields.field_name];
-//     console.log(props.formData);
-// };
-
 function updateFormData(attribute, value) {
     // Cập nhật giá trị của trường inputData 
     Object.defineProperty(inputData.value, attribute, {
@@ -110,12 +75,13 @@ function updateFormData(attribute, value) {
     delete validate.value[props.services_fields.field_name]?.undefined;
     // Xoá dữ liệu từ formData nếu input value rỗng
     // console.log(validate.value[props.services_fields.field_name]?.streetName);
-    if (validate.value[props.services_fields.field_name]?.city === undefined || validate.value[props.services_fields.field_name]?.streetName === undefined)
+    if (validate.value[props.services_fields.field_name]?.city === undefined || validate.value[props.services_fields.field_name]?.streetName === undefined || validate.value[props.services_fields.field_name]?.district === undefined || validate.value[props.services_fields.field_name]?.ward === undefined) {
         delete props.formData[props.services_fields.field_name];
-    // console.log(validate.value);
-
-    // update vao formData
-    props.formData[props.services_fields.field_name] = JSON.stringify(validate.value[props.services_fields.field_name]);
+        // console.log(validate.value);
+    } else {
+        // update vao formData
+        props.formData[props.services_fields.field_name] = JSON.stringify(validate.value[props.services_fields.field_name]);
+    }
 };
 
 // Kiểm tra fetch dữ liệu
@@ -182,7 +148,7 @@ const fetchData = async () => {
         }).then(function (response) {
             addressData = response.data;
             citys.value = response.data;
-             console.log(addressData);
+            console.log(addressData);
         })
     } catch (error) {
         console.error(error);
@@ -309,7 +275,7 @@ const validateForm = () => {
 
         <!-- Tên đường -->
         <div class="">
-            <label :for="services_fields.field_name" class="block font-medium text-gray-900 ">Địa chỉ:
+            <label :for="services_fields.field_name" class="block font-medium text-gray-900 ">Tên đường:
                 <span class="text-[#fb4762]" v-if="stringToObject?.required">*</span>
             </label>
             <input v-model="streetNameInput" type="text" :id="services_fields.field_name" class="text-sm shadow-sm bg-gray-50 
