@@ -13,7 +13,8 @@ use App\Models\ServicesFieldsModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-
+use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class UserController extends Controller
 {
@@ -93,5 +94,38 @@ class UserController extends Controller
             //return notifi model not found
             return Inertia::render('OrderCreateForm',['message'=>'Không thành công']);
         }
+    }
+    public function getUserService()
+    {
+        $user = User::find(Auth::user()->id);
+        $services = ServicesModel::all();
+        $dataService = [];
+        foreach ($services as $service) {
+            $model_name = $service['model_name'];
+            //get service user used
+            $data_model = eval("return \\App\\Models\\" . $model_name . "::all()->where('user_id'," . Auth::user()->id . ");");
+            //dd($data_model);
+
+
+            if (isset($data_model)) {
+
+                foreach ($data_model as $value) {
+                    array_push($dataService, [
+                        'id' => $value['id'],
+                        'created_at' => Carbon::parse($value['created_at'])->toDateTimeString(),
+                        'service_id' => $service['id'],
+                        'service_name' => $service['name']
+                    ]);
+
+                }
+            }
+        }
+
+        $dataResult = [
+            'phone' => $user['phone'],
+            'service' => $dataService,
+
+        ];
+        return Inertia::render('ProfileCustomer', ['data' => $dataResult]);
     }
 }
