@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref, onMounted, onUpdated } from 'vue';
 import InputError from '@/Components/InputError.vue';
 const props = defineProps({
     services_fields: {
@@ -7,14 +7,21 @@ const props = defineProps({
     },
     formData: {
         type: Object,
+    },
+    submitClicked: {
+        type: Boolean,
     }
 });
 const emit = defineEmits(['textResponse']);
 
+onUpdated(() => {
+    eventSubmit();
+})
+
 // Chạy sau khi render
 onMounted(() => {
     emit('textResponse', {
-        required: (stringToObject.value.required ? true : false)
+        required: (stringToObject.value?.required ? true : false)
     })
 })
 
@@ -26,26 +33,28 @@ let validate = ref({
     errors: {}
 });
 
+function eventSubmit() {
+    if (props.submitClicked) {
+        updateFormData(props.services_fields.field_name.value, input)
+    }
+}
+
 function updateFormData(attribute, value) {
     // Cập nhật giá trị của trường input trong biến formData của component cha
     validate.value[props.services_fields.field_name] = value;
     if (validateForm()) {
-
         Object.defineProperty(props.formData, attribute, {
             value: value,
             writable: true, // Cho phép ghi đè giá trị thuộc tính
             enumerable: true, // Có thể lặp qua thuộc tính
             configurable: true // Có thể cấu hình lại thuộc tính
         });
-        validateForm()
     } else {
         delete props.formData[attribute];
-        if (!stringToObject.value.required) {
-            validate.value[props.services_fields.field_name] = null
-        }
         validateForm()
     }
-    console.log(props.formData);
+    delete props.formData['undefined'];
+    // console.log(props.formData);
 };
 
 // computed chuyển đổi chuỗi thành đối tượng
@@ -71,7 +80,7 @@ const stringToObject = computed(() => {
 const validateForm = () => {
     let isValid = true;
 
-    if (stringToObject.value.required) {
+    if (stringToObject.value?.required) {
         if (!validate.value[props.services_fields.field_name]) {
             validate.value.errors[props.services_fields.field_name] = `${props.services_fields.label} không được bỏ trống.`;
             isValid = false;
@@ -83,7 +92,7 @@ const validateForm = () => {
     else {
         validate.value.errors[props.services_fields.field_name] = '';
     }
-    console.log(stringToObject);
+    // console.log(stringToObject);
     return isValid;
 };
 </script>
@@ -92,7 +101,7 @@ const validateForm = () => {
     <div class="">
         <label :for="services_fields.field_name" class="block font-medium text-gray-900 ">{{ services_fields.label
         }}:
-            <span v-if="stringToObject?.required">*</span>
+            <span class="text-[#fb4762]" v-if="stringToObject?.required">*</span>
         </label>
         <input v-model="input" type="text" :id="services_fields.field_name" class="text-sm shadow-sm bg-gray-50 
         border border-gray-300 text-gray-900 rounded-[9999px] 
