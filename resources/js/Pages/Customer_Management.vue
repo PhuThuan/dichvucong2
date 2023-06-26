@@ -99,7 +99,7 @@ const formatDay = (date) => {
     const vietnamTime = utcTime.utcOffset(7);
 
     // Định dạng đầu ra
-    return vietnamTime.format('HH:mm:ss DD-MM-YYYY');
+    return vietnamTime.format('HH:mm DD-MM-YYYY');
     // return moment('2023-06-20T11:00:05.000000Z').format('YYYY-MM-DD');
 };
 </script>

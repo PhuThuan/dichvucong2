@@ -4,20 +4,17 @@ import Home_Admin from '@/Components/Home_Admin.vue';
 
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed, ref, onMounted } from 'vue';
-const props = defineProps({ data: Object })
+const props = defineProps({ data: Array })
 
 const message = ref('')
 const showToast = ref(false)
 const isProcessed = ref(false)
-
+const address = ref()
 onMounted(() => {
     console.log(props.data);
-    if (props.data.status == 1) {
-        isProcessed.value = true
-    }
-    else {
-        isProcessed.value = false
-    }
+    address.value = JSON.parse(props.data.address)
+    console.log(address.value);
+    // props.data=JSON.parse(props.data) 
 })
 
 
@@ -40,6 +37,16 @@ const copyText = (id) => {
             console.error('Lỗi sao chép:', error);
         });
 }
+const formatDay = (date) => {
+    const utcTime = moment.utc(date);
+
+    // Chuyển đổi sang múi giờ Việt Nam
+    const vietnamTime = utcTime.utcOffset(7);
+
+    // Định dạng đầu ra
+    return vietnamTime.format('HH:mm DD-MM-YYYY');
+    // return moment('2023-06-20T11:00:05.000000Z').format('YYYY-MM-DD');
+};
 </script>
 
 
@@ -49,21 +56,58 @@ const copyText = (id) => {
         <div class="w-full text-center font-bold text-base">
             <h3>Mã yêu cầu: {{ props.data.service_id + '0' + props.data.id }}</h3>
         </div>
-        <div class="font-bold text-base p-3 ">
-            <div class="flex p-2 items-center " v-for="(i, index) in props.data.label" :key="index">
-                <strong class="mr-2 ">{{ i }}: </strong>
-                <div v-if="Array.isArray(props.data[index])" v-for="(y, z) in props.data[index]" :key="i" class="flex"
-                    style="flex-wrap: wrap;">
-                    <strong class="">{{ y }}</strong>
-                    <strong class="mr-2 " v-if="z < props.data[index].length - 1">,</strong>
+        <div class="flex p-2 items-center ">
+                    <strong class="mr-2 ">Ngày tạo đơn: </strong>
+                    <strong class=" ">{{ formatDay(props.data.created_at) }}</strong>
+                    <!-- <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                        @click="copyText(address.city)"></i> -->
                 </div>
-                <strong class=" " v-else>{{ props.data[index] }}</strong>
+        <div class="font-bold text-base p-3 ">
+            <template class=" " v-for="(i, index) in props.data.label" :key="index">
+                <div v-if="index != 'address'" class="flex p-2 items-center">
+                    <strong class="mr-2 ">{{ i }}: </strong>
+                    <div v-if="Array.isArray(props.data[index])" v-for="(y, z) in props.data[index]" :key="i" class="flex"
+                        style="flex-wrap: wrap;">
+                        <strong class="">{{ y }}</strong>
+                        <strong class="mr-2 " v-if="z < props.data[index].length - 1">,</strong>
+                    </div>
+                    <strong class=" " v-else-if="index != 'address'">{{ props.data[index] }}</strong>
 
-                <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
-                    @click="copyText(props.data[index])"></i>
+                    <i class="fas fa-clone fa-lg ml-2" v-if="index != 'address'" style="color: #b3b4b7;cursor: pointer;"
+                        @click="copyText(props.data[index])"></i>
+                </div>
+
+            </template>
+            <!-- show address -->
+            <div v-if="address">
+                <div class="flex p-2 items-center ">
+                    <strong class="mr-2 ">Tỉnh/Thành phố: </strong>
+                    <strong class=" ">{{ address.city }}</strong>
+                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                        @click="copyText(address.city)"></i>
+                </div>
+                <div class="flex p-2 items-center ">
+                    <strong class="mr-2 ">Quận/Huyện: </strong>
+                    <strong class=" ">{{ address.district }}</strong>
+                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                        @click="copyText(address.district)"></i>
+                </div>
+                <div class="flex p-2 items-center ">
+                    <strong class="mr-2 ">Phường/Xã: </strong>
+                    <strong class=" ">{{ address.ward }}</strong>
+                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                        @click="copyText(address.ward)"></i>
+                </div>
+                <div class="flex p-2 items-center ">
+                    <strong class="mr-2 ">Tên đường: </strong>
+                    <strong class=" ">{{ address.streetName }}</strong>
+                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                        @click="copyText(address.streetName)"></i>
+                </div>
             </div>
 
-            <div class="flex p-2 items-center">
+
+            <div class="flex p-4 ml-2 items-center">
                 <strong class="mr-2 ">Dịch vụ đã chọn:</strong>
                 <strong class="mr-2 ">{{ props.data.service_name }}</strong>
             </div>

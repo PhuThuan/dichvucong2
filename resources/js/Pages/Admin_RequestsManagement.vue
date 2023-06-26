@@ -106,7 +106,16 @@ const nextPage = () => {
         // Ví dụ: this.fetchData(this.currentPage);
     }
 }
+const formatDay = (date) => {
+    const utcTime = moment.utc(date);
 
+    // Chuyển đổi sang múi giờ Việt Nam
+    const vietnamTime = utcTime.utcOffset(7);
+
+    // Định dạng đầu ra
+    return vietnamTime.format('HH:mm DD-MM-YYYY');
+    // return moment('2023-06-20T11:00:05.000000Z').format('YYYY-MM-DD');
+};
 </script>
 
 
@@ -160,8 +169,8 @@ const nextPage = () => {
                     </div>
                 </template>
             </Dropdown>
-            <Link>
-            <button type="button" href="#"
+            <Link href="/admin/list/service">
+            <button type="button"
                 class="text-white ml-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Thêm
                 yêu cầu</button>
             </Link>
@@ -174,6 +183,7 @@ const nextPage = () => {
                             <thead>
                                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                                     <th class="py-3 px-6 text-left">Mã đơn</th>
+                                    <th class="py-3 px-6 text-left">Ngày tạo đơn</th>
                                     <th class="py-3 px-6 text-left ">Thông tin khách hàng</th>
                                     <th class="py-3 px-6 text-left">Dịch vụ</th>
                                     <th class="py-3 px-6 text-left">Trạng thái</th>
@@ -187,6 +197,11 @@ const nextPage = () => {
                                     <td class="py-3 px-6 text-left whitespace-nowrap">
                                         <div class="flex items-center">
                                             <span class="font-medium">{{ item.service_id + '0' + item.form_id }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-6 text-left ">
+                                        <div class="flex items-center">
+                                            <span class="font-medium">{{ formatDay(item.created_at) }}</span>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 text-left ">
