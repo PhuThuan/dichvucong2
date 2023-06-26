@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Http\Request;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,14 +46,19 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     });
  //   Route::get('/account', [AdminController::class,'getInfo'])->name('admin');
     Route::get('/manage/customer/{page}/{perPage}', [UserController::class, 'showDataCustomer'])->name("adminService");
+
     Route::resource('/service', ServiceController::class)->names(['store'=>'service.store']);
 
     Route::get('/service/list/{status}',[AdminController::class, 'getDataUsers']);
+
     route::get('/account/{page}',[AdminController::class,'getUserAll']);
+
     route::get('/notification',[AdminController::class,'notification'])->name('adminNoti');
-    route::get('/order/detail/{service_id}/{id}',[AdminController::class,'oderDetail'])->name('orderdetail');
-    route::get('/user/detail/{id}');
-    route::get('/user/{user_id}/service',[AdminController::class,'getUserService']);
+    
+    route::get('/order/detail/{service_id}/{id}',[AdminController::class,'orderDetail'])->name('orderdetail');
+
+    //chi tiet tk 
+    route::get('/user/{user_id}/service',[AdminController::class,'getUserService'])->name('detailUser');
     
 });
 
@@ -65,6 +72,8 @@ Route::prefix('/user')->middleware(['auth','verified'])->group(function () {
     Route::get('/service/{id_service}', [UserController::class,'getDataForm'])->name('createService');
 
     Route::post('/service/{id_service}', [UserController::class,'createDataUser']);
+    //chi tiet tai khoan
+    route::get('/profile/service',[UserController::class,'getUserService']);
 
 });
 
