@@ -101,5 +101,6 @@ Route::get('/get-address', function () {
     $json = File::get(public_path('datas/addressData.json'));
     return response($json)->header('Content-Type', 'application/json');
 });
+Route::get('/get-noti',[AdminController::class,'notihead']);
 
 require __DIR__.'/auth.php';
