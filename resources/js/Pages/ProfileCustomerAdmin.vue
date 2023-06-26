@@ -14,14 +14,29 @@ onMounted(() => {
 })
 let serviceList = ref(props.data.service);
 
+let showDate = (data) => {
+    let date = new Date(data)
+    let dateString = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: 'numeric' }).replace(/\//g, '-');
+    return dateString;
+}
+let showTime = (data) => {
+    let time = new Date(data)
+    const formatter = new Intl.DateTimeFormat('vi-VN', {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+    });
+    return formatter.format(time)
+}
+
 // let serviceList = [
 //     {
-//         "created_at": "2023-06-22 14:51:42",
+//         "created_at": "2023-06-22T01:36:10.000000Z",
 //         "service_id": 1,
 //         "service_name": "Kham"
 //     },
 //     {
-//         "created_at": "2023-06-22 14:54:19",
+//         "created_at": "2023-06-22T01:36:10.000000Z",
 //         "service_id": 1,
 //         "service_name": "Kham"
 //     }
@@ -41,7 +56,7 @@ let serviceList = ref(props.data.service);
             <div
                 class="block max-w-sm px-[1rem] pt-[.5rem] border border-gray-200 shadow hover:bg-gray-100 my-[.75rem] bg-[#f6f2f2]">
                 <h5 class="text-[1rem] font-bold tracking-tight text-gray-900 bg-[#ffffff]">{{ item['service_name'] }}
-                    <span>({{ item['created_at'] }})</span>
+                    <span>({{showTime(item['created_at'])}} {{ showDate(item['created_at']) }})</span>
                 </h5>
                 <div class="text-right my-[.25rem]">
                     <Link :href="`http://127.0.0.1:8000/admin/order/detail/${item.service_id}/${item.id}`"
