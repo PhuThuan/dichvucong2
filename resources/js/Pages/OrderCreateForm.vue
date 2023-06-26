@@ -35,16 +35,15 @@ function openModal() {
 // Submit form
 async function submitForm() {
     let exitFlag = false;
-    // Post
-    console.log('Form Data');
-    console.log(formData.value);
-    // console.log(formValidate.value);
 
-    // Kích hoạt sự kiện ở thành phần con
+    // Kích hoạt sự kiện xác thực ở thành phần con
     submitClicked.value = true;
 
     // Nếu có field chưa hợp lệ thì sữa exitFlad
-    services_fields_array.forEach(element => {
+    services_fields_array.forEach(element => {        
+        // Tao formData default
+        if (!formData.value[element.field_name])
+            formData.value[element.field_name] = '';
         // console.log(formData.value[element.field_name]);
         if (formValidate.value[element.field_name]?.required) {
             if (!formData.value[element.field_name]) {
@@ -54,6 +53,11 @@ async function submitForm() {
         }
     });
 
+    // Post
+    console.log('Form Data');
+    console.log(formData.value);
+    // console.log(formValidate.value);
+
     if (exitFlag) {
         return; // Thoát khỏi hàm nếu có trường field không hợp lệ
     } else {
@@ -62,7 +66,7 @@ async function submitForm() {
         form.post(`/user/service/${props.id}`, {
             onSuccess: () => {
                 // Gui form thanh cong
-                if (props.message === 'Tạo thành công') {
+                if (props.message) {
                     openModal();
                 }
             }
@@ -141,22 +145,22 @@ onMounted(() => {
     <form class="px-[2rem] py-[.2rem] text-[1rem]" enctype="multipart/form-data">
         <!-- Tạo input tự động  -->
         <div class="m-[.0rem]" v-for="item in services_fields_array">
-            <TextInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 0"
-                @textResponse="(data) => formValidate[item.field_name] = data" />
-            <NumberInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 1"
-                @numberResponse="(data) => formValidate[item.field_name] = data" />
-            <CheckboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 2"
-                @checkboxResponse="(data) => formValidate[item.field_name] = data" />
-            <RadioInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 6"
-                @radioResponse="(data) => formValidate[item.field_name] = data" />
-            <FileInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 5"
-                @fileResponse="(data) => formValidate[item.field_name] = data" />
-            <AddressInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 21"
-                @addressResponse="(data) => formValidate[item.field_name] = data" />
-            <ComboboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 7"
-                @comboboxResponse="(data) => formValidate[item.field_name] = data" />
-            <TelInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 10"
-                @telResponse="(data) => formValidate[item.field_name] = data" />
+            <TextInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                v-if="item.html_type === 0" @textResponse="(data) => formValidate[item.field_name] = data" />
+            <NumberInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                v-if="item.html_type === 1" @numberResponse="(data) => formValidate[item.field_name] = data" />
+            <CheckboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                v-if="item.html_type === 2" @checkboxResponse="(data) => formValidate[item.field_name] = data" />
+            <RadioInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                v-if="item.html_type === 6" @radioResponse="(data) => formValidate[item.field_name] = data" />
+            <FileInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                v-if="item.html_type === 5" @fileResponse="(data) => formValidate[item.field_name] = data" />
+            <AddressInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                v-if="item.html_type === 21" @addressResponse="(data) => formValidate[item.field_name] = data" />
+            <ComboboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                v-if="item.html_type === 7" @comboboxResponse="(data) => formValidate[item.field_name] = data" />
+            <TelInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                v-if="item.html_type === 10" @telResponse="(data) => formValidate[item.field_name] = data" />
         </div>
 
         <div class="mx-[.0rem] mt-[.5rem]">
