@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Carbon;
 
 
@@ -42,6 +43,9 @@ class UserController extends Controller
     public function showDataCustomer($page, $perPage)
     {
         $customers =  Models\User::paginate($perPage, ['*'], 'page', $page);
+        if (isset($customers)) {
+            return Inertia::render('Error');
+        }
         return Inertia::render('Customer_Management', ['customers' => $customers]);
         // return response()->json($customers); test postman
     }
@@ -52,40 +56,51 @@ class UserController extends Controller
 
     public function getDataForm($id_service)
     {
+        try {
+            $serviceFields = ServicesModel::find($id_service)->servicesFields->get();
 
-        $serviceFields = ServicesModel::find($id_service)->servicesFields->get();
-        //dd($serviceFields);
-        foreach ($serviceFields as $field) {
-            if ($field['html_type'] == TypeData::htmlType['radio'] || $field['html_type'] == TypeData::htmlType['checkbox'] || $field['html_type'] == TypeData::htmlType['select']) {
-                $field->serviceFieldValue;
+
+            if (!isset($serviceFields) && is_null($serviceFields)) {
+                return Inertia::render('Error');
             }
+            //dd($serviceFields);
+            foreach ($serviceFields as $field) {
+                if ($field['html_type'] == TypeData::htmlType['radio'] || $field['html_type'] == TypeData::htmlType['checkbox'] || $field['html_type'] == TypeData::htmlType['select']) {
+                    $field->serviceFieldValue;
+                }
+            }
+            return Inertia::render('OrderCreateForm', ['id' => $id_service, 'services' => $serviceFields]);
+        } catch (Exception $e) {
+            return Inertia::render('Error');
         }
-        return Inertia::render('OrderCreateForm', ['id' => $id_service, 'services' => $serviceFields]);
     }
 
     public function createDataUser(Request $request, $id_service)
     {
-        $table_name=ServicesFieldsModel::get()->where('services_id',$id_service);
-        
-        $datatempt='';
 
-        foreach($table_name as $dataService){
-            
-           $datatempt.='"'. $dataService['field_name'].'"' .'=>'. '"'.$dataService['validate']. '",';
-            
+        $table_name = ServicesFieldsModel::get()->where('services_id', $id_service);
+
+        $datatempt = '';
+
+        foreach ($table_name as $dataService) {
+
+            $datatempt .= '"' . $dataService['field_name'] . '"' . '=>' . '"' . $dataService['validate'] . '",';
         }
-       
+
         $request->validate([
             $datatempt
-            
+
         ]);
         $modelService = ServicesModel::find($id_service);
+        if (!isset($modelService)) {
+            return Inertia::render('Error');
+        }
         if ($model_name = $modelService['model_name']) {
             $data = $request->all();
             $data['status'] = TypeData::status['disable'];
             $data['user_id'] = Auth::user()->id;
             $data['service_id'] = (int)($id_service);
-         
+
             // dd($data);
             $dataConvert = "[";
             foreach ($data as $key => $val) {
@@ -93,9 +108,19 @@ class UserController extends Controller
             }
             $dataConvert .= "]";
 
-           // dd($dataConvert);
-            eval("return \\App\\Models\\" . $model_name . "::create(" . $dataConvert . ");");
-
+            // dd($dataConvert);
+            try {
+                //check model
+                if(!file_exists(app_path('Models/'. $model_name.'.php'))){
+                    return Inertia::render('Error');
+                }
+                $check =  eval("return \\App\\Models\\" . $model_name . "::create(" . $dataConvert . ");");
+                if (!isset($check) && is_null($check)) {
+                    return Inertia::render('Error');
+                }
+            } catch (Exception $e) {
+                return Inertia::render('Error');
+            }
             /////send MAIL////////
             $dataMailForm = $data;
             $dataMailForm = $this->explodeFieldValue($dataMailForm);
@@ -103,21 +128,25 @@ class UserController extends Controller
             unset($dataMailForm['status']);
             $dataMailForm['email'] ?? Auth::user()->email;
             $dataMailForm['phone'] ?? Auth::user()->phone;
-            
+
             $dataMail = [
                 'name' => $request['ho_va_ten'],
-                'message' => "Bạn đã tạo thành công dịch vụ ".$modelService['name'],
+                'message' => "Bạn đã tạo thành công dịch vụ " . $modelService['name'],
                 'subject' =>  $modelService['name'],
                 'data' => $dataMailForm,
             ];
-            
-            Mail::to('phuthuan1910305@gmail.com')->send(new SendMail($dataMail));
 
-            return Inertia::render('OrderCreateForm',['message'=>'Đã thêm yêu cầu thành công']);
-         //   return to_route('dashboard');
+            try {
+                Mail::to('phuthuan1910305@gmail.com')->send(new SendMail($dataMail));
+            } catch (Exception $e) {
+            }
+
+
+            return Inertia::render('OrderCreateForm', ['message' => 'Đã thêm yêu cầu thành công']);
+            //   return to_route('dashboard');
         } else {
             //return notifi model not found
-            return Inertia::render('OrderCreateForm',['message'=>'Không thành công']);
+            return Inertia::render('OrderCreateForm', ['message' => 'Không thành công']);
         }
     }
 
@@ -134,15 +163,18 @@ class UserController extends Controller
                 $dataField = '';
                 foreach ($id as $field) {
                     $field_name = ServiceFieldValueModel::find($field)['name'];
-                   $dataField .= $field_name;
-                   $dataField .= ",";
+                    if(isset($field_name)){
+                        return Inertia::render('Error');
+                    }
+                    $dataField .= $field_name;
+                    $dataField .= ",";
                 }
                 $data[$key] = $dataField;
             }
         }
         //dd($data);
         return $data;
-
+    }
     public function getUserService()
     {
         $user = User::find(Auth::user()->id);
@@ -151,6 +183,10 @@ class UserController extends Controller
         foreach ($services as $service) {
             $model_name = $service['model_name'];
             //get service user used
+            //check model
+            if(!file_exists(app_path('Models/'. $model_name.'.php'))){
+                return Inertia::render('Error');
+            }
             $data_model = eval("return \\App\\Models\\" . $model_name . "::all()->where('user_id'," . Auth::user()->id . ");");
             //dd($data_model);
 
@@ -164,7 +200,6 @@ class UserController extends Controller
                         'service_id' => $service['id'],
                         'service_name' => $service['name']
                     ]);
-
                 }
             }
         }
@@ -175,6 +210,5 @@ class UserController extends Controller
 
         ];
         return Inertia::render('ProfileCustomer', ['data' => $dataResult]);
-
     }
 }
