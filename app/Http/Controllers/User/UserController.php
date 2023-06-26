@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\ServiceFieldValueModel;
 use App\Models\ServicesModel;
 use App\Models;
 use Illuminate\Http\Request;
@@ -13,7 +14,8 @@ use App\Models\ServicesFieldsModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMail;
 
 class UserController extends Controller
 {
@@ -61,18 +63,19 @@ class UserController extends Controller
         $table_name=ServicesFieldsModel::get()->where('services_id',$id_service);
         
         $datatempt='';
+
         foreach($table_name as $dataService){
             
            $datatempt.='"'. $dataService['field_name'].'"' .'=>'. '"'.$dataService['validate']. '",';
             
         }
        
-       
         $request->validate([
             $datatempt
             
         ]);
-        if ($model_name = ServicesModel::find($id_service)['model_name']) {
+        $modelService = ServicesModel::find($id_service);
+        if ($model_name = $modelService['model_name']) {
             $data = $request->all();
             $data['status'] = TypeData::status['disable'];
             $data['user_id'] = Auth::user()->id;
@@ -87,11 +90,51 @@ class UserController extends Controller
 
            // dd($dataConvert);
             eval("return \\App\\Models\\" . $model_name . "::create(" . $dataConvert . ");");
+
+            /////send MAIL////////
+            $dataMailForm = $data;
+            $dataMailForm = $this->explodeFieldValue($dataMailForm);
+            unset($dataMailForm['user_id']);
+            unset($dataMailForm['status']);
+            $dataMailForm['email'] ?? Auth::user()->email;
+            $dataMailForm['phone'] ?? Auth::user()->phone;
+            
+            $dataMail = [
+                'name' => $request['ho_va_ten'],
+                'message' => "Bạn đã tạo thành công dịch vụ ".$modelService['name'],
+                'subject' =>  $modelService['name'],
+                'data' => $dataMailForm,
+            ];
+            
+            Mail::to('phuthuan1910305@gmail.com')->send(new SendMail($dataMail));
+
             return Inertia::render('OrderCreateForm',['message'=>'Đã thêm yêu cầu thành công']);
          //   return to_route('dashboard');
         } else {
             //return notifi model not found
             return Inertia::render('OrderCreateForm',['message'=>'Không thành công']);
         }
+    }
+    public function explodeFieldValue($data)
+    {
+
+        // $dataField = [];
+        foreach ($data as $key => $value) {
+            if (str_contains(explode(',', $value)[0], 'radio') || str_contains(explode(',', $value)[0], 'checkbox') || str_contains(explode(',', $value)[0], 'select')) {
+                $id = explode(',', $value);
+                unset($id[0]);
+                //dd($id);
+                //get value form id field
+                $dataField = '';
+                foreach ($id as $field) {
+                    $field_name = ServiceFieldValueModel::find($field)['name'];
+                   $dataField .= $field_name;
+                   $dataField .= ",";
+                }
+                $data[$key] = $dataField;
+            }
+        }
+        //dd($data);
+        return $data;
     }
 }

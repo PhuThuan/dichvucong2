@@ -121,7 +121,7 @@ class AdminController extends Controller
                 ]);
             }
         }
-        dd($dataResult);
+    //    dd($dataResult);
         return Inertia::render('NotiAdmin', ['noti' => $dataResult]);
     }
 
