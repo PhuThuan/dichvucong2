@@ -182,7 +182,6 @@ const submit = () => {
     });
     console.log(form);
     dataFields = []
-    form.post('post2');
     form.post('/admin/service', {
         onSuccess: () => {
             // Gui form thanh cong
