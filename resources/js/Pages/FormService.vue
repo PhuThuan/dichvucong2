@@ -3,6 +3,7 @@
 import Home_Admin from '@/Components/Home_Admin.vue'
 import { ref } from 'vue'
 import { Head, useForm, Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const props = defineProps({
     message: String
@@ -13,7 +14,6 @@ const htmlType = [
 const dbType = [
     'char', 'varchar', 'int', 'bigint', 'decimal', 'float', 'date', 'time', 'datetime', 'boolean', 'text', 'json', 'enum', 'set', 'blob'
 ]
-
 const fieldList = ref([0])
 const pos = ref(0)
 const addField = () => {
@@ -39,7 +39,7 @@ const handleSelectChange = (item, id) => {
     const field = document.getElementById(id).value;
     console.log(field);
 
-    if (field === '2' || field === '6' || field === '7') {
+    if (field === '2' || field === '4' || field === '5') {
         const row = document.getElementById('row_af' + item);
         if (row !== null) {
             row.remove()
@@ -128,13 +128,13 @@ const submit = () => {
     dataFields.push(object)
     for (let i of fieldList.value) {
         const field_name = document.getElementById('name' + i).value;
-        const html_type = document.getElementById('html' + i).value;
+        var html_type = document.getElementById('html' + i).value;
         const db_type = document.getElementById('db' + i).value;
         const label = document.getElementById('label' + i).value;
         const validate = document.getElementById('validate' + i).value;
         const placehoder = document.getElementById('placehoder' + i).value;
         const arr = []
-        if (html_type === '2' || html_type === '6' || html_type === '7') {
+        if (html_type == '2' || html_type == '4' || html_type =='5') {
             const name = 'name' + i
             var inputElements = document.querySelectorAll('input[name="' + name + '"]');
             // Lặp qua từng phần tử và lấy giá trị
@@ -142,6 +142,22 @@ const submit = () => {
                 var inputValue = input.value;
                 arr.push(inputValue)
             });
+        }
+        if (html_type > 2) {
+            if (html_type == '3') {
+                html_type = 5;
+            }
+            else if (html_type == '4') {
+                html_type = 6;
+            }
+            else if (html_type == '5') {
+                html_type = 7;
+            } else if (html_type == '6') {
+                html_type = 10;
+            }
+            else if (html_type == '7') {
+                html_type = 21;
+            }
         }
         const object = {
             field_name: field_name,
@@ -166,7 +182,7 @@ const submit = () => {
     });
     console.log(form);
     dataFields = []
-    //form.post('post2');
+    form.post('post2');
     form.post('/admin/service', {
         onSuccess: () => {
             // Gui form thanh cong
@@ -181,6 +197,12 @@ const isModalOpen = ref(false)
 function openModal() {
     isModalOpen.value = true;
 };
+
+const shouldDisplay = computed(() => {
+    const allowedIndices = [0, 1, 2, 5, 6, 7, 10, 21];
+    return htmlType.filter((option, index) => allowedIndices.includes(index));
+})
+
 
 </script>
 
@@ -338,11 +360,10 @@ function openModal() {
                                     <td class="px-2 py-2 whitespace-nowrap ">
                                         <select :id="'html' + item" @change="handleSelectChange(item, 'html' + item)"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
-                                            <template v-for="(i, y) in htmlType" :key="i">
-                                                <option :value="i"
-                                                    v-if="y === 0 || y === 1 || y === 2 || y === 5 || y === 6 || y === 7 || y === 10 || y === 21">
-                                                    {{ i }}</option>
-                                            </template>
+
+                                            <option v-for="(i, y) in shouldDisplay" :key="i" :value="y">
+                                                {{ i }}</option>
+
 
                                         </select>
                                     </td>
@@ -397,4 +418,5 @@ function openModal() {
 
 .component.show {
     opacity: 1;
-}</style>
+}
+</style>
