@@ -3,11 +3,9 @@
     
 <strong>------------Nội dung ------------ </strong><br>
 {{ $data['message'] }} <br>
-
-<strong>Name: </strong>{{ $data['name'] }} <br>
-<strong>Subject: </strong>{{ $data['subject'] }} <br>
-
-@foreach($data['data'] as $key => $value)
+<strong>--------------------------------- </strong><br>
+<strong>Họ và tên: </strong>{{ $data['name'] }} <br>
+@foreach($data['info'] as $key => $value)
     <strong>{{$key}}: </strong>{{ $value }} <br>
 @endforeach
 

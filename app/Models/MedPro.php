@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class thuan extends Model
+class MedPro extends Model
 {
     use HasFactory;
     /**
@@ -13,7 +13,7 @@ class thuan extends Model
      *
      * @var string
      */
-    protected $table = 'hu';
+    protected $table = 'MedPro';
 
     /**
     * The database primary key value.
@@ -27,7 +27,7 @@ class thuan extends Model
      *
      * @var array
      */
-    protected $fillable = ['ẹnn','service_id','user_id','status',];
+    protected $fillable = ['ho_va_ten','gender','service_id','user_id','status',];
 
     public function user_id()
     {

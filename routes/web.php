@@ -58,7 +58,7 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     route::get('/order/detail/{service_id}/{id}',[AdminController::class,'orderDetail'])->name('orderdetail');
 
     //chi tiet tk 
-    route::get('/user/{user_id}/service',[AdminController::class,'getUserService'])->name('detailUser');
+    route::get('/manage/customer/{user_id}/service',[AdminController::class,'getUserService'])->name('detailUser');
     
     route::get('/list/service', [AdminController::class, 'getListService']);
 
