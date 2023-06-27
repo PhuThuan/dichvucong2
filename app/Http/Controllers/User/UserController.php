@@ -101,7 +101,6 @@ class UserController extends Controller
             $data['user_id'] = Auth::user()->id;
             $data['service_id'] = (int)($id_service);
 
-            // dd($data);
             $dataConvert = "[";
             foreach ($data as $key => $val) {
                 $dataConvert .= "'" . $key . "'=>'" . $val . "'" . ",";
@@ -109,38 +108,34 @@ class UserController extends Controller
             $dataConvert .= "]";
 
             // dd($dataConvert);
-            try {
+            
                 //check model
-                if(!file_exists(app_path('Models/'. $model_name.'.php'))){
-                    return Inertia::render('Error');
-                }
-                $check =  eval("return \\App\\Models\\" . $model_name . "::create(" . $dataConvert . ");");
-                if (!isset($check) && is_null($check)) {
-                    return Inertia::render('Error');
-                }
-            } catch (Exception $e) {
+            if(!file_exists(app_path('Models/'. $model_name.'.php'))){
                 return Inertia::render('Error');
             }
+            eval("return \\App\\Models\\" . $model_name . "::create(" . $dataConvert . ");");
+        
+            
             /////send MAIL////////
             $dataMailForm = $data;
             $dataMailForm = $this->explodeFieldValue($dataMailForm);
             unset($dataMailForm['user_id']);
             unset($dataMailForm['status']);
+            unset($dataMailForm['ho_va_ten']);
             $dataMailForm['email'] ?? Auth::user()->email;
             $dataMailForm['phone'] ?? Auth::user()->phone;
-
+            $dataMailForm['service_name'] = $modelService['name'];
+            
             $dataMail = [
                 'name' => $request['ho_va_ten'],
                 'message' => "Bạn đã tạo thành công dịch vụ " . $modelService['name'],
-                'subject' =>  $modelService['name'],
-                'data' => $dataMailForm,
+                'subject' => 'Dịch vụ '.$modelService['name'],
+                'info' => $dataMailForm,
             ];
-
-            try {
-                Mail::to('phuthuan1910305@gmail.com')->send(new SendMail($dataMail));
-            } catch (Exception $e) {
-            }
-
+            
+            
+            Mail::to('123@gmail.com')->send(new SendMail($dataMail));
+            
 
             return Inertia::render('OrderCreateForm', ['message' => 'Đã thêm yêu cầu thành công']);
             //   return to_route('dashboard');
@@ -148,6 +143,7 @@ class UserController extends Controller
             //return notifi model not found
             return Inertia::render('OrderCreateForm', ['message' => 'Không thành công']);
         }
+        //return Inertia::render('OrderCreateForm', ['message' => 'Không thành công']);
     }
 
     public function explodeFieldValue($data)
@@ -163,7 +159,7 @@ class UserController extends Controller
                 $dataField = '';
                 foreach ($id as $field) {
                     $field_name = ServiceFieldValueModel::find($field)['name'];
-                    if(isset($field_name)){
+                    if(!isset($field_name)){
                         return Inertia::render('Error');
                     }
                     $dataField .= $field_name;
@@ -172,9 +168,10 @@ class UserController extends Controller
                 $data[$key] = $dataField;
             }
         }
-        //dd($data);
+        
         return $data;
     }
+
     public function getUserService()
     {
         $user = User::find(Auth::user()->id);
