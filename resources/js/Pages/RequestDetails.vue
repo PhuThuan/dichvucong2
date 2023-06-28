@@ -173,6 +173,7 @@ function changeStatus(status) {
                 </div>
             </div>
         </div>
+        
     </Home_Admin>
 </template>
 <style>
