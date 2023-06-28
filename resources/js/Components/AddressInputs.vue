@@ -227,7 +227,9 @@ const validateForm = () => {
 </script>
 
 <template>
-    <div class="d-flex text-dark">
+    <label class="block font-medium text-gray-900">{{ services_fields.label }} </label>
+    
+    <div class="d-flex text-dark ml-2">
         <!-- Chọn thành phố  -->
         <div class="">
             <label class="block font-medium text-gray-900">Tỉnh/Thành Phố: <span class="text-[#fb4762]"

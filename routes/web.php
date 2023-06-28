@@ -83,6 +83,8 @@ Route::prefix('/user')->middleware(['auth','verified'])->group(function () {
     //chi tiet tai khoan
     route::get('/profile/service',[UserController::class,'getUserService']);
 
+    route::get('/order/detail/{service_id}/{id}',[UserController::class,'orderDetail'])->name('order');
+
 });
 
 

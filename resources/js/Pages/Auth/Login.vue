@@ -29,9 +29,6 @@ const showPassword = ref(false);
 
 // Các hàm và xử lý logic khác ở đây
 
-const togglePasswordVisibility = () => {
-    showPassword.value = !showPassword.value;
-};
 
 const validateForm = () => {
     let isValid = true;
@@ -108,13 +105,14 @@ const submit = () => {
                     v-model="form.password" autocomplete="current-password" placeholder="Mật khẩu" />
                 <button type="button" class="absolute right-0 top-0 h-full px-3 text-gray-600 focus:outline-none"
                     @click="showPassword = !showPassword">
-                    <i class="fas fa-eye" :class="{ 'hidden': !showPassword, 'block': showPassword }"></i>
-                    <i class="fas fa-eye-slash"  :class="{ 'block': !showPassword, 'hidden': showPassword }"></i>
+                    <i  :class="{ 'fas fa-eye': !showPassword, 'fas fa-eye-slash': showPassword }"></i>
+                    <!-- <i class="fas fa-eye-slash"  :class="{ 'block': !showPassword, 'hidden': showPassword }"></i> -->
                 </button>
                 <InputError class="mt-2" :message="form.errors.password" />
                 <InputError class="mt-2" v-if="form.errors.password == 'These credentials do not match our records.'"
                     :message="'Sai mật khẩu'" />
             </div>
+            
 
 
 
@@ -164,4 +162,5 @@ const submit = () => {
         </form>
     </GuestLayout>
 </template>
+
 
