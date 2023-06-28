@@ -60,6 +60,7 @@ async function submitForm() {
         let form = useForm(formData.value);
         // console.log(form);
         form.post(route('dataForm',[props.id]), {
+            forceFormData: true,
             onSuccess: () => {
                 // Gui form thanh cong
                 console.log(props.message);
@@ -137,13 +138,14 @@ onMounted(() => {
             <TelInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 10"
                 @telResponse="(data) => formValidate[item.field_name] = data" />
         </div>
-
+        
         <div class="mx-[.0rem] mt-[.5rem]">
             <button @click="submitForm" type="button" class="rounded-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium px-5 py-2.5 
             text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full">
                 Gửi</button>
         </div>
     </form>
+    
 </HeaderCustomer >
 
 </template>

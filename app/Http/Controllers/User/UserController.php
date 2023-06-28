@@ -91,12 +91,31 @@ class UserController extends Controller
             $datatempt
 
         ]);
+
+        $path_file = [];
+        ////handle file/////
+        foreach($table_name as $value){
+            //dd($value['field_name']);
+            
+            if($request->hasFile($value['field_name'])){
+
+                $path_file[$value['field_name']] = 'file,'.$request->file($value['field_name'])->store(Auth::user()->id,'public');
+
+            }
+        }
+
         $modelService = ServicesModel::find($id_service);
         if (!isset($modelService)) {
             return Inertia::render('Error');
         }
         if ($model_name = $modelService['model_name']) {
             $data = $request->all();
+
+            //handle file
+            foreach($path_file as $key => $value){
+                $data[$key] = $value;
+            }
+
             $data['status'] = TypeData::status['disable'];
             $data['user_id'] = Auth::user()->id;
             $data['service_id'] = (int)($id_service);
@@ -151,8 +170,13 @@ class UserController extends Controller
 
         // $dataField = [];
         foreach ($data as $key => $value) {
-            if (str_contains(explode(',', $value)[0], 'radio') || str_contains(explode(',', $value)[0], 'checkbox') || str_contains(explode(',', $value)[0], 'select')) {
+            if (str_contains(explode(',', $value)[0], 'radio') || str_contains(explode(',', $value)[0], 'checkbox') || str_contains(explode(',', $value)[0], 'select') || str_contains(explode(',', $value)[0], 'file')) {
                 $id = explode(',', $value);
+                if($id[0] == 'file'){
+                    $data[$key] = 'storage/'.$id[1];
+                    //dd($data[$key]);
+                    continue;
+                }
                 unset($id[0]);
                 //dd($id);
                 //get value form id field

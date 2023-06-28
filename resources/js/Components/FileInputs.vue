@@ -116,7 +116,7 @@ const validateForm = () => {
         file:rounded-full file:border-0 file:mr-4 hover:file:bg-violet-100 rounded-[9999px] focus:outline-[#3b82f6]"
             :placeholder="services_fields.placeholder" :="stringToObject"
             accept="image/png, image/jpeg, .doc, .docx, .pdf, .pptx"
-            @input="updateFormData(services_fields.field_name, input)" />
+            @input="props.formData[services_fields.field_name] = $event.target?.files[0]" />
         <InputError class="mt-2" :message="validate.errors[props.services_fields.field_name]"
             :required="stringToObject?.required" />
     </div>
