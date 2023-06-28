@@ -145,21 +145,21 @@ onMounted(() => {
     <form class="px-[2rem] py-[.2rem] text-[1rem]" enctype="multipart/form-data">
         <!-- Tạo input tự động  -->
         <div class="m-[.0rem]" v-for="item in services_fields_array">
-            <TextInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+            <TextInputs @keyup.enter="submitForm" :submitClicked="submitClicked" :services_fields="item" :formData="formData"
                 v-if="item.html_type === 0" @textResponse="(data) => formValidate[item.field_name] = data" />
-            <NumberInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+            <NumberInputs @keyup.enter="submitForm" :submitClicked="submitClicked" :services_fields="item" :formData="formData"
                 v-if="item.html_type === 1" @numberResponse="(data) => formValidate[item.field_name] = data" />
-            <CheckboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+            <CheckboxInputs @keyup.enter="submitForm" :submitClicked="submitClicked" :services_fields="item" :formData="formData"
                 v-if="item.html_type === 2" @checkboxResponse="(data) => formValidate[item.field_name] = data" />
-            <RadioInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+            <RadioInputs @keyup.enter="submitForm" :submitClicked="submitClicked" :services_fields="item" :formData="formData"
                 v-if="item.html_type === 6" @radioResponse="(data) => formValidate[item.field_name] = data" />
-            <FileInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+            <FileInputs @keyup.enter="submitForm" :submitClicked="submitClicked" :services_fields="item" :formData="formData"
                 v-if="item.html_type === 5" @fileResponse="(data) => formValidate[item.field_name] = data" />
-            <AddressInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+            <AddressInputs @keyup.enter="submitForm" :submitClicked="submitClicked" :services_fields="item" :formData="formData"
                 v-if="item.html_type === 21" @addressResponse="(data) => formValidate[item.field_name] = data" />
-            <ComboboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+            <ComboboxInputs @keyup.enter="submitForm" :submitClicked="submitClicked" :services_fields="item" :formData="formData"
                 v-if="item.html_type === 7" @comboboxResponse="(data) => formValidate[item.field_name] = data" />
-            <TelInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+            <TelInputs @keyup.enter="submitForm" :submitClicked="submitClicked" :services_fields="item" :formData="formData"
                 v-if="item.html_type === 10" @telResponse="(data) => formValidate[item.field_name] = data" />
         </div>
 

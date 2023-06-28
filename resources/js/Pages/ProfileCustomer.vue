@@ -76,7 +76,7 @@ let serviceList = ref(props.data.service);
                     <span>({{ showTime(item['created_at']) }} {{ showDate(item['created_at']) }})</span>
                 </h5>
                 <div class="text-right my-[.25rem]">
-                    <Link :href="`http://127.0.0.1:8000/admin/order/detail/${item.service_id}/${item.id}`"
+                    <Link :href="route('order',[item.service_id,item.id])"
                         class="bg-[#36b7ff] text-[.75rem] rounded-[24px] py-[0.25rem] px-[0.75rem]">Chi tiết
                     </Link>
                 </div>

@@ -12,18 +12,28 @@ defineProps({ services: Array })
 <template>
     <Head title="Tạo đơn" />
     <HeaderCustomer>
-        <ul class=" bt-5 text-center flex " style="flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-items: center;">
-            <li v-for="service in services" :key="service.id">
-                <Link :href="route('createAdmin', [id_service = service.id])">
-                <button
-                    class="justify-center m-3 inline-flex px-4 py-4 w-56 border border-transparent rounded-md  text-l tracking-widest hover:bg-blue-400 bg-[#38B6FF] transition ease-in-out duration-150">
-                    {{ service.name }}
-                </button>
-                </Link>
+       <div class="text-lg">Chọn dịch vụ</div>
+        <div class="h-full flex flex-col">
+            <div class="w-full h-full shadow">
+                <table class="table-auto w-full">
+                    <tbody>
+                        <template v-for="(service,index) in services" :key="service.id">
+                        <tr 
+                            class="relative transform scale-100  py-1 hover:bg-gray-100 cursor-default bg-opacity-25 "
+                            :class="{ 'bg-gray-300 hover:bg-gray-200': index % 2 == 0 }">
+                            <Link class="block" :href="route('createAdmin', [service.id])">
+                            <td class="pl-5 pr-48 py-5 whitespace-no-wrap ">
+                                <div> {{ service.name }}</div>
+                            </td>
 
-            </li>
-        </ul>
+                            
+                            </Link>
+
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </HeaderCustomer>
 </template>
