@@ -14,7 +14,9 @@ const showToast = ref(false)
 const isProcessed = ref()
 const address = ref([])
 const label = ref([])
-const keys=ref([])
+const keys = ref([])
+const file = ref([])
+const labelFile = ref([])
 onMounted(() => {
     console.log(props.data);
     if (props.data.status == 0) {
@@ -30,6 +32,9 @@ onMounted(() => {
     for (const [key, value] of Object.entries(props.data)) {
         //         console.log();
         //   console.log(`${key}: ${value}`);
+        if (slice(props.data[key])) {
+            file.value.push(key)
+        }
         if (isJSON(props.data[key])) {
             var a = JSON.parse(props.data[key])
             if (a?.city) {
@@ -41,6 +46,21 @@ onMounted(() => {
 
     }
 })
+
+function slice(e) {
+    if (typeof e === 'string') {
+        var lastThreeChars = e.slice(-3);
+        if (lastThreeChars == 'png' || lastThreeChars == 'jpeg' || lastThreeChars == 'pdf') {
+            return true
+        }
+    }
+    return false
+}
+function test(e) {
+    var lastThreeChars = e.slice(-3);
+    console.log(lastThreeChars);
+    return lastThreeChars
+}
 function isJSON(str) {
     try {
         JSON.parse(str);
@@ -112,7 +132,7 @@ function changeStatus(status) {
 
 <template>
     <Head title="Chi Tiết Yêu Cầu" />
-    <Home_Admin v-if="$page.props.auth.user.role==1">
+    <Home_Admin v-if="$page.props.auth.user.role == 1">
         <div class="w-full text-center font-bold text-base">
             <h3>Mã yêu cầu: {{ props.data.service_id + '0' + props.data.id }}</h3>
         </div>
@@ -139,36 +159,42 @@ function changeStatus(status) {
 
             </template>
             <!-- show address -->
-            <div v-for="(address,index) in address">
-                <strong class="ml-2">{{label[index] }}: </strong>
+            <div v-for="(address, index) in address">
+                <strong class="ml-2">{{ label[index] }}: </strong>
                 <div class="ml-2">
                     <div class="flex p-2 items-center ">
-                    <strong class="mr-2 ">Tỉnh/Thành phố: </strong>
-                    <strong class=" ">{{ address.city }}</strong>
-                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
-                        @click="copyText(address.city)"></i>
+                        <strong class="mr-2 ">Tỉnh/Thành phố: </strong>
+                        <strong class=" ">{{ address.city }}</strong>
+                        <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                            @click="copyText(address.city)"></i>
+                    </div>
+                    <div class="flex p-2 items-center ">
+                        <strong class="mr-2 ">Quận/Huyện: </strong>
+                        <strong class=" ">{{ address.district }}</strong>
+                        <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                            @click="copyText(address.district)"></i>
+                    </div>
+                    <div class="flex p-2 items-center ">
+                        <strong class="mr-2 ">Phường/Xã: </strong>
+                        <strong class=" ">{{ address.ward }}</strong>
+                        <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                            @click="copyText(address.ward)"></i>
+                    </div>
+                    <div class="flex p-2 items-center ">
+                        <strong class="mr-2 ">Tên đường: </strong>
+                        <strong class=" ">{{ address.streetName }}</strong>
+                        <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                            @click="copyText(address.streetName)"></i>
+                    </div>
                 </div>
-                <div class="flex p-2 items-center ">
-                    <strong class="mr-2 ">Quận/Huyện: </strong>
-                    <strong class=" ">{{ address.district }}</strong>
-                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
-                        @click="copyText(address.district)"></i>
-                </div>
-                <div class="flex p-2 items-center ">
-                    <strong class="mr-2 ">Phường/Xã: </strong>
-                    <strong class=" ">{{ address.ward }}</strong>
-                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
-                        @click="copyText(address.ward)"></i>
-                </div>
-                <div class="flex p-2 items-center ">
-                    <strong class="mr-2 ">Tên đường: </strong>
-                    <strong class=" ">{{ address.streetName }}</strong>
-                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
-                        @click="copyText(address.streetName)"></i>
-                </div>
-                </div>
-            </div>
 
+            </div>
+ <div v-for="i in file" :key="i" class="ml-2">
+                <strong class="mr-2 ">{{ props.data.label[i] }}</strong>
+
+                <embed v-if="test(props.data[i]) == 'pdf'" :src="'/' + props.data[i]" type="application/pdf" width="100%" height="300px" />
+                <img v-else :src="'/' + props.data[i]" style="height:100px" alt="Image">
+            </div>
 
             <div class="flex p-4 ml-2 items-center">
                 <strong class="mr-2 ">Dịch vụ đã chọn:</strong>
@@ -202,10 +228,10 @@ function changeStatus(status) {
                 </div>
             </div>
         </div>
-        
+
     </Home_Admin>
-    <div v-if="$page.props.auth.user.role==0"> 
-        <HeaderCustomer/>
+    <div v-if="$page.props.auth.user.role == 0">
+        <HeaderCustomer />
         <div class="w-full text-center font-bold text-base">
             <h3>Mã yêu cầu: {{ props.data.service_id + '0' + props.data.id }}</h3>
         </div>
@@ -232,34 +258,41 @@ function changeStatus(status) {
 
             </template>
             <!-- show address -->
-            <div v-for="(address,index) in address">
-                <strong class="ml-2">{{label[index] }}: </strong>
+            <div v-for="(address, index) in address">
+                <strong class="ml-2">{{ label[index] }}: </strong>
                 <div class="ml-2">
                     <div class="flex p-2 items-center ">
-                    <strong class="mr-2 ">Tỉnh/Thành phố: </strong>
-                    <strong class=" ">{{ address.city }}</strong>
-                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
-                        @click="copyText(address.city)"></i>
+                        <strong class="mr-2 ">Tỉnh/Thành phố: </strong>
+                        <strong class=" ">{{ address.city }}</strong>
+                        <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                            @click="copyText(address.city)"></i>
+                    </div>
+                    <div class="flex p-2 items-center ">
+                        <strong class="mr-2 ">Quận/Huyện: </strong>
+                        <strong class=" ">{{ address.district }}</strong>
+                        <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                            @click="copyText(address.district)"></i>
+                    </div>
+                    <div class="flex p-2 items-center ">
+                        <strong class="mr-2 ">Phường/Xã: </strong>
+                        <strong class=" ">{{ address.ward }}</strong>
+                        <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                            @click="copyText(address.ward)"></i>
+                    </div>
+                    <div class="flex p-2 items-center ">
+                        <strong class="mr-2 ">Tên đường: </strong>
+                        <strong class=" ">{{ address.streetName }}</strong>
+                        <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
+                            @click="copyText(address.streetName)"></i>
+                    </div>
                 </div>
-                <div class="flex p-2 items-center ">
-                    <strong class="mr-2 ">Quận/Huyện: </strong>
-                    <strong class=" ">{{ address.district }}</strong>
-                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
-                        @click="copyText(address.district)"></i>
-                </div>
-                <div class="flex p-2 items-center ">
-                    <strong class="mr-2 ">Phường/Xã: </strong>
-                    <strong class=" ">{{ address.ward }}</strong>
-                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
-                        @click="copyText(address.ward)"></i>
-                </div>
-                <div class="flex p-2 items-center ">
-                    <strong class="mr-2 ">Tên đường: </strong>
-                    <strong class=" ">{{ address.streetName }}</strong>
-                    <i class="fas fa-clone fa-lg ml-2" style="color: #b3b4b7;cursor: pointer;"
-                        @click="copyText(address.streetName)"></i>
-                </div>
-                </div>
+
+            </div>
+            <div v-for="i in file" :key="i" class="ml-2">
+                <strong class="mr-2 ">{{ props.data.label[i] }}</strong>
+
+                <embed v-if="test(props.data[i]) == 'pdf'" :src="'/' + props.data[i]" type="application/pdf" width="100%" height="300px" />
+                <img v-else :src="'/' + props.data[i]" style="height:100px" alt="Image">
             </div>
 
 
@@ -267,9 +300,9 @@ function changeStatus(status) {
                 <strong class="mr-2 ">Dịch vụ đã chọn:</strong>
                 <strong class="mr-2 ">{{ props.data.service_name }}</strong>
             </div>
-           
+
         </div>
-       
+
         <div class="relative w-full  flex items-end justify-center" style="bottom: -7rem;">
             <div class="absolute  bottom-2  left-0 right-0 flex justify-center" style="z-index: 99; ">
                 <div id="toast-simple"
@@ -279,9 +312,9 @@ function changeStatus(status) {
                 </div>
             </div>
         </div>
-        <Footer/>
+
+        <Footer />
     </div>
-    
 </template>
 
 <style>
