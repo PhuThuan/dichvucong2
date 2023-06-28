@@ -65,6 +65,9 @@ Route::prefix('/admin')->middleware(['checkAccountLogin','auth','verified'])->gr
     Route::get('/serviceForm/{id_service}', [AdminController::class, 'getForm'])->name('createAdmin');
     
     Route::post('/service/post/{id_service}', [AdminController::class, 'createDataUser'])->name('dataForm');
+
+    route::post('/order/detail/{service_id}/{id}',[AdminController::class,'changeStatus']);
+
 });
 
 Route::prefix('/user')->middleware(['auth','verified'])->group(function () {

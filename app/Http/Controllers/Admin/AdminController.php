@@ -346,4 +346,56 @@ class AdminController extends Controller
             return Inertia::render('Admin_OrderForm',['message'=>'Không thành công']);
         }
     }
+
+    public function changeStatus(Request $request, $service_id, $id)
+    {
+        $request->validate([     
+            'status' => 'required',
+        ]);
+        $data_table =   ServicesModel::find($service_id)->get();
+        foreach ($data_table as $dataService) {
+            $model_name = $dataService['model_name'];
+            eval("return \\App\\Models\\" . $model_name . "::where('id',". $id .")->where('service_id',".$service_id.")->update(['status'=>".$request->status."]);");        }
+
+        
+        $dataService = ServicesModel::find($service_id);
+        if (!isset($dataService)) {
+            return Inertia::render('Error');
+        }
+        $dataLabel = [];
+
+        //array
+        $dataServiceField = ServicesFieldsModel::where('services_id', $service_id)->get();
+        if (!isset($dataServiceField)) {
+            return Inertia::render('Error');
+        }
+        $model_name = $dataService['model_name'];
+        //check model
+        if(!file_exists(app_path('Models/'. $model_name.'.php'))){
+            return Inertia::render('Error');
+        }
+        $data_model = eval("return \\App\\Models\\" . $model_name . "::find(" . $id . ");");
+        if (!isset($data_model) && is_null($data_model)) {
+            return Inertia::render('Error');
+        }
+        //convert to array
+        $data_model = $data_model->toArray();
+
+        //check multi-value and convert
+        $data_model = $this->explodeFieldValue($data_model);
+        //$data_model['label'] = $dataLabel;
+        if (isset($dataServiceField)) {
+
+            foreach ($dataServiceField as $value) {
+                $dataLabel += [$value['field_name'] => $value['label']];
+            }
+        } else {
+            return  Inertia::render('Error');;
+        }
+        $data_model['label'] = $dataLabel;
+        $data_model['service_name'] = $dataService['name'];
+
+        // dd($data_model);
+        return Inertia::render('RequestDetails', ['data' => $data_model,'status'=>$data_model['status']]);
+    }
 }
