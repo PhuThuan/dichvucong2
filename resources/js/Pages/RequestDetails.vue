@@ -50,7 +50,7 @@ onMounted(() => {
 function slice(e) {
     if (typeof e === 'string') {
         var lastThreeChars = e.slice(-3);
-        if (lastThreeChars == 'png' || lastThreeChars == 'jpeg' || lastThreeChars == 'pdf') {
+        if (lastThreeChars == 'png' || lastThreeChars == 'jpeg'||lastThreeChars == 'jpg' || lastThreeChars == 'pdf') {
             return true
         }
     }
@@ -144,7 +144,7 @@ function changeStatus(status) {
         </div>
         <div class="font-bold text-base p-3 ">
             <template class=" " v-for="(i, index) in props.data.label" :key="index">
-                <div v-if="!keys.includes(index)" class="flex p-2 items-center">
+                <div v-if="!keys.includes(index) && file.indexOf(index)" class="flex p-2 items-center">
                     <strong class="mr-2 ">{{ i }}: </strong>
                     <div v-if="Array.isArray(props.data[index])" v-for="(y, z) in props.data[index]" :key="i" class="flex"
                         style="flex-wrap: wrap;">
