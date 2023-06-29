@@ -21,6 +21,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('phone')->unique();
             $table->tinyInteger('role');
+            $table->integer('gr_id');
         });
     }
 
