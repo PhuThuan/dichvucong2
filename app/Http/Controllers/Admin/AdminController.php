@@ -34,12 +34,13 @@ class AdminController extends Controller
         $data = ServicesModel::all();
         return Inertia::render('Admin_Managerment_Services', ['services' => $data]);
     }
-    public function getDataUsers($status)
+    public function getDataUsers($service_id,$status=4)
     {
-        if ($status > 2 || $status < 0) {
-            return Inertia::render('Error');
-        }
-        $dataServices = ServicesModel::all();
+        // if ($status > 4 || $status < 0) {
+        //     return Inertia::render('Error');
+        // }
+        
+        $dataServices = ServicesModel::where('id',$service_id)->get();
         $dataResult = [];
         $data_count = 0;
         //  dd($dataService);
@@ -51,16 +52,17 @@ class AdminController extends Controller
                 return Inertia::render('Error');
             }
             // data type array
-            if ($status == 1) {
+            //if ($status == 1 || $status ==2 || $status ==3) {
                 $data_model = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->get();");
-                $data_count += eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->count();");
-            } else  if ($status == 2) {
-                $data_model = eval("return \\App\\Models\\" . $model_name . "::all();");
-                $data_count = eval("return \\App\\Models\\" . $model_name . "::count();");
-            } else {
-                $data_model = eval("return \\App\\Models\\" . $model_name . "::all()->where('status'," . $status . ");");
-                $data_count += eval("return \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->count();");
-            }
+                $data_count = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->count();");
+            // } else  if ($status == 4) {
+            //     $data_model = eval("return \\App\\Models\\" . $model_name . "::all();");
+            //     $data_count = eval("return \\App\\Models\\" . $model_name . "::count();");
+            // } else {
+
+            //     $data_model = eval("return \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->get();");
+            //     $data_count = eval("return \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->count();");
+            // }
 
             //get status == disable
             //$data_model::where('status',TypeData::status['disable']);
