@@ -47,7 +47,7 @@ class AdminController extends Controller
             $model_name = $dataService['model_name'];
             //check model
             //dd(file_exists(app_path('Models/'. $model_name.'.php')));
-            if(!file_exists(app_path('Models/'. $model_name.'.php'))){
+            if (!file_exists(app_path('Models/' . $model_name . '.php'))) {
                 return Inertia::render('Error');
             }
             // data type array
@@ -110,18 +110,17 @@ class AdminController extends Controller
             $model_name = $dataService['model_name'];
 
             // data type array
-            try{
+            try {
                 //dd(file_exists(!app_path('Models/'. $model_name.'.php')));
-                if(!file_exists(app_path('Models/'. $model_name.'.php'))){
+                if (!file_exists(app_path('Models/' . $model_name . '.php'))) {
                     return Inertia::render('Error');
                 }
                 $data_model = eval("return \\App\\Models\\" . $model_name . "::all()->where('status','0');");
-
-            }catch(Exception $e){
+            } catch (Exception $e) {
                 return Inertia::render('Error');
             }
-            
-            
+
+
             //get status == disable
             //$data_model::where('status',TypeData::status['disable']);
             //dd($data_model);  
@@ -160,7 +159,7 @@ class AdminController extends Controller
         }
         $model_name = $dataService['model_name'];
         //check model
-        if(!file_exists(app_path('Models/'. $model_name.'.php'))){
+        if (!file_exists(app_path('Models/' . $model_name . '.php'))) {
             return Inertia::render('Error');
         }
         $data_model = eval("return \\App\\Models\\" . $model_name . "::find(" . $id . ");");
@@ -196,8 +195,8 @@ class AdminController extends Controller
                 $id = explode(',', $value);
 
                 //handle file
-                if($id[0] == 'file'){
-                    $data[$key] = 'storage/'.$id[1];
+                if ($id[0] == 'file') {
+                    $data[$key] = 'storage/' . $id[1];
                     //dd($data[$key]);
                     continue;
                 }
@@ -230,7 +229,7 @@ class AdminController extends Controller
                 $model_name = $service['model_name'];
                 //check model 
                 //dd(file_exists(app_path('Models/'. $model_name.'.php')));
-                if(!file_exists(app_path('Models/'. $model_name.'.php'))){
+                if (!file_exists(app_path('Models/' . $model_name . '.php'))) {
                     return Inertia::render('Error');
                 }
                 //get service user used
@@ -271,7 +270,7 @@ class AdminController extends Controller
             $model_name = $dataService['model_name'];
 
             // data type array
-            if(!file_exists(app_path('Models/'. $model_name.'.php'))){
+            if (!file_exists(app_path('Models/' . $model_name . '.php'))) {
                 return Inertia::render('Error');
             }
             $data_count += eval("return \\App\\Models\\" . $model_name . "::where('status',0)->count();");
@@ -299,7 +298,7 @@ class AdminController extends Controller
 
     public function createDataUser(Request $request, $id_service)
     {
-       
+
         $table_name = ServicesFieldsModel::get()->where('services_id', $id_service);
 
         $datatempt = '';
@@ -308,7 +307,7 @@ class AdminController extends Controller
 
             $datatempt .= '"' . $dataService['field_name'] . '"' . '=>' . '"' . $dataService['validate'] . '",';
         }
-       
+
         $request->validate([
             $datatempt
 
@@ -316,25 +315,24 @@ class AdminController extends Controller
 
         $path_file = [];
         ////handle file/////
-        foreach($table_name as $value){
+        foreach ($table_name as $value) {
             //dd($value['field_name']);
-            
-            if($request->hasFile($value['field_name'])){
 
-                $path_file[$value['field_name']] = 'file,'.$request->file($value['field_name'])->store(Auth::user()->id,'public');
+            if ($request->hasFile($value['field_name'])) {
 
+                $path_file[$value['field_name']] = 'file,' . $request->file($value['field_name'])->store(Auth::user()->id, 'public');
             }
         }
-        
+
         $modelService = ServicesModel::find($id_service);
         if (!isset($modelService)) {
             return Inertia::render('Error');
         }
         if ($model_name = $modelService['model_name']) {
             $data = $request->all();
-            
+
             //handle file
-            foreach($path_file as $key => $value){
+            foreach ($path_file as $key => $value) {
                 $data[$key] = $value;
             }
 
@@ -342,7 +340,6 @@ class AdminController extends Controller
             $data['user_id'] = Auth::user()->id;
             $data['service_id'] = (int)($id_service);
 
-            //dd($data);
             $dataConvert = "[";
             foreach ($data as $key => $val) {
                 $dataConvert .= "'" . $key . "'=>'" . $val . "'" . ",";
@@ -350,53 +347,56 @@ class AdminController extends Controller
             $dataConvert .= "]";
 
             // dd($dataConvert);
-            
-                //check model
-            if(!file_exists(app_path('Models/'. $model_name.'.php'))){
+
+            //check model
+            if (!file_exists(app_path('Models/' . $model_name . '.php'))) {
                 return Inertia::render('Error');
             }
             eval("return \\App\\Models\\" . $model_name . "::create(" . $dataConvert . ");");
-        
-            
+
+
             /////send MAIL////////
             $dataMailForm = $data;
-            $dataMailForm = $this->explodeFieldValue($dataMailForm);
+            $dataMailForm = $this->explodeFieldValue2($dataMailForm);
             unset($dataMailForm['user_id']);
             unset($dataMailForm['status']);
             unset($dataMailForm['ho_va_ten']);
             $dataMailForm['email'] ?? Auth::user()->email;
             $dataMailForm['phone'] ?? Auth::user()->phone;
             $dataMailForm['service_name'] = $modelService['name'];
-            
+
             $dataMail = [
                 'name' => $request['ho_va_ten'],
                 'message' => "Bạn đã tạo thành công dịch vụ " . $modelService['name'],
-                'subject' => 'Dịch vụ '.$modelService['name'],
+                'subject' => 'Dịch vụ ' . $modelService['name'],
                 'info' => $dataMailForm,
             ];
-            
-            
+
+
             Mail::to('123@gmail.com')->send(new SendMail($dataMail));
-            
-            return Inertia::render('Admin_OrderForm',['message'=>'Đã thêm yêu cầu thành công']);
-         //   return to_route('dashboard');
+
+
+            return Inertia::render('Admin_OrderForm', ['message' => 'Đã thêm yêu cầu thành công']);
+            //   return to_route('dashboard');
         } else {
             //return notifi model not found
-            return Inertia::render('Admin_OrderForm',['message'=>'Không thành công']);
+            return Inertia::render('Admin_OrderForm', ['message' => 'Không thành công']);
         }
+        //return Inertia::render('OrderCreateForm', ['message' => 'Không thành công']);
     }
 
     public function changeStatus(Request $request, $service_id, $id)
     {
-        $request->validate([     
+        $request->validate([
             'status' => 'required',
         ]);
         $data_table =   ServicesModel::find($service_id)->get();
         foreach ($data_table as $dataService) {
             $model_name = $dataService['model_name'];
-            eval("return \\App\\Models\\" . $model_name . "::where('id',". $id .")->where('service_id',".$service_id.")->update(['status'=>".$request->status."]);");        }
+            eval("return \\App\\Models\\" . $model_name . "::where('id'," . $id . ")->where('service_id'," . $service_id . ")->update(['status'=>" . $request->status . "]);");
+        }
 
-        
+
         $dataService = ServicesModel::find($service_id);
         if (!isset($dataService)) {
             return Inertia::render('Error');
@@ -410,7 +410,7 @@ class AdminController extends Controller
         }
         $model_name = $dataService['model_name'];
         //check model
-        if(!file_exists(app_path('Models/'. $model_name.'.php'))){
+        if (!file_exists(app_path('Models/' . $model_name . '.php'))) {
             return Inertia::render('Error');
         }
         $data_model = eval("return \\App\\Models\\" . $model_name . "::find(" . $id . ");");
@@ -435,10 +435,38 @@ class AdminController extends Controller
         $data_model['service_name'] = $dataService['name'];
 
         // dd($data_model);
-        return Inertia::render('RequestDetails', ['data' => $data_model,'status'=>$data_model['status']]);
+        return Inertia::render('RequestDetails', ['data' => $data_model, 'status' => $data_model['status']]);
     }
-   public function image(){
-    $contents = Storage::get('2/8QG9B9koNiv1lY2U5jTIjbVcjgLdRzdArlVVNauU.png');
-    return  $contents;
-   }
+    
+
+     public function explodeFieldValue2($data)
+    {
+
+        // $dataField = [];
+        foreach ($data as $key => $value) {
+            if (str_contains(explode(',', $value)[0], 'radio') || str_contains(explode(',', $value)[0], 'checkbox') || str_contains(explode(',', $value)[0], 'select') || str_contains(explode(',', $value)[0], 'file')) {
+                $id = explode(',', $value);
+                if($id[0] == 'file'){
+                    $data[$key] = 'storage/'.$id[1];
+                    //dd($data[$key]);
+                    continue;
+                }
+                unset($id[0]);
+                //dd($id);
+                //get value form id field
+                $dataField = '';
+                foreach ($id as $field) {
+                    $field_name = ServiceFieldValueModel::find($field)['name'];
+                    if(!isset($field_name)){
+                        return Inertia::render('Error');
+                    }
+                    $dataField .= $field_name;
+                    $dataField .= ",";
+                }
+                $data[$key] = $dataField;
+            }
+        }
+        
+        return $data;
+    }
 }

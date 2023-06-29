@@ -20,7 +20,12 @@ const addField = () => {
     pos.value++
     fieldList.value.push(pos.value)
 }
-const delField = (value) => {
+const delField = (value,id) => {
+    const field = document.getElementById(id).value;
+    if (field === '2' || field === '4' || field === '5'){
+        const row = document.getElementById('row_af' + value);
+        row.remove()
+    }
     fieldList.value = fieldList.value.filter(item => item !== value);
 
 }
@@ -74,7 +79,7 @@ const handleSelectChange = (item, id) => {
     }
 
 }
-const addItem = (id, name, index) => {
+const addItem = (id, name) => {
 
     const div = document.createElement("div");
     const divID = 'diva' + pos.value
@@ -134,7 +139,7 @@ const submit = () => {
         const validate = document.getElementById('validate' + i).value;
         const placehoder = document.getElementById('placehoder' + i).value;
         const arr = []
-        if (html_type == '2' || html_type == '4' || html_type =='5') {
+        if (html_type == '2' || html_type == '4' || html_type == '5') {
             const name = 'name' + i
             var inputElements = document.querySelectorAll('input[name="' + name + '"]');
             // Lặp qua từng phần tử và lấy giá trị
@@ -318,7 +323,7 @@ const shouldDisplay = computed(() => {
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
                                     </th>
                                     <td class="px-2 py-2 whitespace-nowrap ">
-                                        <select id="name_html" @change="handleSelectChange(item, 'html' + item)" disabled
+                                        <select id="name_html"  disabled
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">0,1,2,5,6,7,10,21
                                             <option v-for="(i, y) in htmlType" :key="i" :value="y">{{ i }} </option>
                                         </select>
@@ -386,7 +391,7 @@ const shouldDisplay = computed(() => {
                                     </td>
                                     <td class="px-2 py-2 whitespace-nowrap text-center">
                                         <i class="far fa-trash-alt fa-lg" style="color: #ea0b0b; cursor: pointer;"
-                                            @click="delField(item)"></i>
+                                            @click="delField(item,'html' + item)"></i>
                                     </td>
 
                                 </tr>
