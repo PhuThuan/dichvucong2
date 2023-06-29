@@ -107,5 +107,5 @@ Route::get('/get-address', function () {
     return response($json)->header('Content-Type', 'application/json');
 });
 Route::get('/get-noti',[AdminController::class,'notihead']);
-route::get('/image',[AdminController::class,'image']);
+
 require __DIR__.'/auth.php';

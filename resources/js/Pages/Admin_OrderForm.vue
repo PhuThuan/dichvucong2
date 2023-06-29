@@ -45,6 +45,9 @@ async function submitForm() {
 
     // Nếu có field chưa hợp lệ thì sữa exitFlad
     services_fields_array.forEach(element => {
+        // Tao formData default
+        if (!formData.value[element.field_name])
+            formData.value[element.field_name] = '';
         // console.log(formData.value[element.field_name]);
         if (formValidate.value[element.field_name]?.required) {
             if (!formData.value[element.field_name]) {
@@ -59,7 +62,7 @@ async function submitForm() {
     } else {
         let form = useForm(formData.value);
         // console.log(form);
-        form.post(route('dataForm',[props.id]), {
+        form.post(route('dataForm', [props.id]), {
             forceFormData: true,
             onSuccess: () => {
                 // Gui form thanh cong
@@ -99,53 +102,51 @@ onMounted(() => {
 </script>
 
 <template>
-    
-    <HeaderCustomer >
-    <!-- Popup Model  -->
-    <div class="popup-modal">
-        <div v-if="isModalOpen" id="popup-modal" tabindex="-1"
-            class="flex flex-wrap content-center justify-center fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="p-[0.5rem] text-center px-[1.5rem] pb-[1.5rem] relative bg-[#d9d9d9] rounded-[1.5rem]">
-                <h3 class="mb-[3rem] text-[1.75rem] font-normal text-[#000000]">{{ message }}
-                </h3>
+    <HeaderCustomer>
+        <!-- Popup Model  -->
+        <div class="popup-modal">
+            <div v-if="isModalOpen" id="popup-modal" tabindex="-1"
+                class="flex flex-wrap content-center justify-center fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div class="p-[0.5rem] text-center px-[1.5rem] pb-[1.5rem] relative bg-[#d9d9d9] rounded-[1.5rem]">
+                    <h3 class="mb-[3rem] text-[1.75rem] font-normal text-[#000000]">{{ message }}
+                    </h3>
 
-                <Link href="/admin/list/service"
-                    class="text-[#000000] bg-[#37b6ff] hover:bg-[#58b3e8] focus:outline-none font-medium rounded-full text-sm inline-flex items-center px-5 text-center">
-                Xong
-                </Link>
+                    <Link href="/admin/list/service"
+                        class="text-[#000000] bg-[#37b6ff] hover:bg-[#58b3e8] focus:outline-none font-medium rounded-full text-sm inline-flex items-center px-5 text-center">
+                    Xong
+                    </Link>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Form tạo yêu cầu -->
-    <form class="px-[2rem] py-[.2rem] text-[1rem]" enctype="multipart/form-data">
-        <!-- Tạo input tự động  -->
-        <div class="m-[.0rem]" v-for="item in services_fields_array">
-            <TextInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 0"
-                @textResponse="(data) => formValidate[item.field_name] = data" />
-            <NumberInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 1"
-                @numberResponse="(data) => formValidate[item.field_name] = data" />
-            <CheckboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 2"
-                @checkboxResponse="(data) => formValidate[item.field_name] = data" />
-            <RadioInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 6"
-                @radioResponse="(data) => formValidate[item.field_name] = data" />
-            <FileInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 5"
-                @fileResponse="(data) => formValidate[item.field_name] = data" />
-            <AddressInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 21"
-                @addressResponse="(data) => formValidate[item.field_name] = data" />
-            <ComboboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 7"
-                @comboboxResponse="(data) => formValidate[item.field_name] = data" />
-            <TelInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData" v-if="item.html_type === 10"
-                @telResponse="(data) => formValidate[item.field_name] = data" />
-        </div>
-        
-        <div class="mx-[.0rem] mt-[.5rem]">
-            <button @click="submitForm" type="button" class="rounded-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium px-5 py-2.5 
+        <!-- Form tạo yêu cầu -->
+        <form class="px-[2rem] py-[.2rem] text-[1rem]" enctype="multipart/form-data">
+            <!-- Tạo input tự động  -->
+            <div class="m-[.0rem]" v-for="item in services_fields_array">
+                <TextInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                    v-if="item.html_type === 0" @textResponse="(data) => formValidate[item.field_name] = data" />
+                <NumberInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                    v-if="item.html_type === 1" @numberResponse="(data) => formValidate[item.field_name] = data" />
+                <CheckboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                    v-if="item.html_type === 2" @checkboxResponse="(data) => formValidate[item.field_name] = data" />
+                <RadioInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                    v-if="item.html_type === 6" @radioResponse="(data) => formValidate[item.field_name] = data" />
+                <FileInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                    v-if="item.html_type === 5" @fileResponse="(data) => formValidate[item.field_name] = data" />
+                <AddressInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                    v-if="item.html_type === 21" @addressResponse="(data) => formValidate[item.field_name] = data" />
+                <ComboboxInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                    v-if="item.html_type === 7" @comboboxResponse="(data) => formValidate[item.field_name] = data" />
+                <TelInputs :submitClicked="submitClicked" :services_fields="item" :formData="formData"
+                    v-if="item.html_type === 10" @telResponse="(data) => formValidate[item.field_name] = data" />
+            </div>
+
+            <div class="mx-[.0rem] mt-[.5rem]">
+                <button @click="submitForm" type="button" class="rounded-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium px-5 py-2.5 
             text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full">
-                Gửi</button>
-        </div>
-    </form>
-    
-</HeaderCustomer >
+                    Gửi</button>
+            </div>
+        </form>
 
+    </HeaderCustomer>
 </template>

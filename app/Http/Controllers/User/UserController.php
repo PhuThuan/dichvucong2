@@ -137,7 +137,7 @@ class UserController extends Controller
             
             /////send MAIL////////
             $dataMailForm = $data;
-            $dataMailForm = $this->explodeFieldValue($dataMailForm);
+            $dataMailForm = $this->explodeFieldValue2($dataMailForm);
             unset($dataMailForm['user_id']);
             unset($dataMailForm['status']);
             unset($dataMailForm['ho_va_ten']);
@@ -164,8 +164,35 @@ class UserController extends Controller
         }
         //return Inertia::render('OrderCreateForm', ['message' => 'Không thành công']);
     }
-
     public function explodeFieldValue($data)
+    {
+        // $dataField = [];
+        foreach ($data as $key => $value) {
+            if (str_contains(explode(',', $value)[0], 'radio') || str_contains(explode(',', $value)[0], 'checkbox') || str_contains(explode(',', $value)[0], 'select') || str_contains(explode(',', $value)[0], 'file')) {
+                $id = explode(',', $value);
+
+                //handle file
+                if ($id[0] == 'file') {
+                    $data[$key] = 'storage/' . $id[1];
+                    //dd($data[$key]);
+                    continue;
+                }
+
+                unset($id[0]);
+                //dd($id);
+                //get value form id field
+                $dataField = [];
+                foreach ($id as $field) {
+                    $field_name1 = ServiceFieldValueModel::find($field)['name'];
+                    array_push($dataField, $field_name1);
+                }
+                $data[$key] = $dataField;
+            }
+        }
+        //dd($data);
+        return $data;
+    }
+    public function explodeFieldValue2($data)
     {
 
         // $dataField = [];
