@@ -66,6 +66,5 @@ defineProps({ services: Array })
 
         </li>
     </ul> -->
-
     <Footer2 />
 </template>
