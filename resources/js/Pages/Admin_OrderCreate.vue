@@ -1,6 +1,5 @@
 <script setup>
 import HeaderCustomer from '@/Components/Home_Admin.vue';
-import Footer2 from '@/Components/Footer.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({ services: Array })
@@ -21,14 +20,11 @@ defineProps({ services: Array })
                         <tr 
                             class="relative transform scale-100  py-1 hover:bg-gray-100 cursor-default bg-opacity-25 "
                             :class="{ 'bg-gray-300 hover:bg-gray-200': index % 2 == 0 }">
-                            <Link class="block" :href="route('createAdmin', [service.id])">
+                            <Link class="block" :href="`/admin/service/list/${service.id}`">
                             <td class="pl-5 pr-48 py-5 whitespace-no-wrap ">
                                 <div> {{ service.name }}</div>
                             </td>
-
-                            
                             </Link>
-
                         </tr>
                     </template>
                     </tbody>

@@ -5,7 +5,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed, ref, onMounted, watch } from 'vue';
 
-const props = defineProps({ data: Array, status: Number })
+const props = defineProps({ data: Array, status: Number, service_id: Number })
 var currentPage = ref(1)
 var itemsPerPage = ref(10)
 var totalItems = ref(props.data.length)
@@ -142,34 +142,50 @@ const formatDay = (date) => {
 
                 <template #content>
                     <div class="px-2">
-                        <Link href="/admin/service/list/2">
+                        <Link :href="`/admin/service/list/${props.service_id}`">
                         <div class="flex items-center mb-2 ">
                             <input id="default-radio-1" type="radio" value="2" name="default-radio"
-                                :checked="props.status == 2"
+                                :checked="props.status != 0 && props.status != 1 && props.status != 2 && props.status != 3"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500   focus:ring-2  ">
                             <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Tất cả</label>
                         </div>
                         </Link>
-                        <Link href="/admin/service/list/0">
+                        <Link :href="`/admin/service/list/${props.service_id}/0`">
                         <div class="flex items-center mb-2 ">
-                            <input id="default-radio-1" type="radio" value="0" name="default-radio"
+                            <input id="default-radio-1" type="radio" value="2" name="default-radio"
                                 :checked="props.status == 0"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500   focus:ring-2  ">
                             <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Chưa xử lý</label>
                         </div>
                         </Link>
-                        <Link href="/admin/service/list/1">
+                        <Link :href="`/admin/service/list/${props.service_id}/2`">
                         <div class="flex items-center mb-2 ">
-                            <input id="default-radio-1" type="radio" value="1" name="default-radio"
+                            <input id="default-radio-1" type="radio" value="2" name="default-radio"
+                                :checked="props.status == 2"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500   focus:ring-2  ">
+                            <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Đang xử lý</label>
+                        </div>
+                        </Link>
+                        <Link :href="`/admin/service/list/${props.service_id}/1`">
+                        <div class="flex items-center mb-2 ">
+                            <input id="default-radio-1" type="radio" value="2" name="default-radio"
                                 :checked="props.status == 1"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500   focus:ring-2  ">
                             <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Đã xử lý</label>
                         </div>
                         </Link>
+                        <Link :href="`/admin/service/list/${props.service_id}/3`">
+                        <div class="flex items-center mb-2 ">
+                            <input id="default-radio-1" type="radio" value="2" name="default-radio"
+                                :checked="props.status == 3"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500   focus:ring-2  ">
+                            <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Đã hủy</label>
+                        </div>
+                        </Link>
                     </div>
                 </template>
             </Dropdown>
-            <Link href="/admin/list/service">
+            <Link :href="route('createAdmin', [props.service_id])">
             <button type="button"
                 class="text-white ml-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2  focus:outline-none ">Thêm
                 yêu cầu</button>
@@ -217,7 +233,9 @@ const formatDay = (date) => {
                                     <td class="py-3 px-6 text-left whitespace-nowrap">
                                         <div class="flex items-center">
                                             <span v-if="item.status == 0" class="font-medium">Chưa xử lý</span>
-                                            <span v-else class="font-medium">Đã xử lý</span>
+                                            <span v-if="item.status == 1" class="font-medium">Đã xử lý</span>
+                                            <span v-if="item.status == 2" class="font-medium">Đang xử lý</span>
+                                            <span v-if="item.status == 3" class="font-medium">Đã hủy</span>
                                         </div>
                                     </td>
                                     <td class="py-3 px-6 ">
