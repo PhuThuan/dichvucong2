@@ -34,7 +34,7 @@ class AdminController extends Controller
         $data = ServicesModel::all();
         return Inertia::render('Admin_Managerment_Services', ['services' => $data]);
     }
-    public function getDataUsers($service_id, $status = 4)
+    public function getDataUsers($service_id, $page = 1, $status = 4,)
     {
         // if ($status > 4 || $status < 0) {
         //     return Inertia::render('Error');
@@ -51,21 +51,26 @@ class AdminController extends Controller
             if (!file_exists(app_path('Models/' . $model_name . '.php'))) {
                 return Inertia::render('Error');
             }
-            // data type array
-            //if ($status == 1 || $status ==2 || $status ==3) {
-            $data_model = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->get();");
+            $modelClass = "\\App\\Models\\" . $model_name;
+            $data_model = $modelClass::where('status', $status)->paginate(10, ['*'], 'page', $page);
+            // $data_model = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->get();");
             $data_count = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->count();");
             if ($status == 4) {
-                $data_model = eval("return \\App\\Models\\" . $model_name . "::all();");
+                $modelClass = "\\App\\Models\\" . $model_name;
+                $statuses = [0, 1, 2, 3];
+                $data_model = $modelClass::whereIn('status', $statuses)->paginate(10, ['*'], 'page', $page);
+                // $data_model = eval("return \\App\\Models\\" . $model_name . "::all()->paginate(10);");
                 $data_count = eval("return \\App\\Models\\" . $model_name . "::count();");
             } else {
-                $data_model = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->get();");
+                $data_model = $modelClass::where('status', $status)->paginate(10, ['*'], 'page', $page);
+
+                // $data_model = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->get();");
                 $data_count = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->count();");
             }
 
             //get status == disable
             //$data_model::where('status',TypeData::status['disable']);
-            //dd($data_model);  
+            // dd($data_model);
             foreach ($data_model as $data) {
 
                 $user = User::find($data['user_id']);
@@ -83,7 +88,7 @@ class AdminController extends Controller
             }
         }
         // dd($dataResult);
-        return Inertia::render('Admin_RequestsManagement', ['data' => $dataResult, 'status' => $status, 'service_id' => $service_id]);
+        return Inertia::render('Admin_RequestsManagement', ['data' => $dataResult, 'count'=>$data_count,'status' => $status, 'service_id' => $service_id,'page'=>$page]);
     }
 
     public function  arrayPaginate($items, $perPage = 5, $page = null, $options = [])
@@ -238,12 +243,12 @@ class AdminController extends Controller
         if ($data_model['status'] == 0) {
             $data_model = $this->changeStatus(2, $service_id, $id);
         }
-        return Inertia::render('RequestDetails', ['data' => $data_model,'role'=>$role]);
+        return Inertia::render('RequestDetails', ['data' => $data_model, 'role' => $role]);
 
         // dd($data_model['status']);
     }
 
-    
+
 
     public function explodeFieldValue($data)
     {

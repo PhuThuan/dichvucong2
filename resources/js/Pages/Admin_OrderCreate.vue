@@ -6,8 +6,6 @@ defineProps({ services: Array })
 
 </script>
 
-
-
 <template>
     <Head title="Tạo đơn" />
     <HeaderCustomer>

@@ -3,105 +3,89 @@
 import Home_Admin from '@/Components/Home_Admin.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { computed, ref, onMounted, watch } from 'vue';
+import { router } from '@inertiajs/vue3';
+import {  ref, onMounted,  } from 'vue';
 
-const props = defineProps({ data: Array, status: Number, service_id: Number })
-var currentPage = ref(1)
+const props = defineProps({ data: Array, status: Number, service_id: Number, page: Number,count:Number })
 var itemsPerPage = ref(10)
-var totalItems = ref(props.data.length)
-var listData = ref([])
 var listPage = ref([])
-
+const total = ref()
+var page = Number(props.page)
 const totalPages = () => {
-    return Math.ceil(totalItems.value / itemsPerPage.value);
+    if(props.count){
+        total.value = Math.ceil(props.count / itemsPerPage.value)
+        return Math.ceil(props.count / itemsPerPage.value);
+    }
+    else{
+        total.value = Math.ceil(1 / itemsPerPage.value)
+        return Math.ceil(1 / itemsPerPage.value);
+    }
 }
 const visiblePages = () => {
-    listPage.value = []
-    if (currentPage.value == 1) {
-        listPage.value.push(currentPage.value)
+    // const startPage = Math.max(1, currentPage.value - 2);
+    // const endPage = Math.min(startPage + 2, totalPages.value);
+    // return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+
+    if (page == 1) {
+        listPage.value.push(page)
         console.log(listPage.value);
-        for (let i = 1; i <= 2; i++) {
-            const sum = currentPage.value + i
+        for (let i = 1; i < total.value; i++) {
+            const sum = page + i
             console.log(sum);
-            if (sum <= totalPages()) {
+            if (sum <= total.value) {
                 listPage.value.push(sum)
                 console.log(listPage.value);
             }
-            else {
+            if (listPage.value.length==3) {
                 break
             }
         }
     }
-    else if (currentPage.value == totalPages()) {
+    else if (page == total.value) {
 
         for (let i = 2; i > 0; i--) {
-            if (currentPage.value - i != 0) {
-                listPage.value.push(currentPage.value - i)
+            if (page - i != 0) {
+                listPage.value.push(page - i)
 
             }
         }
-        listPage.value.push(currentPage.value)
+        listPage.value.push(page)
     }
     else {
 
-        listPage.value.push(currentPage.value - 1)
-        listPage.value.push(currentPage.value)
-        listPage.value.push(currentPage.value + 1)
+        listPage.value.push(page - 1)
+        listPage.value.push(page)
+        listPage.value.push(page + 1)
     }
-    console.log(totalPages());
-    console.log(listPage.value);
-
+    // return listPage.value
 }
-const displayData = computed(() => {
-    return listData;
-})
-watch(currentPage, (newX) => {
-    visiblePages()
-})
-onMounted(() => {
-    console.log(props.data.length);
-    // for (let i = 1; i <= itemsPerPage.value; i++) {
-    //     listData.value.push(props.data[i - 1])
-    // }
-    if (props.status == 0) {
-        props.data.sort((a, b) => {
-            const timestampA = new Date(a.created_at);
-            const timestampB = new Date(b.created_at);
-            return timestampA - timestampB;
-        });
-    }
-    goToPage(1)
-    visiblePages()
 
+
+onMounted(() => {
+    
+    totalPages()
+    visiblePages()
+    console.log(total.value);
+    console.log(props.data)
 })
 const goToPage = (page) => {
-    // Xử lý khi người dùng chọn trang
-    listData.value = []
-    currentPage.value = page;
 
-    for (let i = page * 10 - 9; i <= page * 10; i++) {
-        if (i > props.data.length) {
-            break;
-        }
-        listData.value.push(props.data[i - 1])
+    router.get(`/admin/service/list/${props.service_id}/${page}/${props.status}`)
 
-    }
-    displayData
-    // Gọi API hoặc thực hiện các tác vụ liên quan đến dữ liệu của trang mới
-    // Ví dụ: this.fetchData(page);
 }
 const previousPage = () => {
-    if (currentPage.value > 1) {
-        currentPage.value--;
-        goToPage(currentPage.value)
+    if (page > 1) {
+        page--;
+        goToPage(page)
         // Gọi API hoặc thực hiện các tác vụ liên quan đến dữ liệu của trang mới
         // Ví dụ: this.fetchData(this.currentPage);
     }
 }
 const nextPage = () => {
-    if (currentPage.value < totalPages()) {
-        currentPage.value++;
-        goToPage(currentPage.value)
+    // console.log(page+' '+to);
+    if (page < total.value) {
+        page++;
+        goToPage(page)
         // Gọi API hoặc thực hiện các tác vụ liên quan đến dữ liệu của trang mới
         // Ví dụ: this.fetchData(this.currentPage);
     }
@@ -142,7 +126,7 @@ const formatDay = (date) => {
 
                 <template #content>
                     <div class="px-2">
-                        <Link :href="`/admin/service/list/${props.service_id}`">
+                        <Link :href="`/admin/service/list/${props.service_id}/1`">
                         <div class="flex items-center mb-2 ">
                             <input id="default-radio-1" type="radio" value="2" name="default-radio"
                                 :checked="props.status != 0 && props.status != 1 && props.status != 2 && props.status != 3"
@@ -150,7 +134,7 @@ const formatDay = (date) => {
                             <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Tất cả</label>
                         </div>
                         </Link>
-                        <Link :href="`/admin/service/list/${props.service_id}/0`">
+                        <Link :href="`/admin/service/list/${props.service_id}/1/0`">
                         <div class="flex items-center mb-2 ">
                             <input id="default-radio-1" type="radio" value="2" name="default-radio"
                                 :checked="props.status == 0"
@@ -158,7 +142,7 @@ const formatDay = (date) => {
                             <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Chưa xử lý</label>
                         </div>
                         </Link>
-                        <Link :href="`/admin/service/list/${props.service_id}/2`">
+                        <Link :href="`/admin/service/list/${props.service_id}/1/2`">
                         <div class="flex items-center mb-2 ">
                             <input id="default-radio-1" type="radio" value="2" name="default-radio"
                                 :checked="props.status == 2"
@@ -166,7 +150,7 @@ const formatDay = (date) => {
                             <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Đang xử lý</label>
                         </div>
                         </Link>
-                        <Link :href="`/admin/service/list/${props.service_id}/1`">
+                        <Link :href="`/admin/service/list/${props.service_id}/1/1`">
                         <div class="flex items-center mb-2 ">
                             <input id="default-radio-1" type="radio" value="2" name="default-radio"
                                 :checked="props.status == 1"
@@ -174,7 +158,7 @@ const formatDay = (date) => {
                             <label for="default-radio-1" class="ml-2 text-sm font-medium text-gray-900 ">Đã xử lý</label>
                         </div>
                         </Link>
-                        <Link :href="`/admin/service/list/${props.service_id}/3`">
+                        <Link :href="`/admin/service/list/${props.service_id}/1/3`">
                         <div class="flex items-center mb-2 ">
                             <input id="default-radio-1" type="radio" value="2" name="default-radio"
                                 :checked="props.status == 3"
@@ -208,7 +192,7 @@ const formatDay = (date) => {
                             </thead>
                             <!-- :class="{ 'bg-gray-100 hover:bg-gray-100': service.id % 2 != 0 }" -->
                             <tbody class="text-gray-600 text-sm font-light">
-                                <tr class="border-b border-gray-200  hover:bg-gray-100" v-for="(item, index) in listData"
+                                <tr class="border-b border-gray-200  hover:bg-gray-100" v-for="(item, index) in props.data"
                                     :key="index">
                                     <td class="py-3 px-6 text-left whitespace-nowrap">
                                         <div class="flex items-center">
@@ -257,13 +241,13 @@ const formatDay = (date) => {
         <nav aria-label="Page navigation example ">
             <ul class="list-style-none w-full md:w-auto flex mt-2 " style="flex-wrap: nowrap;justify-content: center;">
                 <li>
-                    <button @click="goToPage(1)" :disabled="currentPage === 1"
+                    <button @click="goToPage(1)" :disabled="props.page == 1"
                         class="px-3 py-1 bg-gray-200 rounded-l hover:bg-gray-400 focus:outline-none">
                         First
                     </button>
                 </li>
                 <li>
-                    <button @click="previousPage" :disabled="currentPage === 1"
+                    <button @click="previousPage" :disabled="props.page == 1"
                         class="px-3 py-1 bg-gray-200 hover:bg-gray-400 focus:outline-none">
                         Previous
                     </button>
@@ -271,19 +255,19 @@ const formatDay = (date) => {
                 <li v-for="page in listPage" :key="page">
                     <button @click="goToPage(page)" :class="{
                         'px-3 py-1 bg-gray-200 hover:bg-gray-400 focus:outline-none': true,
-                        'font-bold': currentPage === page
+                        'font-bold': props.page == page
                     }">
                         {{ page }}
                     </button>
                 </li>
                 <li>
-                    <button @click="nextPage" :disabled="currentPage === totalPages()"
+                    <button @click="nextPage" :disabled="props.page == totalPages"
                         class="px-3 py-1 bg-gray-200 hover:bg-gray-400 focus:outline-none">
                         Next
                     </button>
                 </li>
                 <li>
-                    <button @click="goToPage(totalPages())" :disabled="currentPage === totalPages()"
+                    <button @click="goToPage(totalPages())" :disabled="props.page == totalPages"
                         class="px-3 py-1 bg-gray-200 rounded-r hover:bg-gray-400 focus:outline-none">
                         Last
                     </button>

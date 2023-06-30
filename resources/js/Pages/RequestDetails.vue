@@ -193,9 +193,6 @@ onBeforeUnmount(() => {
                                 </button>
                             </div>
                         </td>
-                        <!-- <td class="flex items-center">
-                            
-                        </td> -->
                     </tr>
                     <template class=" " v-for="(i, index) in props.data.label" :key="index">
                         <tr v-if="!keys.includes(index) && file.indexOf(index)" class=" ">
