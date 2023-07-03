@@ -1,25 +1,24 @@
 <script setup>
 import Home_Admin from '@/Components/Home_Admin.vue';
 import { defineProps } from 'vue';
-defineProps({ settingEmail: Array });
+const props = defineProps({ settingEmail: Array });
 import { Head, Link, useForm } from '@inertiajs/vue3';
 //let settingEmail=[{MAIL_USERNAME:"fsdfsdfas@mail.com",MAIL_ENCRYPTION:"tls",MAIL_FROM_NAME:"Dichvu",MAIL_PORT:'123',MAIL_HOST:'smtp@email.com'}]
 const submit = () => {
-    //console.log(form);
+   // console.log(form);
         form.post(route('mail_setting'), {
-            onFinish: () => alert,
+            onSuccess: () => alert,
         });
     
 };
 
 const form = useForm({
-    // settingEmail: [{MAIL_USERNAME:"",MAIL_ENCRYPTION:"",MAIL_FROM_NAME:"",MAIL_PORT:'',MAIL_HOST:''}]
-    MAIL_USERNAME: settingEmail[0].MAIL_USERNAME,
-    MAIL_ENCRYPTION: settingEmail[0].MAIL_ENCRYPTION,
-    MAIL_FROM_NAME: settingEmail[0].MAIL_FROM_NAME,
-    MAIL_PORT: settingEmail[0].MAIL_PORT,
-    MAIL_HOST: settingEmail[0].MAIL_HOST,
-    MAIL_PASSWORD: ""
+    MAIL_USERNAME: props.settingEmail.MAIL_USERNAME,
+    MAIL_ENCRYPTION:props.settingEmail.MAIL_ENCRYPTION,
+    MAIL_FROM_NAME:props.settingEmail.MAIL_FROM_NAME,
+    MAIL_PORT:props.settingEmail.MAIL_PORT,
+    MAIL_HOST:props.settingEmail.MAIL_HOST,
+    MAIL_PASSWORD:''
 });
 </script>
 <template>
@@ -41,19 +40,19 @@ const form = useForm({
         </div>
         <div>
             <label for="encryption" class="block mb-2 text-sm font-medium text-gray-900 ">Mail Encryption</label>
-            <input type="text" id="encryption" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Mail Encryption" required v-model="settingEmail[0].MAIL_ENCRYPTION">
+            <input type="text" id="encryption" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Mail Encryption" required v-model="form.MAIL_ENCRYPTION">
         </div>  
         <div>
             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Mail From Name</label>
-            <input type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Mail Name"  required v-model="settingEmail[0].MAIL_FROM_NAME">
+            <input type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="Mail Name"  required v-model="form.MAIL_FROM_NAME">
         </div>
         <div>
             <label for="port" class="block mb-2 text-sm font-medium text-gray-900 ">Mail Port</label>
-            <input type="text" id="port" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="456" required v-model="settingEmail[0].MAIL_PORT">
+            <input type="text" id="port" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="456" required v-model="form.MAIL_PORT">
         </div>
         <div>
             <label for="host" class="block mb-2 text-sm font-medium text-gray-900 ">Mail Host</label>
-            <input type="text" id="host" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="smtp.gmail.comx" required v-model="settingEmail[0].MAIL_HOST">
+            <input type="text" id="host" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5      " placeholder="smtp.gmail.comx" required v-model="form.MAIL_HOST">
         </div>
     </div>
     
