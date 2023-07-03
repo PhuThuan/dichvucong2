@@ -58,18 +58,19 @@ class UserController extends Controller
     {
         try {
             $serviceFields = ServicesModel::find($id_service)->servicesFields->get();
-
-
+            $service_name = ServicesModel::find($id_service);
+            //$serviceFields['service_name'] = $service_name['name'];
+            //dd($service_name);
             if (!isset($serviceFields) && is_null($serviceFields)) {
                 return Inertia::render('Error');
             }
-            //dd($serviceFields);
+            // dd($serviceFields);
             foreach ($serviceFields as $field) {
                 if ($field['html_type'] == TypeData::htmlType['radio'] || $field['html_type'] == TypeData::htmlType['checkbox'] || $field['html_type'] == TypeData::htmlType['select']) {
                     $field->serviceFieldValue;
                 }
             }
-            return Inertia::render('OrderCreateForm', ['id' => $id_service, 'services' => $serviceFields]);
+            return Inertia::render('OrderCreateForm', ['id' => $id_service, 'services' => $serviceFields, 'service_name'=>$service_name]);
         } catch (Exception $e) {
             return Inertia::render('Error');
         }

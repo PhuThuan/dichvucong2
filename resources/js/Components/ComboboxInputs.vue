@@ -68,9 +68,9 @@ function updateFormData(attribute, value) {
 
 // computed chuyển đổi chuỗi thành đối tượng
 const stringToObject = computed(() => {
-    if (props.services_fields.validate) {
+    if (props.services_fields?.validate) {
         const attributes = {};
-        props.services_fields.validate.split(',').forEach(attr => {
+        props.services_fields.validate.split('|').forEach(attr => {
             const [key, value] = attr.split('=');
             if (key) {
                 const [subKey, subValue] = key.split(':');
@@ -109,8 +109,8 @@ const validateForm = () => {
 
 <template>
     <div class="">
-        <label class="block font-medium text-gray-900">{{ services_fields.label }}: <span class="text-[#fb4762]" v-if="stringToObject?.required">*</span></label>
-        <select v-model="input" class="text-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-[9999px] focus:ring-blue-500 
+        <label class="block font-medium text-[1.05rem]">{{ services_fields.label }}: <span class="text-[#fb4762]" v-if="stringToObject?.required">*</span></label>
+        <select v-model="input" class="text-sm bg-gray-50 border border-gray-300 rounded-[.25rem] focus:ring-blue-500 
                 focus:border-blue-500 block w-full p-2.5" :aria-label="services_fields.label"
             :placeholder="services_fields?.placeholder" :="stringToObject"
             @change="updateFormData(services_fields.field_name, input)">

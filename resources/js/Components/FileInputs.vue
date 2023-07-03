@@ -67,9 +67,9 @@ function updateFormData(attribute, value) {
 
 // computed chuyển đổi chuỗi thành đối tượng
 const stringToObject = computed(() => {
-    if (props.services_fields.validate) {
+    if (props.services_fields?.validate) {
         const attributes = {};
-        props.services_fields.validate.split(',').forEach(attr => {
+        props.services_fields.validate.split('|').forEach(attr => {
             const [key, value] = attr.split('=');
             if (key) {
                 const [subKey, subValue] = key.split(':');
@@ -107,13 +107,12 @@ const validateForm = () => {
 
 <template>
     <div class="flex flex-wrap items-center">
-        <label :for="services_fields.field_name" class="block font-medium text-gray-900">{{
+        <label :for="services_fields.field_name" class="block font-medium text-[1.05rem]">{{
             services_fields.field_name }}: <span class="text-[#fb4762]" v-if="stringToObject?.required">*</span>
         </label>
         <input v-model="input" :type="type" :id="services_fields.field_name" class="
-        text-sm shadow-sm bg-gray-50 border border-gray-300 text-gray-900 block w-full cursor-pointer 
-        file:text-sm file:font-semibold file:py-2 file:px-4 file:bg-violet-50 file:text-[#3b82f6]
-        file:rounded-full file:border-0 file:mr-4 hover:file:bg-violet-100 rounded-[9999px] focus:outline-[#3b82f6]"
+        text-sm shadow-sm bg-gray-50 border border-gray-300 block w-full cursor-pointer 
+        file:text-sm file:font-semibold file:py-2 file:px-4 file:rounded-[.25rem] file:border-0 file:mr-4 rounded-[.25rem]"
             :placeholder="services_fields.placeholder" :="stringToObject"
             accept="image/png, image/jpeg, .doc, .docx, .pdf, .pptx"
             @input="props.formData[services_fields.field_name] = $event.target?.files[0]" />
@@ -121,3 +120,12 @@ const validateForm = () => {
             :required="stringToObject?.required" />
     </div>
 </template>
+<style scoped>
+input::file-selector-button {
+    outline: #3b82f6;
+    background-color: #1c4ed8;
+}
+input::file-selector-button:hover {
+    background-color: #1e40af;
+}
+</style>

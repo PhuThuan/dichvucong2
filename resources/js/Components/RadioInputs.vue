@@ -89,9 +89,9 @@ function updateFormData(attribute, id_service_field_value) {
 
 // computed chuyển đổi chuỗi thành đối tượng
 const stringToObject = computed(() => {
-    if (props.services_fields.validate) {
+    if (props.services_fields?.validate) {
         const attributes = {};
-        props.services_fields.validate.split(',').forEach(attr => {
+        props.services_fields.validate.split('|').forEach(attr => {
             const [key, value] = attr.split('=');
             if (key) {
                 const [subKey, subValue] = key.split(':');
@@ -130,16 +130,16 @@ const validateForm = () => {
 
 <template>
     <div class="">
-        <div>{{ services_fields.label }}: <span class="text-[#fb4762]" v-if="stringToObject?.required">*</span></div>
-        <div v-for="(item, index) in service_field_value" class="flex items-center" :key="item.id">
-            <input type="radio" :id="services_fields.field_name + index" :name="services_fields.field_name" class="text-sm shadow-sm bg-gray-50 
-        border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-4 h-4 rounded"
-                :placeholder="services_fields.placeholder" :="stringToObject"
-                @click="updateFormData(services_fields.field_name, item.id)" />
-            <label :for="services_fields.field_name + index" class="block font-medium text-gray-900 ml-2">{{
-                item.name }}
+        <div class="text-[#4f4f4f] font-medium text-[1.05rem]">{{ services_fields.label }}: <span class="text-[#fb4762]" v-if="stringToObject?.required">*</span></div>
+        <template v-for="(item, index) in service_field_value" :key="item.id">
+            <label :for="services_fields.field_name + index" class="flex flex-wrap items-center justify-between hover:bg-[hsl(210,40%,90%)] px-[.25rem]" style="border-radius: 4px 16px 16px 4px;">
+                <span class="block font-medium mr-2">{{ item.name }}</span>
+                <input type="radio" :id="services_fields.field_name + index" :name="services_fields.field_name" class="text-sm shadow-sm bg-gray-50 
+            border border-gray-300 focus:ring-blue-500 focus:border-blue-500 block w-4 h-4 rounded-[.5rem]"
+                    :placeholder="services_fields.placeholder" :="stringToObject"
+                    @click="updateFormData(services_fields.field_name, item.id)" />
             </label>
-        </div>
+        </template>
         <InputError class="mt-2" :message="validate.errors[props.services_fields.field_name]"
             :required="stringToObject?.required" />
     </div>

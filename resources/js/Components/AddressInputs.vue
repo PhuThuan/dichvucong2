@@ -164,7 +164,7 @@ onMounted(() => {
 const stringToObject = computed(() => {
     if (props.services_fields?.validate) {
         const attributes = {};
-        props.services_fields.validate.split(',').forEach(attr => {
+        props.services_fields.validate.split('|').forEach(attr => {
             const [key, value] = attr.split('=');
             if (key) {
                 const [subKey, subValue] = key.split(':');
@@ -182,44 +182,45 @@ const stringToObject = computed(() => {
 // Xác thực address
 const validateForm = () => {
     let isValid = true;
+    if (props.submitClicked) {
+        if (stringToObject.value?.required) {
+            // city, district, ward
+            if (!validate.value[props.services_fields.field_name]?.city) {
+                validate.value.errors[props.services_fields.field_name].city = `Tỉnh/Thành phố không được bỏ trống.`;
+                validate.value.errors[props.services_fields.field_name].district = `Quận/Huyện không được bỏ trống.`;
+                validate.value.errors[props.services_fields.field_name].ward = `Phường/Xã không được bỏ trống.`;
+                isValid = false;
+            }
+            else if (!validate.value[props.services_fields.field_name]?.district) {
+                validate.value.errors[props.services_fields.field_name].city = ``;
+                validate.value.errors[props.services_fields.field_name].district = `Quận/Huyện không được bỏ trống.`;
+                validate.value.errors[props.services_fields.field_name].ward = `Phường/Xã không được bỏ trống.`;
+                isValid = false;
+            }
+            else if (!validate.value[props.services_fields.field_name]?.ward) {
+                validate.value.errors[props.services_fields.field_name].city = ``;
+                validate.value.errors[props.services_fields.field_name].district = ``;
+                validate.value.errors[props.services_fields.field_name].ward = `Phường/Xã không được bỏ trống.`;
+                isValid = false;
+            }
+            else {
+                validate.value.errors[props.services_fields.field_name].city = ``;
+                validate.value.errors[props.services_fields.field_name].district = ``;
+                validate.value.errors[props.services_fields.field_name].ward = ``;
+            }
 
-    if (stringToObject.value?.required) {
-        // city, district, ward
-        if (!validate.value[props.services_fields.field_name]?.city) {
-            validate.value.errors[props.services_fields.field_name].city = `Tỉnh/Thành phố không được bỏ trống.`;
-            validate.value.errors[props.services_fields.field_name].district = `Quận/Huyện không được bỏ trống.`;
-            validate.value.errors[props.services_fields.field_name].ward = `Phường/Xã không được bỏ trống.`;
-            isValid = false;
-        }
-        else if (!validate.value[props.services_fields.field_name]?.district) {
-            validate.value.errors[props.services_fields.field_name].city = ``;
-            validate.value.errors[props.services_fields.field_name].district = `Quận/Huyện không được bỏ trống.`;
-            validate.value.errors[props.services_fields.field_name].ward = `Phường/Xã không được bỏ trống.`;
-            isValid = false;
-        }
-        else if (!validate.value[props.services_fields.field_name]?.ward) {
-            validate.value.errors[props.services_fields.field_name].city = ``;
-            validate.value.errors[props.services_fields.field_name].district = ``;
-            validate.value.errors[props.services_fields.field_name].ward = `Phường/Xã không được bỏ trống.`;
-            isValid = false;
+            // streetName
+            if (!validate.value[props.services_fields.field_name]?.streetName) {
+                validate.value.errors[props.services_fields.field_name].streetName = `Tên đường không được bỏ trống.`;
+                isValid = false;
+            }
+            else {
+                validate.value.errors[props.services_fields.field_name].streetName = ``;
+            }
         }
         else {
-            validate.value.errors[props.services_fields.field_name].city = ``;
-            validate.value.errors[props.services_fields.field_name].district = ``;
-            validate.value.errors[props.services_fields.field_name].ward = ``;
+            validate.value.errors[props.services_fields.field_name] = '';
         }
-
-        // streetName
-        if (!validate.value[props.services_fields.field_name]?.streetName) {
-            validate.value.errors[props.services_fields.field_name].streetName = `Tên đường không được bỏ trống.`;
-            isValid = false;
-        }
-        else {
-            validate.value.errors[props.services_fields.field_name].streetName = ``;
-        }
-    }
-    else {
-        validate.value.errors[props.services_fields.field_name] = '';
     }
     // console.log(stringToObject);
     return isValid;
@@ -227,14 +228,14 @@ const validateForm = () => {
 </script>
 
 <template>
-    <label class="block font-medium text-gray-900">{{ services_fields.label }} </label>
-    
-    <div class="d-flex text-dark ml-2">
+    <label class="block font-medium text-[1.05rem]">{{ services_fields.label }} </label>
+
+    <div class="d-flex text-dark ml-[.75rem]">
         <!-- Chọn thành phố  -->
         <div class="">
-            <label class="block font-medium text-gray-900">Tỉnh/Thành Phố: <span class="text-[#fb4762]"
+            <label class="block">Tỉnh/Thành Phố: <span class="text-[#fb4762]"
                     v-if="stringToObject?.required">*</span></label>
-            <select class="text-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-[9999px] focus:ring-blue-500 
+            <select class="text-sm bg-gray-50 border border-gray-300 rounded-[.25rem] focus:ring-blue-500 
                 focus:border-blue-500 block w-full p-2.5" v-model="cityIndex"
                 @change="updateCity('city', addressData[cityIndex]?.Name)" aria-label="City" :="stringToObject">
                 <option :value="null">Chọn Tỉnh/Thành Phố</option>
@@ -246,10 +247,10 @@ const validateForm = () => {
 
         <!-- Chọn Quận -->
         <div class="">
-            <label class="block font-medium text-gray-900">Quận/Huyện: <span class="text-[#fb4762]"
+            <label class="block">Quận/Huyện: <span class="text-[#fb4762]"
                     v-if="stringToObject?.required">*</span></label>
             <select :disabled="!districts"
-                class="text-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-[9999px] block w-full p-2.5"
+                class="text-sm bg-gray-50 border border-gray-300 rounded-[.25rem] block w-full p-2.5"
                 v-model="districtIndex"
                 @change="updateDistrict('district', addressData[cityIndex]['Districts'][districtIndex]?.Name)"
                 aria-label="District" :="stringToObject">
@@ -262,11 +263,11 @@ const validateForm = () => {
 
         <!-- Chọn Phường  -->
         <div class="">
-            <label class="block font-medium text-gray-900">Phường/Xã: <span class="text-[#fb4762]"
+            <label class="block">Phường/Xã: <span class="text-[#fb4762]"
                     v-if="stringToObject?.required">*</span></label>
             <select
                 @change="updateFormData('ward', addressData[cityIndex]['Districts'][districtIndex]['Wards'][wardIndex]?.Name)"
-                :disabled="!wards" class="text-sm bg-gray-50 border border-gray-300 text-gray-900 rounded-[9999px] focus:ring-blue-500 
+                :disabled="!wards" class="text-sm bg-gray-50 border border-gray-300 rounded-[.25rem] focus:ring-blue-500 
                 focus:border-blue-500 block w-full p-2.5" v-model="wardIndex" aria-label="Ward" :="stringToObject">
                 <option :value="null">Chọn Phường/Xã</option>
                 <option v-for="(ward, index) in wards" :value="index">{{ ward.Name }}</option>
@@ -277,11 +278,11 @@ const validateForm = () => {
 
         <!-- Tên đường -->
         <div class="">
-            <label :for="services_fields.field_name" class="block font-medium text-gray-900 ">Tên đường:
+            <label :for="services_fields.field_name" class="block">Tên đường:
                 <span class="text-[#fb4762]" v-if="stringToObject?.required">*</span>
             </label>
             <input v-model="streetNameInput" type="text" :id="services_fields.field_name" class="text-sm shadow-sm bg-gray-50 
-        border border-gray-300 text-gray-900 rounded-[9999px] 
+        border border-gray-300 rounded-[.25rem] 
             focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Ấp, thôn, tổ, tên đường...."
                 :="stringToObject" @input="updateFormData('streetName', streetNameInput)" />
             <InputError class="mt-2" :message="validate.errors[props.services_fields.field_name]?.streetName"
