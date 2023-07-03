@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, defineProps } from 'vue';
 import Home_Admin from '@/Components/Home_Admin.vue';
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router,Head } from '@inertiajs/vue3';
 
 const props = defineProps({ noti: Array });
 // const noti = [
@@ -51,6 +51,7 @@ onMounted(() => {
 </script>
 
 <template>
+    <Head title="Thong bao" />
     <Home_Admin>
         <div class="my-3 text-lg">
             Thông báo

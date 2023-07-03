@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, useForm,Head } from '@inertiajs/vue3';
 
 import HeaderCustomer from '@/Components/Home_Admin.vue';
 import TextInputs from '@/Components/TextInputs.vue';
@@ -102,6 +102,8 @@ onMounted(() => {
 </script>
 
 <template>
+         <Head title="Thêm yêu cầu" />
+
     <HeaderCustomer>
         <!-- Popup Model  -->
         <div class="popup-modal">
