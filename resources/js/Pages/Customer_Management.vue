@@ -4,20 +4,12 @@ import Home_Admin from '@/Components/Home_Admin.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 import { router } from '@inertiajs/vue3';
-import { computed, ref, onMounted, onUnmounted } from 'vue';
-// var data = [{ id: '09879979', time: '23/2/2023', service: 'a' },
-// { id: '09879979', time: '23/2/2023', service: 'Đặt lịch khám bệnh' },
-// { id: '09879979', time: '23/2/2023', service: 'b' },
-// { id: '09879979', time: '23/2/2023', service: 'b' },
-// { id: '09879979', time: '23/2/2023', service: 'c' },]
-// var currentPage = ref(1)
-// defineProps({ data: Array,page:Number })
+import { computed, ref, onMounted,  } from 'vue';
 const props = defineProps({
     data: Array,
     page: Number
 });
 var itemsPerPage = ref(10)
-// var totalItems = ref(data.length)
 var listPage = ref([])
 const total = ref()
 var page = Number(props.page)
@@ -36,11 +28,11 @@ const visiblePages = () => {
         for (let i = 1; i < total.value; i++) {
             const sum = page + i
             console.log(sum);
-            if (sum < total.value) {
+            if (sum <= total.value) {
                 listPage.value.push(sum)
                 console.log(listPage.value);
             }
-            if (sum == total.value) {
+            if (listPage.value.length==3) {
                 break
             }
         }

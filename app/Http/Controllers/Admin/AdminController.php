@@ -34,13 +34,13 @@ class AdminController extends Controller
         $data = ServicesModel::all();
         return Inertia::render('Admin_Managerment_Services', ['services' => $data]);
     }
-    public function getDataUsers($service_id,$status=4)
+    public function getDataUsers($service_id, $page = 1, $status = 4,)
     {
         // if ($status > 4 || $status < 0) {
         //     return Inertia::render('Error');
         // }
-        
-        $dataServices = ServicesModel::where('id',$service_id)->get();
+        //dd($status);
+        $dataServices = ServicesModel::where('id', $service_id)->get();
         $dataResult = [];
         $data_count = 0;
         //  dd($dataService);
@@ -51,22 +51,26 @@ class AdminController extends Controller
             if (!file_exists(app_path('Models/' . $model_name . '.php'))) {
                 return Inertia::render('Error');
             }
-            // data type array
-            //if ($status == 1 || $status ==2 || $status ==3) {
-                $data_model = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->get();");
-                $data_count = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->count();");
-            // } else  if ($status == 4) {
-            //     $data_model = eval("return \\App\\Models\\" . $model_name . "::all();");
-            //     $data_count = eval("return \\App\\Models\\" . $model_name . "::count();");
-            // } else {
+            $modelClass = "\\App\\Models\\" . $model_name;
+            $data_model = $modelClass::where('status', $status)->paginate(10, ['*'], 'page', $page);
+            // $data_model = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->get();");
+            $data_count = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->count();");
+            if ($status == 4) {
+                $modelClass = "\\App\\Models\\" . $model_name;
+                $statuses = [0, 1, 2, 3];
+                $data_model = $modelClass::whereIn('status', $statuses)->paginate(10, ['*'], 'page', $page);
+                // $data_model = eval("return \\App\\Models\\" . $model_name . "::all()->paginate(10);");
+                $data_count = eval("return \\App\\Models\\" . $model_name . "::count();");
+            } else {
+                $data_model = $modelClass::where('status', $status)->paginate(10, ['*'], 'page', $page);
 
-            //     $data_model = eval("return \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->get();");
-            //     $data_count = eval("return \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->count();");
-            // }
+                // $data_model = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->get();");
+                $data_count = eval("return   \\App\\Models\\" . $model_name . "::where('status'," . $status . ")->count();");
+            }
 
             //get status == disable
             //$data_model::where('status',TypeData::status['disable']);
-            //dd($data_model);  
+            // dd($data_model);
             foreach ($data_model as $data) {
 
                 $user = User::find($data['user_id']);
@@ -84,7 +88,7 @@ class AdminController extends Controller
             }
         }
         // dd($dataResult);
-        return Inertia::render('Admin_RequestsManagement', ['data' => $dataResult, 'status' => $status]);
+        return Inertia::render('Admin_RequestsManagement', ['data' => $dataResult, 'count'=>$data_count,'status' => $status, 'service_id' => $service_id,'page'=>$page]);
     }
 
     public function  arrayPaginate($items, $perPage = 5, $page = null, $options = [])
@@ -146,6 +150,54 @@ class AdminController extends Controller
         return Inertia::render('NotiAdmin', ['noti' => $dataResult]);
     }
 
+    public function changeStatus($status, $service_id, $id)
+    {
+        $data_table =   ServicesModel::find($service_id)->get();
+        foreach ($data_table as $dataService) {
+            $model_name = $dataService['model_name'];
+            eval("return \\App\\Models\\" . $model_name . "::where('id'," . $id . ")->where('service_id'," . $service_id . ")->update(['status'=>" . $status . "]);");
+        }
+
+
+        $dataService = ServicesModel::find($service_id);
+        if (!isset($dataService)) {
+            return Inertia::render('Error');
+        }
+        $dataLabel = [];
+
+        //array
+        $dataServiceField = ServicesFieldsModel::where('services_id', $service_id)->get();
+        if (!isset($dataServiceField)) {
+            return Inertia::render('Error');
+        }
+        $model_name = $dataService['model_name'];
+        //check model
+        if (!file_exists(app_path('Models/' . $model_name . '.php'))) {
+            return Inertia::render('Error');
+        }
+        $data_model = eval("return \\App\\Models\\" . $model_name . "::find(" . $id . ");");
+        if (!isset($data_model) && is_null($data_model)) {
+            return Inertia::render('Error');
+        }
+        //convert to array
+        $data_model = $data_model->toArray();
+
+        //check multi-value and convert
+        $data_model = $this->explodeFieldValue($data_model);
+        //$data_model['label'] = $dataLabel;
+        if (isset($dataServiceField)) {
+
+            foreach ($dataServiceField as $value) {
+                $dataLabel += [$value['field_name'] => $value['label']];
+            }
+        } else {
+            return  Inertia::render('Error');;
+        }
+        $data_model['label'] = $dataLabel;
+        $data_model['service_name'] = $dataService['name'];
+        return $data_model;
+    }
+
     public function orderDetail($service_id, $id)
     {
         $dataService = ServicesModel::find($service_id);
@@ -184,10 +236,19 @@ class AdminController extends Controller
         }
         $data_model['label'] = $dataLabel;
         $data_model['service_name'] = $dataService['name'];
+        $user = Auth::user();
 
-        // dd($data_model);
-        return Inertia::render('RequestDetails', ['data' => $data_model]);
+        // Truy cập vào thuộc tính 'role' của người dùng
+        $role = $user->role;
+        if ($data_model['status'] == 0) {
+            $data_model = $this->changeStatus(2, $service_id, $id);
+        }
+        return Inertia::render('RequestDetails', ['data' => $data_model, 'role' => $role]);
+
+        // dd($data_model['status']);
     }
+
+
 
     public function explodeFieldValue($data)
     {
@@ -387,69 +448,30 @@ class AdminController extends Controller
         //return Inertia::render('OrderCreateForm', ['message' => 'Không thành công']);
     }
 
-    public function changeStatus(Request $request, $service_id, $id)
+    public function updateStatus(Request $request, $service_id, $id)
     {
+        // dd($request->status);
         $request->validate([
             'status' => 'required',
         ]);
-        $data_table =   ServicesModel::find($service_id)->get();
-        foreach ($data_table as $dataService) {
-            $model_name = $dataService['model_name'];
-            eval("return \\App\\Models\\" . $model_name . "::where('id'," . $id . ")->where('service_id'," . $service_id . ")->update(['status'=>" . $request->status . "]);");
-        }
+        $data_model = $this->changeStatus($request->status, $service_id, $id);
 
-
-        $dataService = ServicesModel::find($service_id);
-        if (!isset($dataService)) {
-            return Inertia::render('Error');
+        // dd($request->status);
+        if ($request->status != 0) {
+            return Inertia::render('RequestDetails', ['data' => $data_model]);
         }
-        $dataLabel = [];
-
-        //array
-        $dataServiceField = ServicesFieldsModel::where('services_id', $service_id)->get();
-        if (!isset($dataServiceField)) {
-            return Inertia::render('Error');
-        }
-        $model_name = $dataService['model_name'];
-        //check model
-        if (!file_exists(app_path('Models/' . $model_name . '.php'))) {
-            return Inertia::render('Error');
-        }
-        $data_model = eval("return \\App\\Models\\" . $model_name . "::find(" . $id . ");");
-        if (!isset($data_model) && is_null($data_model)) {
-            return Inertia::render('Error');
-        }
-        //convert to array
-        $data_model = $data_model->toArray();
-
-        //check multi-value and convert
-        $data_model = $this->explodeFieldValue($data_model);
-        //$data_model['label'] = $dataLabel;
-        if (isset($dataServiceField)) {
-
-            foreach ($dataServiceField as $value) {
-                $dataLabel += [$value['field_name'] => $value['label']];
-            }
-        } else {
-            return  Inertia::render('Error');;
-        }
-        $data_model['label'] = $dataLabel;
-        $data_model['service_name'] = $dataService['name'];
-
-        // dd($data_model);
-        return Inertia::render('RequestDetails', ['data' => $data_model, 'status' => $data_model['status']]);
     }
-    
 
-     public function explodeFieldValue2($data)
+
+    public function explodeFieldValue2($data)
     {
 
         // $dataField = [];
         foreach ($data as $key => $value) {
             if (str_contains(explode(',', $value)[0], 'radio') || str_contains(explode(',', $value)[0], 'checkbox') || str_contains(explode(',', $value)[0], 'select') || str_contains(explode(',', $value)[0], 'file')) {
                 $id = explode(',', $value);
-                if($id[0] == 'file'){
-                    $data[$key] = 'storage/'.$id[1];
+                if ($id[0] == 'file') {
+                    $data[$key] = 'storage/' . $id[1];
                     //dd($data[$key]);
                     continue;
                 }
@@ -459,7 +481,7 @@ class AdminController extends Controller
                 $dataField = '';
                 foreach ($id as $field) {
                     $field_name = ServiceFieldValueModel::find($field)['name'];
-                    if(!isset($field_name)){
+                    if (!isset($field_name)) {
                         return Inertia::render('Error');
                     }
                     $dataField .= $field_name;
@@ -468,7 +490,7 @@ class AdminController extends Controller
                 $data[$key] = $dataField;
             }
         }
-        
+
         return $data;
     }
 }
