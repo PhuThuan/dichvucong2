@@ -48,24 +48,8 @@ let serviceList = ref(props.data.service);
     <HeaderCustomer />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <nav class="flex text-center font-semibold flex-wrap content-center bg-[#5de1e6] justify-between h-[2.5rem]">
-        <Link href="/admin" class="flex content-center flex-wrap">
-        <span class="material-symbols-outlined" style="font-size: 2rem;">
-            arrow_back
-        </span>
-        </Link>
-        <div class="flex content-center text-[1rem] flex-wrap font-[800]">
-            Thông tin tài khoản
-        </div>
-        <div href="/customer-filter" class="flex content-center flex-wrap">
-            <span class="material-symbols-outlined w-[32px]" style="font-size: 2rem;">
-                <!-- filter_alt -->
-            </span>
-        </div>
-    </nav>
-
-    <div class="text-[1rem] font-[600] p-[2rem]">
-        <div>Sđt: <span class="text-slate-400">{{ props.data?.phone }}</span></div>
+    <div class="text-[1rem] font-[600] p-[2rem] w-[100%] sm:w-[40rem] mx-auto">
+        <div>Sđt: <span class="text-[#565a5d] font-bold">{{ props.data?.phone }}</span></div>
         <div>Dịch vụ đã xử dụng:</div>
 
         <!-- v-for  -->
@@ -76,7 +60,7 @@ let serviceList = ref(props.data.service);
                     <span>({{ showTime(item['created_at']) }} {{ showDate(item['created_at']) }})</span>
                 </h5>
                 <div class="text-right my-[.25rem]">
-                    <Link :href="route('order',[item.service_id,item.id])"
+                    <Link :href="route('order', [item.service_id, item.id])"
                         class="bg-[#36b7ff] text-[.75rem] rounded-[24px] py-[0.25rem] px-[0.75rem]">Chi tiết
                     </Link>
                 </div>
@@ -85,13 +69,16 @@ let serviceList = ref(props.data.service);
         <!-- Logout -->
         <link rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-        <div class="bg-[#e0e9f8] flex content-center justify-center flex-wrap h-[3rem] sticky bottom-0">
-            <span class="material-symbols-outlined">
-                logout
-            </span>
-            <Link class="mx-[2rem]" :href="route('logout')" method="post" as="button">
-            Đăng xuất khỏi thiết bị
-            </Link>
+        <div
+            class=" flex content-center justify-center flex-wrap mt-[2rem] sticky bottom-0">
+            <div class="flex content-center justify-center flex-wrap h-[3rem] w-[15rem] bg-[#e0e9f8] rounded-[.25rem]">
+                <span class="material-symbols-outlined">
+                    logout
+                </span>
+                <Link class="mx-[2rem]" :href="route('logout')" method="post" as="button">
+                Đăng xuất
+                </Link>
+            </div>
         </div>
     </div>
     <FooterVue />
