@@ -13,9 +13,8 @@ defineProps({ services: Array })
     <Head title="Dashboard" />
     <HeaderCustomer />
     <div class="w-full my-4 ">
-        <ul class="w-96 text-center" style="margin: 0 auto;">
-            <li 
-                class="w-full text-lg font-bold text-neutral-500 border-b-2 border-neutral-100 border-opacity-100 py-4 ">
+        <!-- <ul class="w-96 text-center" style="margin: 0 auto;">
+            <li class="w-full text-lg font-bold text-neutral-500 border-b-2 border-neutral-100 border-opacity-100 py-4 ">
                 Danh Sách Dịch Vụ
             </li>
             <li v-for="service in services" :key="service.id"
@@ -25,46 +24,32 @@ defineProps({ services: Array })
                 </Link>
             </li>
 
+        </ul> -->
+        
+        <ul class="max-w-md divide-y divide-gray-200 mx-auto">
+            <template v-for="service in services" :key="service.id">
+                <li class="mt-5 p-3 rounded-lg shadow-md lg:hover:shadow-xl">
+                    <Link class="block" :href="route('createService', [service.id])">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-1 min-w-0">
+                            <p class=" text-gray-900 truncate text-lg font-bold">
+
+                                {{ service.name }}
+
+                            </p>
+                            <p class="text-sm text-gray-500 truncate text-ellipsis overflow-hidden">
+                                {{ service.description }}
+                            </p>
+                        </div>
+                        <div class="inline-flex items-center text-base font-semibold text-gray-900 ">
+                            <i class="fas fa-angle-double-right fa-lg"></i>
+                        </div>
+                    </div>
+                    </Link>
+                </li>
+            </template>
         </ul>
     </div>
-    <!-- <div class="overflow-x-auto h-96">
-        <table class="table table-pin-rows text-center ">
-            <thead>
-                <tr class="text-lg">
-                    <th>Chọn dịch vụ</th>
-                </tr>
-            </thead>
-            <tbody class="">
-                <ul class="w-96">
-                    <li v-for="service in services" :key="service.id"
-                        class="w-full border-b-2 border-neutral-100 border-opacity-100 py-4 hover:bg-slate-300">
-                        <Link class="block text-lg font-bold" :href="route('createService', [service.id])">
-                        {{ service.name }}
-                        </Link>
-                    </li>
 
-                </ul>
-                <tr v-for="service in services" :key="service.id">
-                    <td class=" py-5 hover:bg-slate-300 ">
-                        <Link class="block text-lg font-bold" :href="route('createService', [service.id])">
-                        {{ service.name }}
-                        </Link>
-
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div> -->
-    <!-- <ul class=" bt-5 text-center ">
-        <li v-for="service in services" :key="service.id">
-            <Link :href="route('createService', [id_service = service.id])">
-            <button
-                class="justify-center m-3 inline-flex px-4 py-4 w-56 border border-transparent rounded-md  text-l tracking-widest hover:bg-blue-400 bg-[#38B6FF] transition ease-in-out duration-150">
-                {{ service.name }}
-            </button>
-            </Link>
-
-        </li>
-    </ul> -->
     <Footer2 />
 </template>
