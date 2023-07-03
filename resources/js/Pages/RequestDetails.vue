@@ -129,11 +129,11 @@ onBeforeUnmount(() => {
     console.log(props.role);
     if (props.role == 1) {
         if (props.data.status == 2) {
-            window.addEventListener('beforeunload', function (event) {
-                changeStatus(0)
-                event.preventDefault();
-                event.returnValue = ''; // Để hiển thị thông báo mặc định của trình duyệt
-            })
+            // window.addEventListener('beforeunload', function (event) {
+            //     changeStatus(0)
+            //     event.preventDefault();
+            //     event.returnValue = ''; // Để hiển thị thông báo mặc định của trình duyệt
+            // })
             changeStatus(0)
         }
     }
