@@ -350,13 +350,15 @@ class AdminController extends Controller
     {
 
         $serviceFields = ServicesModel::find($id_service)->servicesFields->get();
+        $service_name = ServicesModel::find($id_service);
+
         // dd($serviceFields);
         foreach ($serviceFields as $field) {
             if ($field['html_type'] == TypeData::htmlType['radio'] || $field['html_type'] == TypeData::htmlType['checkbox'] || $field['html_type'] == TypeData::htmlType['select']) {
                 $field->serviceFieldValue;
             }
         }
-        return Inertia::render('Admin_OrderForm', ['id' => $id_service, 'services' => $serviceFields]);
+        return Inertia::render('Admin_OrderForm', ['id' => $id_service, 'services' => $serviceFields,'service_name'=>$service_name]);
     }
 
     public function createDataUser(Request $request, $id_service)
