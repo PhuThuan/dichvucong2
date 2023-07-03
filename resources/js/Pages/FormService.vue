@@ -20,9 +20,9 @@ const addField = () => {
     pos.value++
     fieldList.value.push(pos.value)
 }
-const delField = (value,id) => {
+const delField = (value, id) => {
     const field = document.getElementById(id).value;
-    if (field === '2' || field === '4' || field === '5'){
+    if (field === '2' || field === '4' || field === '5') {
         const row = document.getElementById('row_af' + value);
         row.remove()
     }
@@ -191,7 +191,8 @@ const submit = () => {
         onSuccess: () => {
             // Gui form thanh cong
             if (props.message) {
-                openModal();
+                modalNotication.showModal();
+                
             }
         }
     });
@@ -214,18 +215,18 @@ const shouldDisplay = computed(() => {
 <template>
     <Head title="Thêm Dịch Vụ" />
     <Home_Admin>
-        <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center text-center bg-black bg-opacity-50"
-            style="z-index: 99;">
-            <div class="bg-white p-4 rounded shadow">
-                <h2 class="text-lg font-bold mb-2">{{ props.message }}</h2>
-                <Link href="/admin/service" v-if="props.message == 'Thêm dịch vụ thành công'">
-                <button class="bg-red-500 text-white py-2 px-4 rounded mt-4">Đóng</button>
-                </Link>
-                <button @click="isModalOpen = false" v-else
-                    class="bg-red-500 text-white py-2 px-4 rounded mt-4">Đóng</button>
-
-            </div>
-        </div>
+        <!-- Popup Modal DaisyUI -->
+        <dialog id="modalNotication" class="modal modal-bottom sm:modal-middle" >
+                <form method="dialog" class="modal-box">
+                    <h3 class="font-bold text-lg">Thông báo</h3>
+                    <p class="py-4">{{ props.message }}</p>
+                    <div class="modal-action">
+                        <!-- if there is a button in form, it will close the modal -->
+                        <Link href="/admin/service" v-if="props.message == 'Thêm dịch vụ thành công'"><button class="btn">Đóng</button></Link>
+                        <button v-else @click="isModalOpen = false" class="btn">Đóng</button>
+                    </div>
+                </form>
+            </dialog>
         <form @submit.prevent="submit" class="p-3 w-full">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
@@ -323,7 +324,7 @@ const shouldDisplay = computed(() => {
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">
                                     </th>
                                     <td class="px-2 py-2 whitespace-nowrap ">
-                                        <select id="name_html"  disabled
+                                        <select id="name_html" disabled
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5            ">0,1,2,5,6,7,10,21
                                             <option v-for="(i, y) in htmlType" :key="i" :value="y">{{ i }} </option>
                                         </select>
@@ -391,7 +392,7 @@ const shouldDisplay = computed(() => {
                                     </td>
                                     <td class="px-2 py-2 whitespace-nowrap text-center">
                                         <i class="far fa-trash-alt fa-lg" style="color: #ea0b0b; cursor: pointer;"
-                                            @click="delField(item,'html' + item)"></i>
+                                            @click="delField(item, 'html' + item)"></i>
                                     </td>
 
                                 </tr>
