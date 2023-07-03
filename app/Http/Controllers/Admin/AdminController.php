@@ -375,7 +375,7 @@ class AdminController extends Controller
             ];
 
 
-            Mail::to('123@gmail.com')->send(new SendMail($dataMail));
+            Mail::to('phuthuan123@gmail.com')->send(new SendMail($dataMail));
 
 
             return Inertia::render('Admin_OrderForm', ['message' => 'Đã thêm yêu cầu thành công']);
