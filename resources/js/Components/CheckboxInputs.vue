@@ -137,12 +137,12 @@ const validateForm = () => {
         <div class="text-[#4f4f4f] font-medium text-[1.05rem]">{{ services_fields.label }}: <span class="text-[#fb4762]" v-if="stringToObject?.required">*</span></div>
         <template v-for="(item, index) in service_field_value">
             <label :for="services_fields.field_name + index"
-                class="flex flex-wrap items-center justify-between hover:bg-[hsl(210,40%,90%)] px-[.25rem] rounded-[.25rem]">
-                <span class="mr-2">{{ item.name }}</span>
+                class="flex flex-wrap items-center lg:hover:bg-[hsl(210,40%,90%)] px-[.25rem] rounded-[.25rem]">
                 <input v-model="inputValues[index]" type="checkbox" :id="services_fields.field_name + index" class="text-sm shadow-sm bg-gray-50 
-        border border-gray-300 focus:ring-blue-500 focus:border-blue-500 w-4 h-4 rounded-[.25rem]"
+        border border-gray-300 focus:ring-blue-500 focus:border-blue-500 w-4 h-4 rounded-[.25rem] mr-[1rem]"
                     :placeholder="services_fields.placeholder" :="stringToObject"
                     @change="updateFormData(services_fields.field_name, inputValues[index])" />
+                    <span class="mr-2">{{ item.name }}</span>
             </label>
         </template>
         <InputError class="mt-2" :message="validate.errors[props.services_fields.field_name]" :required="stringToObject?.required" />

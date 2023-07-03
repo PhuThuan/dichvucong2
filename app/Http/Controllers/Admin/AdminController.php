@@ -436,10 +436,16 @@ class AdminController extends Controller
                 'subject' => 'Dịch vụ ' . $modelService['name'],
                 'info' => $dataMailForm,
             ];
-
-
-            Mail::to('phuthuan123@gmail.com')->send(new SendMail($dataMail));
-
+           
+            try{
+                foreach(User::all()->where('role',TypeData::roleUser['admin']) as $user){
+                  //  dd($user['email']);
+                    Mail::to($user['email'])->send(new SendMail($dataMail));
+                }
+           
+            }catch(Exception $e){
+                return Inertia::render('Error');
+            }
 
             return Inertia::render('Admin_OrderForm', ['message' => 'Đã thêm yêu cầu thành công']);
             //   return to_route('dashboard');

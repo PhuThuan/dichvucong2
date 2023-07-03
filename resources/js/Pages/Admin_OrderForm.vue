@@ -1,6 +1,10 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
+
 import { Link, useForm, Head } from '@inertiajs/vue3';
+
+//import { Link, useForm,Head } from '@inertiajs/vue3';
+
 
 import HeaderCustomer from '@/Components/Home_Admin.vue';
 import TextInputs from '@/Components/TextInputs.vue';
@@ -93,6 +97,7 @@ onMounted(() => {
 </script>
 
 <template>
+
     <section class="bg-[#ffffff] pb-[.5rem]">
         <link rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -108,6 +113,23 @@ onMounted(() => {
                 <div class="modal-action">
                     <!-- if there is a button in form, it will close the modal -->
                     <Link href="/admin/list/service"><button class="btn">Đóng</button></Link>
+
+         <Head title="Thêm yêu cầu" />
+
+    <HeaderCustomer>
+        <!-- Popup Model  -->
+        <div class="popup-modal">
+            <div v-if="isModalOpen" id="popup-modal" tabindex="-1"
+                class="flex flex-wrap content-center justify-center fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div class="p-[0.5rem] text-center px-[1.5rem] pb-[1.5rem] relative bg-[#d9d9d9] rounded-[1.5rem]">
+                    <h3 class="mb-[3rem] text-[1.75rem] font-normal text-[#000000]">{{ message }}
+                    </h3>
+
+                    <Link href="/admin/list/service"
+                        class="text-[#000000] bg-[#37b6ff] hover:bg-[#58b3e8] focus:outline-none font-medium rounded-full text-sm inline-flex items-center px-5 text-center">
+                    Xong
+                    </Link>
+
                 </div>
             </form>
         </dialog>
