@@ -29,8 +29,19 @@
     </footer>
 </template>
 
-<style scoped>
+<style>
 img {
     filter: drop-shadow(0 0 0.25rem crimson);
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+}
+
+@media (min-height: 100vh) {
+  footer {
+    position: initial;
+  }
 }
 </style>
