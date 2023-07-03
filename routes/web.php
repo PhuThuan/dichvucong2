@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\Service\ServiceController;
 use App\Http\Controllers\Admin\Service\ServiceFieldsController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Auth\PermissionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -71,7 +72,7 @@ Route::prefix('/admin')->middleware(['checkAccountLogin', 'auth', 'verified'])->
 
     route::post('/order/detail/{service_id}/{id}', [AdminController::class, 'updateStatus']);
 
-    route::get('/setting/mail',[SettingController::class, 'getEmail']);
+    route::get('/setting/route',[PermissionController::class, 'getUserPermission']);
     route::post('/setting/mail',[SettingController::class, 'storeEmail'])->name('mail_setting');
 });
 
