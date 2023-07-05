@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\GroupModel;
 use Illuminate\Support\Facades\Storage;
+use PHPUnit\Framework\Attributes\Group;
 
 class AdminController extends Controller
 {
@@ -100,7 +101,7 @@ class AdminController extends Controller
     }
     public function getUserAll($page)
     {
-        $users = User::where('role', '=', TypeData::roleUser['user'])->paginate(10, ['*'], 'page', $page);
+        $users = User::paginate(10, ['*'], 'page', $page);
         $usersCount = User::where('role', '=', TypeData::roleUser['user'])->count();
         $data =  [
             'users' => $users,
@@ -314,11 +315,15 @@ class AdminController extends Controller
                 }
             }
             $group = GroupModel::all();
-
+            
             $dataResult = [
+                'user_id' => $user['id'],
                 'phone' => $user['phone'],
                 'service' => $dataService,
                 'group' => $group,
+                'currentRole' => $user['role'],
+                'role' => TypeData::roleUser(),
+                'currentGroup' => $user['gr_id'],
             ];
             return Inertia::render('ProfileCustomerAdmin', ['data' => $dataResult]);
         } catch (Exception $e) {
@@ -327,12 +332,16 @@ class AdminController extends Controller
     }
 
     public function storeUserInfo(Request $request,$user_id){
-    if(Auth::user()->role!=TypeData::roleUser['admin']){  
-        return Inertia::render('Error');
-    }
-        User::find($user_id)->update('gr_id',$request->input('gr_id'));
-        
-        return to_route('detailUser');
+        if(Auth::user()->role!=TypeData::roleUser['admin']){  
+            return Inertia::render('Error');
+        }
+            //dd($request->gr_id);
+            
+            $user = User::find($request->user_id);
+            $user->gr_id = $request->gr_id;
+            $user->save();
+            
+            return to_route('detailUser',['user_id' => $request->user_id]);
     }
     public function notihead()
     {
