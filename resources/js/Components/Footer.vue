@@ -30,7 +30,7 @@
 </template>
 
 <style>
-img {
+footer img {
     filter: drop-shadow(0 0 0.25rem crimson);
 }
 
