@@ -63,6 +63,9 @@ function updateFormData(attribute, value) {
     // console.log(props.formData[props.services_fields.field_name]);
     if (props.formData[props.services_fields.field_name] === `select,${props.services_fields?.placeholder}`)
         delete props.formData[props.services_fields.field_name];
+    else if(props.formData[props.services_fields.field_name] === `select,` && !props.services_fields?.placeholder) {
+        delete props.formData[props.services_fields.field_name];
+    }
     // console.log(props.formData);
 };
 
