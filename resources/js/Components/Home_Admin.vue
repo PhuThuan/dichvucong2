@@ -154,7 +154,7 @@ onMounted(()=>{
                   </svg>
                 </span>
                 
-                <span class="ml-2 text-sm tracking-wide truncate">Settings</span>
+                <span class="ml-2 text-sm tracking-wide truncate">Permission</span>
               </Link>
             </li>
           </ul>

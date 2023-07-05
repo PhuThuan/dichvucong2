@@ -43,7 +43,7 @@ Route::get('/contact', [UserController::class, 'contact'])->name('contact');;
 
 
 //middleware check account login is admin or user
-Route::prefix('/admin')->middleware(['checkAccountLogin', 'auth', 'verified'])->group(function () {
+Route::prefix('/admin')->middleware(['checkAccountLogin', 'auth', 'verified','permission'])->group(function () {
 
     Route::get('/', function () {
         return Inertia::render('Admin_Home');
@@ -66,6 +66,8 @@ Route::prefix('/admin')->middleware(['checkAccountLogin', 'auth', 'verified'])->
 
     route::post('/manage/customer/{user_id}/service', [AdminController::class, 'storeUserInfo'])->name('sendDetailUser');
 
+    route::put('/manage/customer/{user_id}/service', [PermissionController::class, 'updateRoleUser'])->name('updateUserDetail');
+
     route::get('/list/service', [AdminController::class, 'getListService']);
 
     Route::get('/serviceForm/{id_service}', [AdminController::class, 'getForm'])->name('createAdmin');
@@ -73,12 +75,20 @@ Route::prefix('/admin')->middleware(['checkAccountLogin', 'auth', 'verified'])->
     Route::post('/service/post/{id_service}', [AdminController::class, 'createDataUser'])->name('dataForm');
 
     route::post('/order/detail/{service_id}/{id}', [AdminController::class, 'updateStatus']);
-
+//
     route::get('/setting/route',[PermissionController::class, 'getUserPermission'])->name('setting_premission');
 
+    route::put('/setting/route',[PermissionController::class, 'updateGroupPermission'])->name('update_setting_premission');
+
+    //route::post('/setting/current_permission',[PermissionController::class,'getCurrentPermission'])->name('get_current_permission');
+
+    route::post('/setting/route',[PermissionController::class, 'storeGroupPermission'])->name('store_setting_premission');
+//
     route::post('/setting/mail',[SettingController::class, 'storeEmail'])->name('mail_setting');
 
     route::get('/routing/{id}',[PermissionController::class, 'getRoute']);
+
+    //route::post('/routing/{id}',[PermissionController::class, 'storePermissionRoute']);
 
     route::get('/{slug?}', function (){
         return Inertia::render('Error');
@@ -123,7 +133,7 @@ Route::get('/get-address', function () {
 Route::get('/get-noti', [AdminController::class, 'notihead']);
 
 
-route::get('/{slug?}', function (){
-    return Inertia::render('Error');
-});
+// route::get('/{slug?}', function (){
+//     return Inertia::render('Error');
+// });
 require __DIR__ . '/auth.php';

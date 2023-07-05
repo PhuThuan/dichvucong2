@@ -46,8 +46,8 @@ onMounted(() => {
     <nav class="bg-slate-100 border-gray-200">
         <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
             <a href="" class="flex items-center">
-                <img src="/storage/Titops DX4U Logo Square (1).png" class="h-8 mr-3" alt="Flowbite Logo" />
-                <span class="self-center text-2xl font-semibold whitespace-nowrap ">Dx4u</span>
+                <img src="/storage/Titops DX4U Logo Square (1).png" class="h-8 mr-3" alt="DX4U Logo" />
+                <span class="self-center text-2xl font-semibold whitespace-nowrap ">DX4U</span>
             </a>
             <button id="mega-menu-full-cta-button" type="button"
                 class="inline-flex items-center  ml-1 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100   "
