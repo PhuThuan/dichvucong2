@@ -20,6 +20,7 @@ use Illuminate\Pagination\Paginator;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
+use App\Models\GroupModel;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
@@ -312,11 +313,12 @@ class AdminController extends Controller
                     }
                 }
             }
+            $group = GroupModel::all();
 
             $dataResult = [
                 'phone' => $user['phone'],
                 'service' => $dataService,
-
+                'group' => $group,
             ];
             return Inertia::render('ProfileCustomerAdmin', ['data' => $dataResult]);
         } catch (Exception $e) {

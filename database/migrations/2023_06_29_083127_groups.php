@@ -16,7 +16,7 @@ return new class extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->char('name');
-            $table->json('permission');
+            $table->longtext('permission');
             });
     }
 

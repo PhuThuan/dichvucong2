@@ -24,7 +24,7 @@ class PermissionController extends Controller
         foreach ($dataRoute as $data) {
            array_push($data_url,$data->uri) ;
         }
-        
+        dd($dataRoute);
         $data_user=[];
         foreach (User::all() as $data) {
             array_push($data_user,$data['email']) ;
@@ -36,5 +36,9 @@ class PermissionController extends Controller
         ];
 
         return Inertia::render('Permission',['data'=>$data]);
+    }
+
+    public function getRoute(){
+        return Route::current()->uri;
     }
 }

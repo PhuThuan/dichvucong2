@@ -72,8 +72,16 @@ Route::prefix('/admin')->middleware(['checkAccountLogin', 'auth', 'verified'])->
 
     route::post('/order/detail/{service_id}/{id}', [AdminController::class, 'updateStatus']);
 
-    route::get('/setting/route',[PermissionController::class, 'getUserPermission']);
+    route::get('/setting/route',[PermissionController::class, 'getUserPermission'])->name('setting_premission');
+
     route::post('/setting/mail',[SettingController::class, 'storeEmail'])->name('mail_setting');
+
+    route::get('/routing/{id}',[PermissionController::class, 'getRoute']);
+
+    route::get('/{slug?}', function (){
+        return Inertia::render('Error');
+    })->name('Error');
+    
 });
 
 Route::prefix('/user')->middleware(['auth', 'verified'])->group(function () {
@@ -112,4 +120,8 @@ Route::get('/get-address', function () {
 });
 Route::get('/get-noti', [AdminController::class, 'notihead']);
 
+
+route::get('/{slug?}', function (){
+    return Inertia::render('Error');
+});
 require __DIR__ . '/auth.php';
