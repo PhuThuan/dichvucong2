@@ -64,6 +64,8 @@ Route::prefix('/admin')->middleware(['checkAccountLogin', 'auth', 'verified'])->
     //chi tiet tk 
     route::get('/manage/customer/{user_id}/service', [AdminController::class, 'getUserService'])->name('detailUser');
 
+    route::post('/manage/customer/{user_id}/service', [AdminController::class, 'storeUserInfo'])->name('sendDetailUser');
+
     route::get('/list/service', [AdminController::class, 'getListService']);
 
     Route::get('/serviceForm/{id_service}', [AdminController::class, 'getForm'])->name('createAdmin');

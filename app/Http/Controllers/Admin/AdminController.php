@@ -325,6 +325,15 @@ class AdminController extends Controller
             return Inertia::render('Error');
         }
     }
+
+    public function storeUserInfo(Request $request,$user_id){
+    if(Auth::user()->role!=TypeData::roleUser['admin']){  
+        return Inertia::render('Error');
+    }
+        User::find($user_id)->update('gr_id',$request->input('gr_id'));
+        
+        return to_route('detailUser');
+    }
     public function notihead()
     {
         $dataServices = ServicesModel::all();
