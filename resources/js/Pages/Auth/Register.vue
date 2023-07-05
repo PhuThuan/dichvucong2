@@ -65,14 +65,14 @@ const submit = () => {
     <GuestLayout style=" background: radial-gradient(#13a8ff, #dddef8);">
 
         <Head title="Register" />
-        <div class="text-blue-500 text-3xl text-center font-bold my-10">
+        <div class="text-blue-500 text-3xl text-center font-bold mb-[2rem]">
             Đăng ký
         </div>
         <form @submit.prevent="submit">
 
 
             <div class="mt-4">
-                <TextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" placeholder="Số điện thoại"
+                <TextInput id="phone" type="text" class="text-sm shadow-sm bg-gray-50 border border-gray-300 rounded-[.25rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" v-model="form.phone" placeholder="Số điện thoại"
                     autocomplete="username" />
 
                 <InputError class="mt-2" v-if="form.errors.phone != 'The phone has already been taken.'"
@@ -84,10 +84,10 @@ const submit = () => {
                 <TextInput 
                     id="password" 
                     :type="showPassword ? 'text' : 'password'" 
-                    class="mt-1 block w-full"
+                    class="text-sm shadow-sm bg-gray-50 border border-gray-300 rounded-[.25rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     v-model="form.password" 
                     autocomplete="current-password" 
-                    placeholder="Mật khẩu" />
+                    placeholder="Mật khẩu"/>
                 <button type="button" class="absolute right-0 top-0 h-full px-3 text-gray-300 focus:outline-none"
                     @click="showPassword = !showPassword">
                     <i class="fas fa-eye" :class="{ 'hidden': !showPassword, 'block': showPassword }"></i>
@@ -99,7 +99,7 @@ const submit = () => {
 
 
             <div class="relative mt-4">
-                <TextInput id="password_confirmation" :type="showPassword2 ? 'text' : 'password'" class="mt-1 block w-full"
+                <TextInput id="password_confirmation" :type="showPassword2 ? 'text' : 'password'" class="text-sm shadow-sm bg-gray-50 border border-gray-300 rounded-[.25rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     v-model="form.password_confirmation" autocomplete="current-password" placeholder="Nhập lại mật khẩu" />
                 <button type="button" class="absolute right-0 top-0 h-full text-gray-300 px-3 focus:outline-none"
                     @click="showPassword2 = !showPassword2">
@@ -116,7 +116,7 @@ const submit = () => {
             <div class="flex items-center justify-center ">
 
                 <button
-                    class="my-4 bg-gradient-to-r from-[#b4b4b4] to-[#ededed] text-black py-2 px-4 rounded-[11px]  font-semibold"
+                    class="mt-[2rem] bg-gradient-to-r from-[#a5edff] to-[#27a1f3] text-black py-2 px-4 rounded-[.5rem] font-semibold"
                     :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Đăng ký
                 </button>
