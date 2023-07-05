@@ -77,21 +77,21 @@ const submit = () => {
 
 
 <template>
-    <GuestLayout style=" background: radial-gradient(#13a8ff, #dddef8);">
+    <GuestLayout class="py-[2rem]" style=" background: radial-gradient(#13a8ff, #dddef8);">
 
         <Head title="Log in" />
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
-        <div class="text-blue-500 text-3xl text-center font-bold my-10">
-            Đăng nhập
+        <div class="text-blue-500 text-3xl text-center font-bold mb-[2rem]">
+            Đăng Nhập
         </div>
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="phone" />
 
-                <TextInput id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" autofocus
+                <TextInput id="phone" type="text" class="text-sm shadow-sm bg-gray-50 border border-gray-300 rounded-[.25rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" v-model="form.phone" autofocus
                     autocomplete="username" placeholder="Số điện thoại" />
 
                 <InputError class="mt-2" v-if="form.errors.email == 'These credentials do not match our records.'"
@@ -101,7 +101,7 @@ const submit = () => {
 
 
             <div class="relative mt-4">
-                <TextInput id="password" :type="showPassword ? 'text' : 'password'" class="mt-1 block w-full"
+                <TextInput id="password" :type="showPassword ? 'text' : 'password'" class="text-sm shadow-sm bg-gray-50 border border-gray-300 rounded-[.25rem] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     v-model="form.password" autocomplete="current-password" placeholder="Mật khẩu" />
                 <button type="button" class="absolute right-0 top-0 h-full px-3 text-gray-600 focus:outline-none"
                     @click="showPassword = !showPassword">
@@ -112,10 +112,6 @@ const submit = () => {
                 <InputError class="mt-2" v-if="form.errors.password == 'These credentials do not match our records.'"
                     :message="'Sai mật khẩu'" />
             </div>
-            
-
-
-
             <!-- 
             <div class="mt-4">
                 
@@ -141,21 +137,19 @@ const submit = () => {
             </div>
 
             <div class="items-center justify-end mt-4 text-center">
-                <PrimaryButton class=" border-none my-3 bg-gradient-to-r from-[#b4b4b4] to-[#ededed]  " style="color: black;"
-                    :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Đăng nhập
+                <PrimaryButton class="border-none my-[.5rem] bg-gradient-to-r from-[#a5edff] to-[#27a1f3]" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" style="color: black;">
+                    Đăng Nhập
                 </PrimaryButton>
                 <br>
                 <Link v-if="canResetPassword" :href="route('password.request')"
-                    class="font-semibold text-sm text-dark-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    class="text-[#4f4f4f] font-semibold text-sm text-dark-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Quên mật khẩu?
                 </Link>
 
-
-                <div class="mt-10 font-semibold text-sm text-dark-600">
+                <div class="text-[#4f4f4f] mt-[1rem] font-semibold text-sm text-dark-600">
                     Bạn chưa có tài khoản?
                 </div>
-                <Link :href="route('register')" class="font-semibold text-sm text-dark-600">
+                <Link :href="route('register')" class="text-[#4f4f4f] font-semibold text-sm text-dark-600">
                 Tạo tài khoản mới
                 </Link>
             </div>
