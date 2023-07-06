@@ -96,7 +96,7 @@ Route::prefix('/admin')->middleware(['checkAccountLogin', 'auth', 'verified','pe
     
 });
 
-Route::prefix('/user')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('/user')->middleware(['auth', 'verified','permission'])->group(function () {
     Route::get('/', function () {
         return Inertia::render('Home_Admin');
     });

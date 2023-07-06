@@ -45,7 +45,7 @@ onMounted(() => {
     </header> -->
     <nav class="bg-slate-100 border-gray-200">
         <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
-            <a href="" class="flex items-center">
+            <a href="/" class="flex items-center">
                 <img src="/storage/Titops DX4U Logo Square (1).png" class="h-8 mr-3" alt="DX4U Logo" />
                 <span class="self-center text-2xl font-semibold whitespace-nowrap ">DX4U</span>
             </a>

@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->char('name');
+            $table->char('name')->unique();
             $table->longtext('permission');
             });
     }
