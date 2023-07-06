@@ -61,11 +61,15 @@ async function submitForm() {
     } else {
         let form = useForm(formData.value);
         // console.log(form);
+        disForm.value=true
         form.post(`/admin/service/post/${props.id}`, {
             onSuccess: () => {
                 // Gui form thanh cong
                 if (props.message) {
                     modalNotication.showModal();
+                    if(props.message=='Dữ liệu gửi không hợp lệ ! Tạo yêu cầu thất bại'){
+                        disForm.value=false
+                    }
                 }
             }
         })
@@ -74,6 +78,7 @@ async function submitForm() {
 
 // Kiểm tra fetch dữ liệu
 let isLoading = ref({});
+let disForm= ref(false);
 
 let services_fields_array = reactive([])
 
@@ -123,7 +128,7 @@ onMounted(() => {
         
 
         <!-- Form tạo yêu cầu -->
-        <form
+        <form :class="{ 'pointer-events-none': disForm }"
             class="text-[#4f4f4f] px-[2rem] py-[.2rem] text-[1rem] w-[90%] sm:w-[40rem] sm:px-[4rem] sm:py-[1rem] mx-auto bg-[#ffffff] my-[1rem] rounded-[.25rem] shadow-lg"
             enctype="multipart/form-data">
             <!-- sub header -->
