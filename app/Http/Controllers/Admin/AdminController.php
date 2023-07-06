@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Validator;
 use App\Enums\TypeData;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
@@ -389,11 +390,27 @@ class AdminController extends Controller
             $datatempt[$dataService['field_name']] = $dataService['validate'];
         }
         //dd( $datatempt);
-        $request->validate([
-            $datatempt
+        // $request->validate(
+        //     $datatempt
 
-        ]);
+        // );
+        //handle validation
+        $dataRequest = [];
+        
+        //dd(!str_contains($request->all()['ho_va_ten'],'select'));
+        foreach($request->all() as $key => $data){
+            if(isset($datatempt[$key]) && $datatempt[$key]!= NULL && !str_contains($data,'select') && !$request->hasFile($key) && !str_contains($data,'radio') && !str_contains($data,'checkbox') ){
+                $dataRequest[$key] = $data;
+            }else {
+                unset($datatempt[$key]);
+            }
+        }
+        //dd($datatempt);
+        $validator = Validator::make($dataRequest,$datatempt);
 
+        if($validator->fails()){
+            return Inertia::render('Admin_OrderForm',['message'=>'Dữ liệu gửi không hợp lệ ! Tạo yêu cầu thất bại']);
+        }
         $path_file = [];
         ////handle file/////
         foreach ($table_name as $value) {

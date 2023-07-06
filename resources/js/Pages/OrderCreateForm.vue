@@ -55,17 +55,24 @@ async function submitForm() {
         return; // Thoát khỏi hàm nếu có trường field không hợp lệ
     } else {
         let form = useForm(formData.value);
-        // console.log(form);
+
         form.post(`/user/service/${props.id}`, {
             onSuccess: () => {
                 // Gui form thanh cong
+
                 if (props.message) {
                     modalNotication.showModal();
                 }
-            }
+
+            },
         })
     }
 }
+
+const isModalOpen = ref(false)
+function openModal() {
+    isModalOpen.value = true;
+};
 
 let services = {}
 
@@ -98,6 +105,7 @@ onMounted(() => {
     <section class="bg-[#ffffff] pb-[.5rem]">
         <link rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
         <Head title="Đăng Ký Dịch Vụ" />
         <!-- Header -->
         <HeaderCustomer />
@@ -109,7 +117,11 @@ onMounted(() => {
                 <p class="py-4">{{ message }}</p>
                 <div class="modal-action">
                     <!-- if there is a button in form, it will close the modal -->
-                    <Link href="/"><button class="btn">Đóng</button></Link>
+                    <!-- <Link href="/"><button class="btn">Đóng</button></Link> -->
+                    <!-- if there is a button in form, it will close the modal -->
+                    <Link href="/" v-if="props.message == 'Đã thêm yêu cầu thành công'"><button class="btn">Đóng</button>
+                    </Link>
+                    <button v-else @click="isModalOpen = false" class="btn">Đóng</button>
                 </div>
             </form>
         </dialog>
@@ -126,11 +138,22 @@ onMounted(() => {
                     {{ serviceName }}
                 </div>
                 <Link href="#" class="flex content-center flex-wrap">
-                <span title="Quét QR để điền thông tin tự động"
+                <!-- <span title="Quét QR để điền thông tin tự động"
                     class="material-symbols-outlined rounded-[.25rem] hover:bg-[#58b3e8] hover:text-[#f1f5f9] focus:ring-4 focus:outline-none focus:ring-blue-300"
                     style="font-size: 2rem;">
                     qr_code_scanner
-                </span>
+                </span> -->
+                <svg xmlns="http://www.w3.org/2000/svg" style="font-size: 2rem;" width="30" height="30" fill="currentColor"
+                    class="bi bi-qr-code-scan rounded-[.25rem]  focus:ring-4 focus:outline-none focus:ring-blue-300"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0v-3Zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5ZM.5 12a.5.5 0 0 1 .5.5V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5Zm15 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H15v-2.5a.5.5 0 0 1 .5-.5ZM4 4h1v1H4V4Z" />
+                    <path d="M7 2H2v5h5V2ZM3 3h3v3H3V3Zm2 8H4v1h1v-1Z" />
+                    <path d="M7 9H2v5h5V9Zm-4 1h3v3H3v-3Zm8-6h1v1h-1V4Z" />
+                    <path
+                        d="M9 2h5v5H9V2Zm1 1v3h3V3h-3ZM8 8v2h1v1H8v1h2v-2h1v2h1v-1h2v-1h-3V8H8Zm2 2H9V9h1v1Zm4 2h-1v1h-2v1h3v-2Zm-4 2v-1H8v1h2Z" />
+                    <path d="M12 9h2V8h-2v1Z" />
+                </svg>
                 </Link>
             </nav>
 
@@ -167,6 +190,5 @@ onMounted(() => {
                 text-center">
                     Đăng Ký Dịch Vụ</button>
             </div>
-        </form>
-    </section>
-</template>
+    </form>
+</section></template>

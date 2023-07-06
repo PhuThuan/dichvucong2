@@ -30,7 +30,7 @@ defineProps({ services: Array })
             <template v-for="service in services" :key="service.id">
                 <li class="mt-5 p-3 rounded-lg shadow-md lg:hover:shadow-xl">
                     <Link class="block" :href="route('createService', [service.id])">
-                    <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-4" :title="service.name">
                         <div class="flex-1 min-w-0">
                             <p class=" text-gray-900 truncate text-lg font-bold">
 

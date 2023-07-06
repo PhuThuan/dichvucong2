@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceFieldValueModel;
 use App\Models\ServicesModel;
@@ -88,11 +89,21 @@ class UserController extends Controller
             //$datatempt += '\'' . $dataService['field_name'] . '\'' . '=>' . '\'' . $dataService['validate'] . '\',';
             $datatempt[$dataService['field_name']] = $dataService['validate'];
         }
+        $dataRequest = [];
+        
+        //dd(!str_contains($request->all()['ho_va_ten'],'select'));
+        foreach($request->all() as $key => $data){
+            if(isset($datatempt[$key]) && $datatempt[$key]!= NULL && !str_contains($data,'select') && !$request->hasFile($key) && !str_contains($data,'radio') && !str_contains($data,'checkbox') ){
+                $dataRequest[$key] = $data;
+            }else {
+                unset($datatempt[$key]);
+            }
+        }
+        $validator = Validator::make($dataRequest,$datatempt);
 
-        $request->validate([
-            $datatempt
-
-        ]);
+        if($validator->fails()){
+            return Inertia::render('OrderCreateForm',['message'=>'Dữ liệu gửi không hợp lệ ! Tạo yêu cầu thất bại']);
+        }
 
         $path_file = [];
         ////handle file/////
