@@ -81,11 +81,12 @@ class UserController extends Controller
 
         $table_name = ServicesFieldsModel::get()->where('services_id', $id_service);
 
-        $datatempt = '';
+        $datatempt = [];
 
         foreach ($table_name as $dataService) {
 
-            $datatempt .= '"' . $dataService['field_name'] . '"' . '=>' . '"' . $dataService['validate'] . '",';
+            //$datatempt += '\'' . $dataService['field_name'] . '\'' . '=>' . '\'' . $dataService['validate'] . '\',';
+            $datatempt[$dataService['field_name']] = $dataService['validate'];
         }
 
         $request->validate([

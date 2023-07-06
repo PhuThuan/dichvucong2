@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Enums\TypeData;
+use App\Models\GroupModel;
 
 class RegisteredUserController extends Controller
 {
@@ -37,13 +39,13 @@ class RegisteredUserController extends Controller
             'password' => ['required'],
             'password_confirmation'=>['required', 'same:password',],
         ]);
-        
+        //dd(GroupModel::where('name','customer')->first()['id']);
         $user = User::create([
             'phone' => $request->phone,
             'email' => $request->phone.'@asia.mail',
             'password' => Hash::make($request->password),
-            'role' => 0,
-            'gr_id' => 0,
+            'role' => TypeData::roleUser['user'],
+            'gr_id' => GroupModel::where('name','customer')->first()['id'],
         ]);
 
         event(new Registered($user));

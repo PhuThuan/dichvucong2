@@ -2,6 +2,7 @@
 import { onMounted, defineProps } from 'vue';
 import Home_Admin from '@/Components/Home_Admin.vue';
 import { Link, router,Head } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const props = defineProps({ noti: Array });
 // const noti = [
@@ -33,7 +34,7 @@ let realTime = () => {
     let dateString = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric' }).replace(/\//g, '-');
     return dateString;
 }
-
+const time=ref()
 onMounted(() => {
     //sort creat_at
     props.noti = props.noti.sort((a, b) => a.created_at - b.created_at)
@@ -43,6 +44,8 @@ onMounted(() => {
         const timeB = new Date(b.created_at);
         return timeB - timeA;
     });
+    time.value= props.noti
+    console.log(1212312222222222222222222222222);
     
 })
 
@@ -62,7 +65,7 @@ onMounted(() => {
             <div class="w-full h-full shadow">
                 <table class="table-auto w-full">
                     <tbody>
-                        <template v-for="(not, index) in noti" :key="index">
+                        <template v-for="(not, index) in time" :key="index">
                         <tr 
                             class="relative transform scale-100 text-sm py-1 hover:bg-gray-100 cursor-default bg-opacity-25 "
                             :class="{ 'bg-gray-200 hover:bg-gray-200': index % 2 == 0 }">

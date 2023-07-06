@@ -39,9 +39,6 @@ class AdminController extends Controller
     public function getDataUsers($service_id, $page = 1, $status = 4,)
     {
         // if ($status > 4 || $status < 0) {
-        //     return Inertia::render('Error');
-        // }
-        //dd($status);
         $dataServices = ServicesModel::where('id', $service_id)->get();
         $dataResult = [];
         $data_count = 0;
@@ -102,7 +99,7 @@ class AdminController extends Controller
     public function getUserAll($page)
     {
         $users = User::paginate(10, ['*'], 'page', $page);
-        $usersCount = User::where('role', '=', TypeData::roleUser['user'])->count();
+        $usersCount = User::count();
         $data =  [
             'users' => $users,
             'usersCount' => $usersCount,
@@ -128,8 +125,6 @@ class AdminController extends Controller
                 return Inertia::render('Error');
             }
 
-
-            //get status == disable
             //$data_model::where('status',TypeData::status['disable']);
             //dd($data_model);  
             foreach ($data_model as $data) {
@@ -386,13 +381,14 @@ class AdminController extends Controller
 
         $table_name = ServicesFieldsModel::get()->where('services_id', $id_service);
 
-        $datatempt = '';
+        $datatempt = [];
 
         foreach ($table_name as $dataService) {
 
-            $datatempt .= '"' . $dataService['field_name'] . '"' . '=>' . '"' . $dataService['validate'] . '",';
+            //$datatempt += '\'' . $dataService['field_name'] . '\'' . '=>' . '\'' . $dataService['validate'] . '\',';
+            $datatempt[$dataService['field_name']] = $dataService['validate'];
         }
-
+        //dd( $datatempt);
         $request->validate([
             $datatempt
 

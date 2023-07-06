@@ -72,15 +72,14 @@ let serviceList = ref(props.data.service);
         <!-- Logout -->
         <link rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-        <div class=" flex content-center justify-center flex-wrap mt-[2rem] sticky bottom-0">
-            <div class="flex content-center justify-center flex-wrap h-[3rem] w-[15rem] bg-[#e0e9f8] rounded-[.25rem]">
-                <span class="material-symbols-outlined">
+            <div class=" flex content-center justify-center flex-wrap mt-[2rem] sticky bottom-0">
+            <Link class="mx-[2rem]" :href="route('logout')" method="post" as="button">
+            <div class="flex content-center justify-center flex-wrap h-[3rem] bg-[#e0e9f8] rounded-[.25rem] px-[1rem]">
+                <span class="material-symbols-outlined inline-block mr-[1rem]">
                     logout
-                </span>
-                <Link class="mx-[2rem]" :href="route('logout')" method="post" as="button">
-                Đăng xuất
-                </Link>
+                </span>Đăng xuất
             </div>
+            </Link>
         </div>
     </div>
     <FooterVue />

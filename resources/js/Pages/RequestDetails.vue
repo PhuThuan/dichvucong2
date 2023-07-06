@@ -23,10 +23,7 @@ onMounted(() => {
     else {
         isProcessed.value = true
     }
-    if (props.data.address) {
-        address.value = JSON.parse(props.data.address)
-        console.log(address.value);
-    }
+    
     for (const [key, value] of Object.entries(props.data)) {
         //         console.log();
         //   console.log(`${key}: ${value}`);
