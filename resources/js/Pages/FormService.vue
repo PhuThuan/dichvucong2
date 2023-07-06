@@ -111,6 +111,7 @@ const addItem = (id, name) => {
     });
     pos.value++
 }
+const exitFlag = ref(true)
 
 
 const submit = () => {
@@ -147,6 +148,10 @@ const submit = () => {
                 var inputValue = input.value;
                 arr.push(inputValue)
             });
+            if (arr.length == 0) {
+                alert('Bạn chưa điền đủ giá trị')
+                return
+            }
         }
         if (html_type > 2) {
             if (html_type == '3') {
@@ -187,11 +192,16 @@ const submit = () => {
     });
     console.log(form);
     dataFields = []
+    exitFlag.value = false
     form.post('/admin/service', {
         onSuccess: () => {
             // Gui form thanh cong
             if (props.message) {
                 modalNotication.showModal();
+                if (props.message == 'Thêm dịch vụ thất bại') {
+                    exitFlag.value = true
+
+                }
                 
             }
         }
@@ -216,18 +226,19 @@ const shouldDisplay = computed(() => {
     <Head title="Thêm Dịch Vụ" />
     <Home_Admin>
         <!-- Popup Modal DaisyUI -->
-        <dialog id="modalNotication" class="modal modal-bottom sm:modal-middle" >
-                <form method="dialog" class="modal-box">
-                    <h3 class="font-bold text-lg">Thông báo</h3>
-                    <p class="py-4">{{ props.message }}</p>
-                    <div class="modal-action">
-                        <!-- if there is a button in form, it will close the modal -->
-                        <Link href="/admin/service" v-if="props.message == 'Thêm dịch vụ thành công'"><button class="btn">Đóng</button></Link>
-                        <button v-else @click="isModalOpen = false" class="btn">Đóng</button>
-                    </div>
-                </form>
-            </dialog>
-        <form @submit.prevent="submit" class="p-3 w-full">
+        <dialog id="modalNotication" class="modal modal-bottom sm:modal-middle">
+            <form method="dialog" class="modal-box">
+                <h3 class="font-bold text-lg">Thông báo</h3>
+                <p class="py-4">{{ props.message }}</p>
+                <div class="modal-action">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <Link href="/admin/service" v-if="props.message == 'Thêm dịch vụ thành công'"><button
+                        class="btn">Đóng</button></Link>
+                    <button v-else @click="isModalOpen = false" class="btn">Đóng</button>
+                </div>
+            </form>
+        </dialog>
+        <form @submit.prevent="submit" class="p-3 w-full" :class="{ 'pointer-events-none': !exitFlag }">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                     <label for="nameService" class="block mb-2 text-sm font-medium text-gray-900  ">Tên dịch

@@ -23,12 +23,12 @@ const props = defineProps({
 const serviceName = ref();
 
 const formValidate = ref({})
-
+let disForm= ref(false);
 let submitClicked = ref(false);
-
+let exitFlag =ref(false);
+//let disabledForm= ref(false);
 // Submit form
 async function submitForm() {
-    let exitFlag = false;
 
     // Kích hoạt sự kiện xác thực ở thành phần con
     submitClicked.value = true;
@@ -41,34 +41,40 @@ async function submitForm() {
         // console.log(formData.value[element.field_name]);
         if (formValidate.value[element.field_name]?.required) {
             if (!formData.value[element.field_name]) {
-                exitFlag = true;
+                exitFlag.value = true;
+                disForm.value=false
                 return;
             }
         }
     });
-
     // Post
     console.log('Form Data');
     console.log(formData.value);
     // console.log(formValidate.value);
-    if (exitFlag) {
+    if (exitFlag.value) {
         return; // Thoát khỏi hàm nếu có trường field không hợp lệ
     } else {
         let form = useForm(formData.value);
-
+        disForm.value=true
         form.post(`/user/service/${props.id}`, {
             onSuccess: () => {
                 // Gui form thanh cong
 
                 if (props.message) {
                     modalNotication.showModal();
+                    if(props.message=='Dữ liệu gửi không hợp lệ ! Tạo yêu cầu thất bại'){
+                        disForm.value=false
+                    }
                 }
 
             },
         })
     }
 }
-
+function changeDis(){
+    disForm=true
+    alert("2312312")
+}
 const isModalOpen = ref(false)
 function openModal() {
     isModalOpen.value = true;
@@ -127,7 +133,7 @@ onMounted(() => {
         </dialog>
 
         <!-- Form tạo yêu cầu -->
-        <form
+        <form :class="{ 'pointer-events-none': disForm }"
             class="text-[#4f4f4f] px-[2rem] py-[.2rem] text-[1rem] w-[90%] sm:w-[40rem] sm:px-[4rem] sm:py-[1rem] mx-auto bg-[#ffffff] my-[1rem] rounded-[.25rem] shadow-lg"
             enctype="multipart/form-data">
             <!-- sub header -->
@@ -186,7 +192,7 @@ onMounted(() => {
             </div>
 
             <div class="mx-[.0rem] m-[1rem] text-center">
-                <button @click="submitForm" type="button" class="rounded-[.25rem] text-white bg-[#1c4ed8] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium px-5 py-2.5 
+                <button  @click="submitForm" type="button" class="rounded-[.25rem] text-white bg-[#1c4ed8] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium px-5 py-2.5 
                 text-center">
                     Đăng Ký Dịch Vụ</button>
             </div>

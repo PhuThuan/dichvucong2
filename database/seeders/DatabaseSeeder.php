@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
 
         GroupModel::create([
             'name' => 'customer',
-            'permission' => '["sanctum/csrf-cookie","_ignition/health-check","_ignition/execute-solution","_ignition/update-config","api/user","/","contact","user","user/service","user/profile/service","user/order/detail/{service_id}/{id}","profile","get-address","get-noti","register","login","forgot-password","reset-password/{token}","reset-password","verify-email","verify-email/{id}/{hash}","email/verification-notification","confirm-password","password","logout"]',
+            'permission' => '["sanctum/csrf-cookie","_ignition/health-check","_ignition/execute-solution","_ignition/update-config","api/user","/","contact","user","user/service","user/service/{id_service}","user/profile/service","user/order/detail/{service_id}/{id}","profile","get-address","get-noti","register","login","forgot-password","reset-password/{token}","reset-password","verify-email","verify-email/{id}/{hash}","email/verification-notification","confirm-password","password","logout"]',
         ]);
 
         \App\Models\User::factory()->create([

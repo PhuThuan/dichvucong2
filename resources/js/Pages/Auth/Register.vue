@@ -90,8 +90,7 @@ const submit = () => {
                     placeholder="Mật khẩu"/>
                 <button type="button" class="absolute right-0 top-0 h-full px-3 text-gray-300 focus:outline-none"
                     @click="showPassword = !showPassword">
-                    <i class="fas fa-eye" :class="{ 'hidden': !showPassword, 'block': showPassword }"></i>
-                    <i class="fas fa-eye-slash" :class="{ 'block': !showPassword, 'hidden': showPassword }"></i>
+                     <i class="" :class="{ 'fas fa-eye': !showPassword, 'fas fa-eye-slash': showPassword }"></i>
                 </button>
                 
             </div>
@@ -103,8 +102,8 @@ const submit = () => {
                     v-model="form.password_confirmation" autocomplete="current-password" placeholder="Nhập lại mật khẩu" />
                 <button type="button" class="absolute right-0 top-0 h-full text-gray-300 px-3 focus:outline-none"
                     @click="showPassword2 = !showPassword2">
-                    <i class="fas fa-eye" :class="{ 'hidden': !showPassword2, 'block': showPassword2 }"></i>
-                    <i class="fas fa-eye-slash" :class="{ 'block': !showPassword2, 'hidden': showPassword2 }"></i>
+                    <i class="" :class="{ 'fas fa-eye': !showPassword2, 'fas fa-eye-slash': showPassword2 }"></i>
+                    
                 </button>
             
             </div>
