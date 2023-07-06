@@ -7,8 +7,11 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref, defineProps, defineEmits } from 'vue';
+import { onMounted } from 'vue';
 
-
+onMounted(()=>{
+    console.log(form.errors);
+})
 defineProps({
     canResetPassword: {
         type: Boolean,

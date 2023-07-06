@@ -105,7 +105,7 @@ const validateForm = () => {
         </label>
         <input v-model="input" type="text" :id="services_fields.field_name" class="text-sm shadow-sm bg-gray-50 
         border border-gray-300 rounded-[.25rem] 
-            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " :="stringToObject"
+            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " 
             :placeholder="services_fields.placeholder" @input="updateFormData(services_fields.field_name, input)" />
         <InputError class="mt-2" :message="validate.errors[props.services_fields.field_name]"
             :required="stringToObject?.required" />
